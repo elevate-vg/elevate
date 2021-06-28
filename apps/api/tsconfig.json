@@ -1,0 +1,10 @@
+{
+   "extends": "../../tsconfig.json",
+   "compilerOptions": {
+      "jsx": "preserve",
+      "lib": ["dom", "es2017"],
+      "noEmit": false
+   },
+   "exclude": ["dist", ".next", "out", "next.config.js"],
+   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+}

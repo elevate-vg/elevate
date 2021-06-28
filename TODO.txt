@@ -1,0 +1,39 @@
+TODO
+=====
+
+
+Pipeline
+-----
+
+v1
+--
+prisma
+nexus
+dist
+  dl node (windows)
+  bundle launch theme
+  bundle exe launcher
+
+v2
+--
+Cypress for launcher theme
+Cypress for api 
+jest for exe plugin
+nyc
+
+
+
+
+Research
+-----
+
+Api plugin safe?
+bundle Move themes and apis into single plugin type
+
+
+Testing
+-----
+
+Plugins: Jest
+Themes: Cypress & Jest
+API: Cypress & Jest

@@ -1,0 +1,18 @@
+{
+   "packages": ["apps/*", "libs/*", "plugins/*", "themes/*"],
+   "npmClientArgs": ["--no-lockfile"],
+   "command": {
+      "version": {
+         "ignoreChanges": ["*.md"],
+         "npmClient": "npm",
+         "message": "chore(release): publish"
+      },
+
+      "publish": {
+         "npmClient": "npm"
+      }
+   },
+   "version": "independent",
+   "npmClient": "yarn",
+   "useWorkspaces": true
+}

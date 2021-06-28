@@ -1,0 +1,13 @@
+{
+   "name": "@elevate/root",
+   "private": true,
+   "workspaces": [
+      "apps/*",
+      "libs/*",
+      "plugins/*",
+      "themes/*"
+   ],
+   "devDependencies": {
+      "lerna": "^4.0.0"
+   }
+}
