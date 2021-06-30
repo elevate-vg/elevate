@@ -1,4 +1,7 @@
+import { PrismaClient } from '@prisma/client'
 import * as hello from '../../../../../plugins/hello-world'
+
+const prisma = new PrismaClient()
 
 // Loaders
 import store from './store'
@@ -19,6 +22,8 @@ const normalizePlugin = (plugin: Plugin): Plugin => ({
 
 export default (server: Application) => {
    const plugins = [hello].map(normalizePlugin)
+
+   prisma.user.findMany().then(console.log)
 
    store(server)(plugins)
    theme(server)()

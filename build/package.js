@@ -2,6 +2,7 @@
 const { createWriteStream, mkdirSync } = require('fs')
 const archiver = require('archiver')
 const { join } = require('path')
+const replace = require("replace-in-file")
 
 const distDir = join(__dirname, '../dist')
 const pkgDir = join(__dirname, `../pkg/`)
@@ -60,6 +61,22 @@ const main = (platform) => {
 }
 
 module.exports = main
-// main(process.argv.slice(2)[0])
-main('win')
-main('darwin')
+
+// HACK: Prisma is using an undocumented node module
+//       Webpack fails to compile without this
+;(async () => {
+   try {
+      const results = await replace({
+         files: join(distDir, './server.js'),
+         from: /e.exports=_http_common/g,
+         to: 'e.exports=require("_http_common")',
+       })
+
+      main('win')
+      main('darwin')
+    }
+    catch (error) {
+      console.error('Error occurred:', error);
+    }
+})()
+

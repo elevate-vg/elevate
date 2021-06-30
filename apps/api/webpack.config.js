@@ -1,10 +1,22 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
+const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
    entry: './src/index.ts',
-   externals: [nodeExternals()], // in order to ignore all modules in node_modules folder
+   target: 'node',
+   externalsPresets: { node: true },
+   externals: ['_http_common', nodeExternals()], // in order to ignore all modules in node_modules folder
+   plugins: [
+      new CopyPlugin({
+         patterns: [
+            { from: './prisma/schema.prisma' },
+            { from: '../../node_modules/prisma/query-engine-windows.exe' },
+            { from: '../../node_modules/prisma/query-engine-darwin' },
+         ],
+      }),
+   ],
    module: {
       rules: [
          {
@@ -22,7 +34,6 @@ module.exports = {
          themes: path.resolve(__dirname, '../../themes/'),
       },
    },
-   target: 'node',
    mode: 'production',
    output: {
       filename: 'server.js',
