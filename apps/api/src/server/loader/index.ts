@@ -1,4 +1,4 @@
-import * as hello from 'plugins/hello-world'
+import * as hello from '../../../../../plugins/hello-world'
 
 // Loaders
 import store from './store'

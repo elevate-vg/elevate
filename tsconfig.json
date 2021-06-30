@@ -25,6 +25,6 @@
          "themes/*": ["./themes/*"]
       }
    },
-   "include": ["apps/**/*.ts", "apps/**/*.tsx"],
+   "include": ["plugins/**/*.ts", "plugins/**/*.tsx", "apps/**/*.ts", "apps/**/*.tsx"],
    "exclude": ["dist", ".next", "out", "next.config.js", "node_modules", "**/*.spec.ts"]
 }

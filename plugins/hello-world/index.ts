@@ -1,4 +1,4 @@
-import { Plugin, Platforms } from 'libs/types'
+import { Plugin, Platforms } from '../../libs/types'
 import { Response } from 'express'
 
 export const meta: Plugin.Meta = {

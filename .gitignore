@@ -51,3 +51,7 @@ cypress/**/*.png
 
 dist/
 /pkg
+/bin
+assets/win/prisma-query-engine
+assets/darwin/prisma-query-engine
+*.db

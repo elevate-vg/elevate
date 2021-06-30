@@ -1,18 +1,12 @@
 TODO
 =====
 
-add cli into build process
-sync lerna scripts (build, dist, etc)
-common build terms
-how to separate packaged and unpacked dist
-   dist - minified version
-   build - scripts or tooling
 bundle binaries
   prisma
-  puppeteer (chrome)
-
-
-
+download on run if missing
+  https://commondatastorage.googleapis.com/chromium-browser-snapshots/Win_x64/897225/chrome-win.zip 
+  https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/897228/chrome-mac.zip 
+  
 
 Pipeline
 -----
@@ -21,10 +15,6 @@ v1
 --
 prisma
 nexus
-dist
-  dl node (windows)
-  bundle launch theme
-  bundle exe launcher
 
 v2
 --

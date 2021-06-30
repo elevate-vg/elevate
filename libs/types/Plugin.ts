@@ -1,5 +1,5 @@
 import { Platforms } from '.'
-import type { PuppeteerNode } from 'puppeteer'
+import type { PuppeteerNode } from 'puppeteer-core'
 import type { Router } from 'express'
 
 export type Meta = {
