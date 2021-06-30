@@ -3,22 +3,22 @@
    "version": "1.0.0",
    "scripts": {
       "dev": "nodemon",
-      "webpack": "webpack",
-      "build": "npm run build:tsc && npm run build:next",
-      "build:tsc": "cross-env NODE_ENV=production tsc --project tsconfig.server.json",
-      "build:next": "cross-env NODE_ENV=production next build",
-      "package": "mkdir -p ../../dist/api && cp -R .next dist/* ../../dist/api && package:install",
-      "package:install": "npm install --prefix ../../dist/apps/api",
-      "start": "cross-env NODE_ENV=production node dist/index.js"
+      "build": "webpack",
+      "//package": "mkdir -p ../../dist/raw/api && cp -R dist/* ../../dist/raw/api && package:install",
+      "//package:install": "npm install --prefix ../../dist/raw/api",
+      "//start": "cross-env NODE_ENV=production node ../../dist/raw/index.js"
    },
    "dependencies": {
+      "archiver": "^5.3.0",
       "cross-env": "^7.0.2",
       "express": "^4.17.1",
-      "puppeteer": "^10.0.0"
+      "puppeteer": "^10.0.0",
+      "request": "^2.88.2"
    },
    "devDependencies": {
       "@types/express": "^4.17.12",
       "@types/node": "^15.12.4",
+      "@types/request": "^2.48.5",
       "@typescript-eslint/eslint-plugin": "^4.27.0",
       "@typescript-eslint/parser": "^4.27.0",
       "eslint": "^7.29.0",

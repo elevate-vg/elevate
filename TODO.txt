@@ -1,6 +1,18 @@
 TODO
 =====
 
+add cli into build process
+sync lerna scripts (build, dist, etc)
+common build terms
+how to separate packaged and unpacked dist
+   dist - minified version
+   build - scripts or tooling
+bundle binaries
+  prisma
+  puppeteer (chrome)
+
+
+
 
 Pipeline
 -----

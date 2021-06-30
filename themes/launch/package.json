@@ -4,9 +4,7 @@
    "private": true,
    "scripts": {
       "dev": "next dev",
-      "build": "next build",
-      "export": "next export",
-      "dist": "next build && next export && mkdir -p ../../dist/themes/@elevate/launch && mv out/* ../../dist/themes/@elevate/launch",
+      "build": "next build && next export -o ../../dist/themes/@elevate/launch",
       "start": "next start",
       "lint": "next lint"
    },

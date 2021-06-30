@@ -1,12 +1,17 @@
 {
-  "name": "@elevate/cli",
-  "version": "1.0.0",
-  "description": "",
-  "scripts": {},
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "yargs": "^17.0.1"
-  }
+   "name": "@elevate/cli",
+   "version": "1.0.0",
+   "description": "",
+   "scripts": {
+      "build": "mkdir -p ../../dist && ncc build index.ts --target es2017 --minify && mv ./dist/index.js ../../dist/cli.js"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "devDependencies": {
+      "ncc": "^0.3.6"
+   },
+   "dependencies": {
+      "yargs": "^17.0.1"
+   }
 }

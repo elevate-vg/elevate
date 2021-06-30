@@ -19,8 +19,8 @@ node_modules/
 /.next/
 /out/
 
-# production
-/build
+# node
+/assets/**/node*
 
 # misc
 .DS_Store
@@ -48,3 +48,6 @@ yarn-error.log*
 # Cypress
 cypress/**/*.mp4
 cypress/**/*.png
+
+dist/
+/pkg

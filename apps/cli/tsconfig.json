@@ -1,0 +1,9 @@
+{
+   "extends": "../../tsconfig.json",
+   "compilerOptions": {
+      "lib": ["es2017"],
+      "noEmit": false
+   },
+   "exclude": ["dist", ".next", "out", "next.config.js"],
+   "include": ["**/*.ts", "**/*.tsx"]
+}
