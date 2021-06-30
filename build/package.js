@@ -5,15 +5,17 @@ const { join } = require('path')
 const replace = require("replace-in-file")
 
 const distDir = join(__dirname, '../dist')
-const pkgDir = join(__dirname, `../pkg/`)
+const pkgDir = join(__dirname, `../pkg`)
+const assetDir = join(__dirname, `../assets/all`)
 
 mkdirSync(pkgDir, { recursive: true })
 
 const main = (platform) => {
-   const assetDir = join(__dirname, `../assets/${platform}`)
+   const assetPlatformDir = join(__dirname, `../assets/${platform}`)
 
    switch (platform) {
       case 'darwin': {
+         // TODO: Use actual version in filename
          const output = createWriteStream(join(pkgDir, 'elevate-v1.0.0-darwin-x64.tar.gz'))
 
          const archive = archiver('tar', {
@@ -33,11 +35,13 @@ const main = (platform) => {
 
          // append files from a sub-directory, putting its contents at the root of archive
          archive.directory(distDir, false)
+         archive.directory(assetPlatformDir, false)
          archive.directory(assetDir, false)
          return archive.finalize()
       }
       case 'win':
       default: {
+         // TODO: Use actual version in filename
          const output = createWriteStream(join(pkgDir, 'elevate-v1.0.0-win-x64.zip'))
          const archive = archiver('zip')
 
@@ -54,6 +58,7 @@ const main = (platform) => {
 
          // append files from a sub-directory, putting its contents at the root of archive
          archive.directory(distDir, false)
+         archive.directory(assetPlatformDir, false)
          archive.directory(assetDir, false)
          return archive.finalize()
       }

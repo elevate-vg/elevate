@@ -3,7 +3,7 @@
    "version": "1.0.0",
    "scripts": {
       "dev": "nodemon",
-      "build": "prisma generate && webpack",
+      "build": "prisma generate && webpack && DATABASE_URL=\"file:../../../assets/all/elevate.db\" prisma db push",
       "//package": "mkdir -p ../../dist/raw/api && cp -R dist/* ../../dist/raw/api && package:install",
       "//package:install": "npm install --prefix ../../dist/raw/api"
    },
