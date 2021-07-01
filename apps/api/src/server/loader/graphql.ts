@@ -1,11 +1,13 @@
 import { ApolloServer } from 'apollo-server-express'
 import type { Application } from 'express'
-import { makeSchema, stringArg, queryType } from 'nexus'
+import { makeSchema, stringArg, extendType } from 'nexus'
 import { join } from 'path'
+import type { Graphql, Plugin } from 'libs/types/Plugin'
 
-export const main = async (server: Application) => {
+export const main = (server: Application) => async (plugins: Plugin[]) => {
    try {
-      const Query = queryType({
+      const b = extendType({
+         type: 'Query',
          definition(t) {
             t.string('hello', {
                args: { name: stringArg() },
@@ -14,8 +16,17 @@ export const main = async (server: Application) => {
          },
       })
 
+      let myPlugins: Graphql[] = []
+
+      // TODO: Don't mutate variables
+      plugins?.map((plugin) =>
+         plugin?.graphql?.map((type) => {
+            myPlugins.push(type)
+         }),
+      )
+
       const schema = makeSchema({
-         types: [Query],
+         types: [b, ...myPlugins],
          outputs:
             process.env.NODE_ENV === 'production'
                ? {}
@@ -24,6 +35,7 @@ export const main = async (server: Application) => {
                     typegen: join(__dirname, '../../../../../libs/types/Nexus.ts'),
                  },
       })
+
       const apollo = new ApolloServer({
          schema,
          tracing: true,

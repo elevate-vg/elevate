@@ -15,6 +15,7 @@ import type { Application } from 'express'
 
 const normalizePlugin = (plugin: Plugin): Plugin => ({
    themes: [],
+   graphql: [],
    stores: [],
    launchers: [],
    apis: [],
@@ -26,7 +27,7 @@ export default async (server: Application) => {
 
    prisma.user.findMany().then(console.log)
 
-   await graphql(server)
+   await graphql(server)(plugins)
    await store(server)(plugins)
    await theme(server)()
    await api(server)(plugins)

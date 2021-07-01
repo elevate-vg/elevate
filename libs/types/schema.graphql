@@ -4,4 +4,5 @@
 
 type Query {
   hello(name: String): String
+  plugin__simonwjackson__hello(name: String): String
 }

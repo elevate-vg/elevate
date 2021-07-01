@@ -1,6 +1,7 @@
 import { Platforms } from '.'
 import type { PuppeteerNode } from 'puppeteer-core'
 import type { Router } from 'express'
+import type { NexusExtendTypeDef } from 'nexus/dist/core'
 
 export type Meta = {
    namespace: string
@@ -36,7 +37,10 @@ export type Plugin = {
    themes?: Theme[]
    stores?: Store[]
    apis?: Api[]
+   graphql?: Graphql[]
    launchers?: Launcher[]
 }
+
+export type Graphql = NexusExtendTypeDef<any>
 
 export default Plugin
