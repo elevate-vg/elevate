@@ -2,12 +2,41 @@ import type { Application, Response, Request } from 'express'
 import puppeteer from 'puppeteer-core'
 import type Plugin from 'libs/types/Plugin'
 import { trace } from 'console'
+import { join } from 'path'
 
-// TODO: Chromium path should have multi-platform support
-const executablePath =
-   process.env.NODE_ENV === 'production'
-      ? './bin/chrome/Chromium.app/Contents/MacOS/Chromium'
-      : '../../bin/chrome/Chromium.app/Contents/MacOS/Chromium'
+const projectRoot = join(__dirname, '../../../../../')
+
+const getPuppeteer = () => {
+   switch (process.env.NODE_ENV) {
+      case 'production': {
+         switch (process.platform) {
+            case 'win32': {
+               // TODO: Is this the correct path
+               return './bin/chrome-win/chrome.exe'
+            }
+            case 'darwin': {
+               return './bin/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
+            }
+         }
+         break
+      }
+      default: {
+         switch (process.platform) {
+            case 'win32': {
+               return join(
+                  projectRoot,
+                  // TODO: Is this the correct path
+                  'bin/chrome-win/chrome.exe',
+               )
+            }
+            case 'darwin': {
+               join(projectRoot, 'bin/chrome-mac/Chromium.app/Contents/MacOS/Chromium')
+            }
+         }
+         break
+      }
+   }
+}
 
 // TODO: Generate type for this monkey patch
 // TODO: Refactor into separate file
@@ -20,7 +49,7 @@ const myPuppet = () => {
       // @ts-ignore
       return puppeteer._launch({
          ...opts,
-         executablePath,
+         executablePath: getPuppeteer(),
       })
    }
 

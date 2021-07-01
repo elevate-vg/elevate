@@ -32,7 +32,7 @@ const main = async (platform) => {
             const nodePath = join(assetDir, 'node')
 
             // TODO: Detecting if node exists by filename only is a bit naive
-            if (existsSync(nodePath)){
+            if (!existsSync(nodePath)){
                var extract = tar.extract()
                var chunks = []
 
@@ -68,7 +68,7 @@ const main = async (platform) => {
          default: {
             const nodePath = join(assetDir, 'node.exe')
             // TODO: Detecting if node exists by filename only is a bit naive
-            if (existsSync(nodePath)){
+            if (!existsSync(nodePath)){
                const zip = request(url).pipe(unzipper.Parse({ forceStream: true }))
 
                for await (const entry of zip) {

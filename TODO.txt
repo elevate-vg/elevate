@@ -1,11 +1,6 @@
 TODO
 =====
 
-bundle binaries
-  prisma
-download on run if missing
-  https://commondatastorage.googleapis.com/chromium-browser-snapshots/Win_x64/897225/chrome-win.zip 
-  https://commondatastorage.googleapis.com/chromium-browser-snapshots/Mac/897228/chrome-mac.zip 
   
 
 Pipeline
@@ -13,7 +8,6 @@ Pipeline
 
 v1
 --
-prisma
 nexus
 
 v2
