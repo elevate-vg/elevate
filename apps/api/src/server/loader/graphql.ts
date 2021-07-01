@@ -1,7 +1,7 @@
 import { ApolloServer } from 'apollo-server-express'
 import type { Application } from 'express'
 import { makeSchema, stringArg, queryType } from 'nexus'
-// import path from 'path'
+import { join } from 'path'
 
 export const main = async (server: Application) => {
    try {
@@ -16,10 +16,13 @@ export const main = async (server: Application) => {
 
       const schema = makeSchema({
          types: [Query],
-         //  outputs: {
-         //     schema: __dirname + '/generated/schema.graphql',
-         //     typegen: __dirname + '/generated/typings.ts',
-         //  },
+         outputs:
+            process.env.NODE_ENV === 'production'
+               ? {}
+               : {
+                    schema: join(__dirname, '../../../../../libs/types/schema.graphql'),
+                    typegen: join(__dirname, '../../../../../libs/types/Nexus.ts'),
+                 },
       })
       const apollo = new ApolloServer({
          schema,

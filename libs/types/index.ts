@@ -22,3 +22,4 @@ export enum Platforms {
 }
 
 export * as Plugin from './Plugin'
+export * as Nexus from './Nexus'
