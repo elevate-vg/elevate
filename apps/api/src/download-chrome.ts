@@ -1,4 +1,4 @@
-import fs, { mkdirSync, existsSync, chmod, createWriteStream } from 'fs'
+import fs, { mkdirSync, existsSync, createWriteStream } from 'fs'
 import https from 'https'
 import { join } from 'path'
 import extractZip from 'extract-zip'

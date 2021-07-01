@@ -26,11 +26,11 @@ const getPuppeteer = () => {
                return join(
                   projectRoot,
                   // TODO: Is this the correct path
-                  'bin/chrome-win/chrome.exe',
+                  './bin/chrome-win/chrome.exe',
                )
             }
             case 'darwin': {
-               join(projectRoot, 'bin/chrome-mac/Chromium.app/Contents/MacOS/Chromium')
+               return join(projectRoot, './bin/chrome-mac/Chromium.app/Contents/MacOS/Chromium')
             }
          }
          break

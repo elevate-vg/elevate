@@ -2,6 +2,7 @@
    "name": "@elevate/lib-types",
    "version": "1.0.0",
    "description": "",
+   "private": true,
    "scripts": {
       "build": "exit 0"
    },

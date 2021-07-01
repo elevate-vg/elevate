@@ -6,8 +6,7 @@ const CopyPlugin = require('copy-webpack-plugin')
 module.exports = {
    entry: './src/index.ts',
    target: 'node',
-   externalsPresets: { node: true },
-   externals: ['_http_common', nodeExternals()], // in order to ignore all modules in node_modules folder
+   externals: ['_http_common'], // in order to ignore all modules in node_modules folder
    plugins: [
       new CopyPlugin({
          patterns: [
@@ -24,10 +23,19 @@ module.exports = {
             use: 'ts-loader',
             exclude: /node_modules/,
          },
+         {
+            test: /\.mjs$/,
+            include: /node_modules/,
+            type: 'javascript/auto',
+            // graphql module needs this
+            resolve: {
+               fullySpecified: false,
+            },
+         },
       ],
    },
    resolve: {
-      extensions: ['.tsx', '.ts', '.js'],
+      extensions: ['.tsx', '.ts', '.js', '.mjs'],
       alias: {
          plugins: path.resolve(__dirname, '../../plugins/'),
          libs: path.resolve(__dirname, '../../libs/'),
@@ -35,6 +43,9 @@ module.exports = {
       },
    },
    mode: 'production',
+   optimization: {
+      minimize: true,
+   },
    output: {
       filename: 'server.js',
       path: path.resolve(__dirname, '../../dist'),
