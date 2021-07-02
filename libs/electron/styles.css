@@ -1,0 +1,35 @@
+html,
+body {
+   margin: 0px;
+   height: 100%;
+   width: 100%;
+   background: black;
+   font-family: sans-serif;
+   color: rgb(255 255 255 / 75%);
+}
+
+.noscroll {
+   position: fixed;
+   overflow-y: scroll;
+   overscroll-behavior: none;
+}
+
+.box.flex {
+   height: 100%;
+   width: 100%;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+}
+
+.box {
+   padding: 0.5rem;
+   height: 300px;
+   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.03);
+   border-radius: 4px;
+}
+
+.message {
+   margin-top: 25px;
+}

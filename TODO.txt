@@ -18,7 +18,7 @@ Cypress for launcher theme
 Cypress for api 
 jest for exe plugin
 nyc
-
+storybook
 
 
 
@@ -27,11 +27,3 @@ Research
 
 Api plugin safe?
 bundle Move themes and apis into single plugin type
-
-
-Testing
------
-
-Plugins: Jest
-Themes: Cypress & Jest
-API: Cypress & Jest

@@ -21,7 +21,7 @@ const normalizePlugin = (plugin: Plugin): Plugin => ({
    ...plugin,
 })
 
-const port = parseInt(process.env.PORT || '3000', 10)
+const port = parseInt(process.env.PORT || '31348', 10)
 
 const plugins = [hello].map(normalizePlugin)
 
