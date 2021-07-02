@@ -1,10 +1,11 @@
-import type { Application, Response, Request, NextFunction } from 'express'
+import type { Response, Request, NextFunction } from 'express'
 import { static as serveDir } from 'express'
 import { join } from 'path'
+import { Context } from '../../context'
 // import expressStaticGzip from 'express-static-gzip'
 
-export default (server: Application) => () => {
-   server.use(
+export default (ctx: Context) => () => {
+   ctx.express.use(
       '/~/:namespace/:name/theme/:themeName',
       (req: Request, res: Response, next: NextFunction) => {
          const { namespace, themeName } = req.params

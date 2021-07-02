@@ -1,10 +1,10 @@
 import { ApolloServer } from 'apollo-server-express'
-import type { Application } from 'express'
 import { makeSchema, stringArg, extendType } from 'nexus'
 import { join } from 'path'
 import type { Graphql, Plugin } from 'libs/types/Plugin'
+import { Context } from '../../context'
 
-export const main = (server: Application) => async (plugins: Plugin[]) => {
+export const main = (ctx: Context) => async (plugins: Plugin[]) => {
    try {
       const b = extendType({
          type: 'Query',
@@ -16,7 +16,7 @@ export const main = (server: Application) => async (plugins: Plugin[]) => {
          },
       })
 
-      let myPlugins: Graphql[] = []
+      const myPlugins: Graphql[] = []
 
       // TODO: Don't mutate variables
       plugins?.map((plugin) =>
@@ -38,17 +38,20 @@ export const main = (server: Application) => async (plugins: Plugin[]) => {
 
       const apollo = new ApolloServer({
          schema,
+         context: ctx,
          tracing: true,
+         introspection: true, //environment.apollo.introspection,
+         playground: true, //environment.apollo.playground
       })
 
-      apollo.applyMiddleware({ app: server })
+      apollo.applyMiddleware({ app: ctx.express })
 
       console.log(`🚀 Graphql server started..`)
    } catch (e) {
       console.error(e)
    }
 
-   return server
+   return ctx.express
 }
 
 export default main

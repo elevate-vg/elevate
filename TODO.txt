@@ -1,6 +1,8 @@
 TODO
 =====
 
+Download Electron:
+  https://npm.taobao.org/mirrors/electron/13.1.5/
   
 
 Pipeline

@@ -11,7 +11,7 @@ import api from './api'
 
 // Types
 import type { Plugin } from 'libs/types/Plugin'
-import type { Application } from 'express'
+import { Context } from '../../context'
 
 const normalizePlugin = (plugin: Plugin): Plugin => ({
    themes: [],
@@ -22,15 +22,16 @@ const normalizePlugin = (plugin: Plugin): Plugin => ({
    ...plugin,
 })
 
-export default async (server: Application) => {
+export default async (ctx: Context) => {
    const plugins = [hello].map(normalizePlugin)
 
+   // TODO: Remove this query
    prisma.user.findMany().then(console.log)
 
-   await graphql(server)(plugins)
-   await store(server)(plugins)
-   await theme(server)()
-   await api(server)(plugins)
+   await graphql(ctx)(plugins)
+   await store(ctx)(plugins)
+   await api(ctx)(plugins)
+   await theme(ctx)()
 
-   return server
+   return ctx.express
 }
