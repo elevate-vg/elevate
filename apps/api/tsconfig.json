@@ -3,7 +3,9 @@
    "compilerOptions": {
       "jsx": "preserve",
       "lib": ["dom", "es2017"],
-      "noEmit": false
+      "noEmit": false,
+      "typeRoots": ["node_modules/@types"],
+      "types": ["node"]
    },
    "exclude": ["dist", "out"],
    "include": ["**/*.ts", "**/*.tsx"]
