@@ -71,11 +71,20 @@ module.exports = main
 //       Webpack fails to compile without this
 ;(async () => {
    try {
+      // Compressed
       await replace({
          files: join(distDir, './server.js'),
          from: /e.exports=_http_common/g,
          to: 'e.exports=require("_http_common")',
        })
+
+       // Uncompressed
+      await replace({
+         files: join(distDir, './server.js'),
+         from: /module.exports = _http_common/g,
+         to: 'module.exports = require("_http_common")',
+       })
+
 
       main('win')
       main('darwin')
