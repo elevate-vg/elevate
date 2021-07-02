@@ -3,7 +3,6 @@ const { app, BrowserWindow } = require('electron')
 const path = require('path')
 const { request } = require('http')
 
-
 function createWindow() {
    const win = new BrowserWindow({
       width: 800,
@@ -24,7 +23,7 @@ function createWindow() {
 
    win.loadFile('index.html')
 
-   return tryLoad(win) 
+   return tryLoad(win)
 }
 
 app.whenReady().then(() => {
@@ -39,14 +38,12 @@ app.on('window-all-closed', function () {
    if (process.platform !== 'darwin') app.quit()
 })
 
-
 /* UTILS */
-
 
 // TODO: Refactor tryLoad() with less side effects
 const tryLoad = (win) => {
-   const DELAY = 1000
-   const TIMEOUT = 30 * (250 / DELAY)
+   const DELAY = 250
+   const TIMEOUT = 30 * (1000 / DELAY)
    // TODO: Show timeout message in electron if max tries reached
    let tries = 0
    // TODO: Don't assume host and port

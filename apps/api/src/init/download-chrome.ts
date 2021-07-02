@@ -42,6 +42,7 @@ const main = async (platform: string) => {
             break
          }
          case 'win32': {
+            // TODO: Download chromium in windows
             break
          }
       }

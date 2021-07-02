@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const path = require('path')
-const nodeExternals = require('webpack-node-externals')
 const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = {
@@ -11,6 +10,7 @@ module.exports = {
       new CopyPlugin({
          patterns: [
             { from: './prisma/schema.prisma' },
+            { from: '../../libs/electron/', to: './assets/electron/' },
             { from: '../../node_modules/prisma/query-engine-windows.exe' },
             { from: '../../node_modules/prisma/query-engine-darwin' },
          ],
@@ -44,7 +44,7 @@ module.exports = {
    },
    mode: 'production',
    optimization: {
-      minimize: true,
+      minimize: false,
    },
    output: {
       filename: 'server.js',
