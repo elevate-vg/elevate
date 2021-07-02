@@ -22,11 +22,6 @@ export type Store = {
    search: (arg0: { puppeteer: PuppeteerNode }) => (arg0: { query: string }) => Promise<any> | any
 }
 
-export type Theme = {
-   name: string
-   directory: string
-}
-
 export type Api = {
    name: string
    fn: (arg0: Router) => Router
@@ -34,7 +29,6 @@ export type Api = {
 
 export type Plugin = {
    meta: Meta
-   themes?: Theme[]
    stores?: Store[]
    apis?: Api[]
    graphql?: Graphql[]

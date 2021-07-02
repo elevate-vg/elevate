@@ -1,18 +1,19 @@
 import type { Response, Request, NextFunction } from 'express'
 import { static as serveDir } from 'express'
 import { join } from 'path'
-import { Context } from '../../context'
+import { baseDir } from '../constants'
+import { Context } from '../context'
 // import expressStaticGzip from 'express-static-gzip'
 
-export default (ctx: Context) => () => {
+export default (ctx: Context) => {
    ctx.express.use(
       '/~/:namespace/:name/theme/:themeName',
       (req: Request, res: Response, next: NextFunction) => {
          const { namespace, themeName } = req.params
-         const path =
-            process.env.NODE_ENV !== 'production'
-               ? join(__dirname, `../../../../`, `themes/${namespace}/${themeName}`)
-               : join(__dirname, `themes/${namespace}/${themeName}`)
+
+         // const rootDir = process.env.NODE_ENV === 'production' ? __dirname : baseDir
+         // const path = join(rootDir, `themes/${namespace}/${themeName}`)
+         const path = join(baseDir, `dist/themes/${namespace}/${themeName}`)
 
          try {
             // TODO: Set theme as active and alias it to alias it to /app (?)
@@ -23,4 +24,6 @@ export default (ctx: Context) => () => {
          }
       },
    )
+
+   return ctx
 }

@@ -3,15 +3,14 @@ import https from 'https'
 import { join } from 'path'
 import extractZip from 'extract-zip'
 import { promisify } from 'util'
+import { baseDir } from '../constants'
 
 const unlinkAsync = promisify(fs.unlink.bind(fs))
 
 const main = async (platform: string) => {
    try {
       const binDir =
-         process.env.NODE_ENV !== 'production'
-            ? join(__dirname, `../../../bin`)
-            : join(__dirname, `./bin`)
+         process.env.NODE_ENV !== 'production' ? join(baseDir, `bin`) : join(__dirname, `./bin`)
       mkdirSync(binDir, { recursive: true })
 
       switch (platform) {

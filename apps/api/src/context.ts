@@ -2,8 +2,7 @@ import { PrismaClient } from '@prisma/client'
 import expressApp, { Application } from 'express'
 import puppeteer, { Puppeteer } from 'puppeteer-core'
 import { join } from 'path'
-
-const projectRoot = join(__dirname, '../../../../')
+import { baseDir } from './constants'
 
 // TODO: Generate type for this monkey patch
 // TODO: Refactor into separate file
@@ -25,13 +24,13 @@ const getPuppeteer = () => {
          switch (process.platform) {
             case 'win32': {
                return join(
-                  projectRoot,
+                  baseDir,
                   // TODO: Is this the correct path
                   './bin/chrome-win/chrome.exe',
                )
             }
             case 'darwin': {
-               return join(projectRoot, './bin/chrome-mac/Chromium.app/Contents/MacOS/Chromium')
+               return join(baseDir, './bin/chrome-mac/Chromium.app/Contents/MacOS/Chromium')
             }
          }
          break
