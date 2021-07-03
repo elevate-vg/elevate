@@ -3,12 +3,13 @@
    "version": "1.0.0",
    "description": "",
    "scripts": {
-      "build": "mkdir -p ../../dist && ncc build index.ts --target es2017 --minify && mv ./dist/index.js ../../dist/cli.js"
+      "build": "mkdir -p ../../dist && ncc build ./src/index.ts --target es2017 --minify && mv ./dist/index.js ../../dist/elevate"
    },
    "keywords": [],
    "author": "",
    "license": "ISC",
    "devDependencies": {
+      "@types/yargs": "^17.0.1",
       "ncc": "^0.3.6"
    },
    "dependencies": {
