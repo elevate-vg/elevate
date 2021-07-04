@@ -43,6 +43,7 @@ const main = async (platform: string) => {
          }
          case 'win32': {
             // TODO: Download chromium in windows
+            // https://npm.taobao.org/mirrors/electron/13.1.5/electron-v13.1.5-win32-x64.zip
             break
          }
       }

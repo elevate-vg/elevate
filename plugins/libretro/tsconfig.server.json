@@ -2,7 +2,7 @@
    "extends": "./tsconfig.json",
    "compilerOptions": {
       "module": "commonjs",
-      "outDir": "../../dist/plugins/hello-world",
+      "outDir": "../../dist/plugins/libretro",
       "target": "es2017",
       "isolatedModules": false,
       "noEmit": false

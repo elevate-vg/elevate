@@ -1,6 +1,7 @@
-import { Plugin, Platforms } from '../../libs/types'
+import { Platforms, Plugin } from '../../libs/types'
 import { Response } from 'express'
 import { stringArg, extendType } from 'nexus'
+import { Context } from 'apps/api/src/context'
 
 export const meta: Plugin.Meta = {
    namespace: '@simonwjackson',
@@ -12,9 +13,10 @@ export const graphql: Plugin.Graphql[] = [
    extendType({
       type: 'Query',
       definition(t) {
-         t.string('plugin__simonwjackson__hello', {
+         t.nullable.string('plugin__simonwjackson__hello', {
             args: { name: stringArg() },
-            resolve: (_, { name }) => `Hello ${name || 'World'}!`,
+            resolve: async (_, __, ctx: Context) =>
+               (await ctx.prisma.user.findFirst())?.name || null,
          })
          t.string('hello', {
             args: { name: stringArg() },
@@ -25,23 +27,26 @@ export const graphql: Plugin.Graphql[] = [
 ]
 
 export const launchers: Plugin.Launcher[] = [
-   {
-      name: 'snes9x',
-      platforms: [Platforms.SuperNintendo],
-      os: [Platforms.Windows10],
-      launch: ({ gamePath, launcherPath }) => {
-         return `${launcherPath} --file ${gamePath}`
-      },
-   },
+   // {
+   //    name: 'snes9x',
+   //    platforms: [Platforms.SuperNintendo],
+   //    os: [Platforms.Windows10],
+   //    launch: ({ gamePath, launcherPath }) => {
+   //       return `${launcherPath} --file ${gamePath}`
+   //    },
+   // },
 ]
 
 export const stores: Plugin.Store[] = [
    {
       name: 'steam',
-      platforms: [Platforms.Windows10, Platforms.MacOS],
+      // platforms: [Platforms.Windows10, Platforms.MacOS],
       search:
          ({ puppeteer }) =>
          async ({ query }) => {
+            query
+            // TODO: Add launch type to puppeteer
+            // @ts-ignore
             const browser = await puppeteer.launch()
             const page = await browser.newPage()
 
@@ -55,16 +60,22 @@ export const stores: Plugin.Store[] = [
                }
             })
 
+            dimensions
+
             await browser.close()
 
-            return {
-               ...meta,
-               data: {
-                  hello: true,
-                  dimensions,
-                  query,
+            return [
+               {
+                  platform: Platforms.NINTENDO_ENTERTAINMENT_SYSTEM,
+                  name: 'Mario Bros. 2',
+                  applications: [
+                     {
+                        name: 'Mario Bros. 2',
+                     },
+                  ],
+                  locations: [{ uri: 'http://a.com/b.c.zip' }],
                },
-            }
+            ]
          },
    },
 ]

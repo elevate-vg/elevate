@@ -2,7 +2,70 @@
 ### Do not make changes to this file directly
 
 
+interface Application {
+  name: String
+  software(platforms: [PlatformType!]): [Software]
+}
+
+type Directory implements Location {
+  uri: String
+}
+
+type File implements Location {
+  md5: String
+  sha256: String
+  size: Int
+  type: FileType
+  uri: String
+}
+
+enum FileType {
+  ARCHIVE
+  EXECUTABLE
+  UNKNOWN
+}
+
+type Game implements Application {
+  name: String
+  software(platforms: [PlatformType!]): [Software]
+}
+
+type Launcher implements Application {
+  name: String
+  software(platforms: [PlatformType!]): [Software]
+  supports: [LauncherSupport]
+}
+
+type LauncherSupport {
+  locations: [Location]
+  platforms: [PlatformType]
+}
+
+interface Location {
+  uri: String
+}
+
+enum PlatformType {
+  NINTENDO_ENTERTAINMENT_SYSTEM
+  SUPER_NINTENDO_ENTERTAINMENT_SYSTEM
+  WINDOWS_32
+}
+
 type Query {
+  games: [Game]
   hello(name: String): String
   plugin__simonwjackson__hello(name: String): String
+  storeSearch(query: String): [Software]
+}
+
+type Software {
+  applications(platforms: [PlatformType!]): [Application]
+  locations: [Location]
+  name: String
+  platform: PlatformType
+  version: String
+}
+
+enum SoftwareType {
+  LAUNCHER
 }

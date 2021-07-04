@@ -12,10 +12,8 @@ export default (ctx: Context) => (plugins: Plugin[]) =>
       const store = (stores || []).find((store) => store.name === req.params.store)
 
       try {
-         // @ts-ignore
          const searchResults = await store?.search(ctx)({
-            // @ts-ignore
-            query: req?.query?.query,
+            query: req?.query?.query as string,
          })
          res.json(searchResults)
       } catch (e) {

@@ -16,9 +16,9 @@ export enum Architecture {
 }
 
 export enum Platforms {
-   SuperNintendo = 'snes',
-   Windows10 = 'win10',
-   MacOS = 'macos',
+   'SUPER_NINTENDO_ENTERTAINMENT_SYSTEM' = 'SUPER_NINTENDO_ENTERTAINMENT_SYSTEM',
+   'NINTENDO_ENTERTAINMENT_SYSTEM' = 'NINTENDO_ENTERTAINMENT_SYSTEM',
+   'WINDOWS_32' = 'WINDOWS_32',
 }
 
 export * as Plugin from './Plugin'

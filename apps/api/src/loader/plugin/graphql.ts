@@ -1,17 +1,231 @@
 import { ApolloServer } from 'apollo-server-express'
-import { makeSchema, stringArg, extendType } from 'nexus'
+import {
+   makeSchema,
+   objectType,
+   interfaceType,
+   enumType,
+   stringArg,
+   arg,
+   // unionType,
+   queryType,
+   nonNull,
+   list,
+} from 'nexus'
+
 import { join } from 'path'
-import type { Graphql, Plugin } from 'libs/types/Plugin'
+import { Graphql, Plugin, Software, Store } from 'libs/types/Plugin'
 import { Context } from '../../context'
+import { has, allPass } from 'ramda'
+
+// prettier-ignore
+const getStores = (plugins: Plugin[]): Store[] =>
+   plugins
+      .filter((plugin) => plugin.stores)
+      .map(plugin=> plugin.stores)
+      .reduce((acc, cur) => [...acc || [], ...cur || []], []) || []
 
 export const main = (ctx: Context) => async (plugins: Plugin[]) => {
    try {
-      const b = extendType({
-         type: 'Query',
+      const SoftwareType = enumType({
+         name: 'SoftwareType',
+         members: ['LAUNCHER'],
+      })
+
+      const PlatformType = enumType({
+         name: 'PlatformType',
+         members: [
+            'SUPER_NINTENDO_ENTERTAINMENT_SYSTEM',
+            'NINTENDO_ENTERTAINMENT_SYSTEM',
+            'WINDOWS_32',
+         ],
+      })
+
+      const Location = interfaceType({
+         name: 'Location',
          definition(t) {
-            t.string('hello', {
-               args: { name: stringArg() },
-               resolve: (_, { name }) => `Hello ${name || 'World'}!`,
+            t.string('uri')
+         },
+         resolveType: (data) => {
+            if (allPass([has('md5')])(data)) {
+               return 'File'
+            } else {
+               return 'Directory'
+            }
+         },
+      })
+
+      const Directory = objectType({
+         name: 'Directory',
+         definition(t) {
+            t.implements('Location')
+         },
+      })
+
+      const FileType = enumType({
+         name: 'FileType',
+         members: ['EXECUTABLE', 'ARCHIVE', 'UNKNOWN'],
+      })
+
+      const File = objectType({
+         name: 'File',
+         definition(t) {
+            t.implements('Location')
+            t.nullable.int('size')
+            t.field('type', {
+               type: 'FileType',
+               resolve: (data) => {
+                  if (data.uri?.endsWith('.exe') || data.uri?.endsWith('.app')) return 'EXECUTABLE'
+                  else if (
+                     data.uri?.endsWith('.zip') ||
+                     data.uri?.endsWith('.tar.gz') ||
+                     data.uri?.endsWith('.bz') ||
+                     data.uri?.endsWith('.7z')
+                  )
+                     return 'ARCHIVE'
+                  return 'UNKNOWN'
+               },
+            })
+            t.nullable.string('md5')
+            t.nullable.string('sha256')
+         },
+      })
+
+      const Software = objectType({
+         name: 'Software',
+         definition(t) {
+            t.list.field('locations', {
+               type: 'Location',
+            })
+            t.list.field('applications', {
+               type: 'Application',
+               args: {
+                  platforms: arg({ type: list(nonNull('PlatformType')) }),
+               },
+            })
+            t.string('name')
+            t.string('version')
+            t.field('platform', {
+               type: 'PlatformType',
+            })
+         },
+      })
+
+      const Application = interfaceType({
+         name: 'Application',
+
+         definition(t) {
+            t.string('name')
+            t.list.field('software', {
+               type: 'Software',
+               args: {
+                  platforms: arg({ type: list(nonNull('PlatformType')) }),
+               },
+               // TODO: Implement platform filtering
+            })
+         },
+         resolveType: (data) => {
+            if (allPass([has('supports')])(data)) {
+               return 'Launcher'
+            } else {
+               return 'Game'
+            }
+         },
+      })
+
+      const Game = objectType({
+         name: 'Game',
+
+         definition(t) {
+            t.implements('Application')
+         },
+      })
+
+      const LauncherSupport = objectType({
+         name: 'LauncherSupport',
+         definition(t) {
+            t.list.field('platforms', {
+               type: 'PlatformType',
+            })
+            t.list.field('locations', {
+               type: 'Location',
+            })
+         },
+      })
+
+      const Launcher = objectType({
+         name: 'Launcher',
+         definition(t) {
+            t.implements('Application')
+            t.list.field('supports', {
+               type: 'LauncherSupport',
+            })
+         },
+      })
+
+      const storeSearch = queryType({
+         definition(t) {
+            t.list.field('games', {
+               type: 'Game',
+               resolve: () => [
+                  {
+                     __typename: 'Game',
+                     name: 'Mario 2',
+                     software: [
+                        {
+                           platform: 'NINTENDO_ENTERTAINMENT_SYSTEM',
+                           locations: [{ uri: 'file:///a/b/c.rom' }],
+                        },
+                        {
+                           platform: 'SUPER_NINTENDO_ENTERTAINMENT_SYSTEM',
+                           locations: [{ uri: 'file:///d/e/f.rom' }],
+                        },
+                     ],
+                  },
+               ],
+            })
+            t.list.field('storeSearch', {
+               type: 'Software',
+               args: { query: stringArg() },
+               //    resolve: () => [
+               //       {
+               //          host: 'WINDOWS_32',
+               //          name: 'Mario',
+               //          version: '1231',
+               //          applications: [
+               //             {
+               //                name: 'Mario',
+               //             },
+               //          ],
+               //       },
+               //       {
+               //          name: 'RetroArch',
+               //          applications: [
+               //             {
+               //                name: 'RetroArch',
+               //                supports: [
+               //                   {
+               //                      platforms: ['SUPER_NINTENDO_ENTERTAINMENT_SYSTEM'],
+               //                      locations: [
+               //                         {
+               //                            uri: 'http://google.com/file.zip',
+               //                         },
+               //                      ],
+               //                   },
+               //                ],
+               //             },
+               //          ],
+               //       },
+               //    ],
+               resolve: async (_, { query }, ctx: Context) => {
+                  return getStores(plugins).reduce(
+                     // prettier-ignore
+                     async (acc, cur) => [
+                        ...(await acc), 
+                        ...(await cur?.search(ctx)({ query: query as string }))
+                     ],
+                     Promise.resolve(<Software[]>[]),
+                  )
+               },
             })
          },
       })
@@ -26,7 +240,24 @@ export const main = (ctx: Context) => async (plugins: Plugin[]) => {
       )
 
       const schema = makeSchema({
-         types: [b, ...myPlugins],
+         types: [
+            // StoreSearchResult,
+            // Resource,
+            // StoreItem,
+            LauncherSupport,
+            storeSearch,
+            Application,
+            Launcher,
+            Location,
+            Software,
+            SoftwareType,
+            PlatformType,
+            File,
+            FileType,
+            Directory,
+            Game,
+            ...myPlugins,
+         ],
          outputs:
             process.env.NODE_ENV === 'production'
                ? {}

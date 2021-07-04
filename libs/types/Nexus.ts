@@ -17,6 +17,9 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  FileType: "ARCHIVE" | "EXECUTABLE" | "UNKNOWN"
+  PlatformType: "NINTENDO_ENTERTAINMENT_SYSTEM" | "SUPER_NINTENDO_ENTERTAINMENT_SYSTEM" | "WINDOWS_32"
+  SoftwareType: "LAUNCHER"
 }
 
 export interface NexusGenScalars {
@@ -28,34 +31,153 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Directory: { // root type
+    uri?: string | null; // String
+  }
+  File: { // root type
+    md5?: string | null; // String
+    sha256?: string | null; // String
+    size?: number | null; // Int
+    uri?: string | null; // String
+  }
+  Game: { // root type
+    name?: string | null; // String
+    software?: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
+  }
+  Launcher: { // root type
+    name?: string | null; // String
+    software?: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
+    supports?: Array<NexusGenRootTypes['LauncherSupport'] | null> | null; // [LauncherSupport]
+  }
+  LauncherSupport: { // root type
+    locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    platforms?: Array<NexusGenEnums['PlatformType'] | null> | null; // [PlatformType]
+  }
   Query: {};
+  Software: { // root type
+    applications?: Array<NexusGenRootTypes['Application'] | null> | null; // [Application]
+    locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    name?: string | null; // String
+    platform?: NexusGenEnums['PlatformType'] | null; // PlatformType
+    version?: string | null; // String
+  }
 }
 
 export interface NexusGenInterfaces {
+  Application: NexusGenRootTypes['Game'] | NexusGenRootTypes['Launcher'];
+  Location: NexusGenRootTypes['Directory'] | NexusGenRootTypes['File'];
 }
 
 export interface NexusGenUnions {
 }
 
-export type NexusGenRootTypes = NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Directory: { // field return type
+    uri: string | null; // String
+  }
+  File: { // field return type
+    md5: string | null; // String
+    sha256: string | null; // String
+    size: number | null; // Int
+    type: NexusGenEnums['FileType'] | null; // FileType
+    uri: string | null; // String
+  }
+  Game: { // field return type
+    name: string | null; // String
+    software: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
+  }
+  Launcher: { // field return type
+    name: string | null; // String
+    software: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
+    supports: Array<NexusGenRootTypes['LauncherSupport'] | null> | null; // [LauncherSupport]
+  }
+  LauncherSupport: { // field return type
+    locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    platforms: Array<NexusGenEnums['PlatformType'] | null> | null; // [PlatformType]
+  }
   Query: { // field return type
+    games: Array<NexusGenRootTypes['Game'] | null> | null; // [Game]
     hello: string | null; // String
     plugin__simonwjackson__hello: string | null; // String
+    storeSearch: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
+  }
+  Software: { // field return type
+    applications: Array<NexusGenRootTypes['Application'] | null> | null; // [Application]
+    locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
+    name: string | null; // String
+    platform: NexusGenEnums['PlatformType'] | null; // PlatformType
+    version: string | null; // String
+  }
+  Application: { // field return type
+    name: string | null; // String
+    software: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
+  }
+  Location: { // field return type
+    uri: string | null; // String
   }
 }
 
 export interface NexusGenFieldTypeNames {
+  Directory: { // field return type name
+    uri: 'String'
+  }
+  File: { // field return type name
+    md5: 'String'
+    sha256: 'String'
+    size: 'Int'
+    type: 'FileType'
+    uri: 'String'
+  }
+  Game: { // field return type name
+    name: 'String'
+    software: 'Software'
+  }
+  Launcher: { // field return type name
+    name: 'String'
+    software: 'Software'
+    supports: 'LauncherSupport'
+  }
+  LauncherSupport: { // field return type name
+    locations: 'Location'
+    platforms: 'PlatformType'
+  }
   Query: { // field return type name
+    games: 'Game'
     hello: 'String'
     plugin__simonwjackson__hello: 'String'
+    storeSearch: 'Software'
+  }
+  Software: { // field return type name
+    applications: 'Application'
+    locations: 'Location'
+    name: 'String'
+    platform: 'PlatformType'
+    version: 'String'
+  }
+  Application: { // field return type name
+    name: 'String'
+    software: 'Software'
+  }
+  Location: { // field return type name
+    uri: 'String'
   }
 }
 
 export interface NexusGenArgTypes {
+  Game: {
+    software: { // args
+      platforms?: NexusGenEnums['PlatformType'][] | null; // [PlatformType!]
+    }
+  }
+  Launcher: {
+    software: { // args
+      platforms?: NexusGenEnums['PlatformType'][] | null; // [PlatformType!]
+    }
+  }
   Query: {
     hello: { // args
       name?: string | null; // String
@@ -63,22 +185,41 @@ export interface NexusGenArgTypes {
     plugin__simonwjackson__hello: { // args
       name?: string | null; // String
     }
+    storeSearch: { // args
+      query?: string | null; // String
+    }
+  }
+  Software: {
+    applications: { // args
+      platforms?: NexusGenEnums['PlatformType'][] | null; // [PlatformType!]
+    }
+  }
+  Application: {
+    software: { // args
+      platforms?: NexusGenEnums['PlatformType'][] | null; // [PlatformType!]
+    }
   }
 }
 
 export interface NexusGenAbstractTypeMembers {
+  Application: "Game" | "Launcher"
+  Location: "Directory" | "File"
 }
 
 export interface NexusGenTypeInterfaces {
+  Directory: "Location"
+  File: "Location"
+  Game: "Application"
+  Launcher: "Application"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = never;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
-export type NexusGenInterfaceNames = never;
+export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
@@ -86,7 +227,7 @@ export type NexusGenUnionNames = never;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = never;
 
-export type NexusGenAbstractsUsingStrategyResolveType = never;
+export type NexusGenAbstractsUsingStrategyResolveType = "Application" | "Location";
 
 export type NexusGenFeaturesConfig = {
   abstractTypeStrategies: {
