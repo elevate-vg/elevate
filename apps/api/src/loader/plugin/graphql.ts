@@ -22,15 +22,11 @@ const getStores = (plugins: Plugin[]): Store[] =>
    plugins
       .filter((plugin) => plugin.stores)
       .map(plugin=> plugin.stores)
-      .reduce((acc, cur) => [...acc || [], ...cur || []], []) || []
+      .reduce((acc = [], cur = []) => [...acc , ...cur], [])
+      || []
 
 export const main = (ctx: Context) => async (plugins: Plugin[]) => {
    try {
-      const SoftwareType = enumType({
-         name: 'SoftwareType',
-         members: ['LAUNCHER'],
-      })
-
       const PlatformType = enumType({
          name: 'PlatformType',
          members: [
@@ -74,6 +70,7 @@ export const main = (ctx: Context) => async (plugins: Plugin[]) => {
             t.field('type', {
                type: 'FileType',
                resolve: (data) => {
+                  // TODO: This filetype detection implementation is weak
                   if (data.uri?.endsWith('.exe') || data.uri?.endsWith('.app')) return 'EXECUTABLE'
                   else if (
                      data.uri?.endsWith('.zip') ||
@@ -90,9 +87,12 @@ export const main = (ctx: Context) => async (plugins: Plugin[]) => {
          },
       })
 
-      const Software = objectType({
-         name: 'Software',
+      const Program = interfaceType({
+         name: 'Program',
          definition(t) {
+            t.list.field('patches', {
+               type: 'Patch',
+            })
             t.list.field('locations', {
                type: 'Location',
             })
@@ -104,6 +104,51 @@ export const main = (ctx: Context) => async (plugins: Plugin[]) => {
             })
             t.string('name')
             t.string('version')
+         },
+         resolveType: (data) => {
+            if (allPass([has('platform')])(data)) {
+               return 'Software'
+            } else {
+               return 'Patch'
+            }
+         },
+      })
+
+      const Hash = objectType({
+         name: 'Hash',
+         definition(t) {
+            t.string('crc32')
+            t.string('md5')
+            t.string('sha512')
+            t.string('sha256')
+            t.string('sha1')
+         },
+      })
+
+      const PatchType = enumType({
+         name: 'PatchType',
+         members: ['TRANSLATION', 'VISUAL', 'MECHANICS', 'ENVIRONMENT', 'AUDIO', 'OTHER'],
+      })
+
+      const PatchFormat = enumType({
+         name: 'PatchFormat',
+         members: ['IPS'],
+      })
+
+      const Patch = objectType({
+         name: 'Patch',
+         definition(t) {
+            t.implements('Program')
+            t.list.field('supports', { type: 'Hash' })
+            t.list.field('type', { type: 'PatchType' })
+            t.list.field('format', { type: 'PatchFormat' })
+         },
+      })
+
+      const Software = objectType({
+         name: 'Software',
+         definition(t) {
+            t.implements('Program')
             t.field('platform', {
                type: 'PlatformType',
             })
@@ -184,7 +229,7 @@ export const main = (ctx: Context) => async (plugins: Plugin[]) => {
                ],
             })
             t.list.field('storeSearch', {
-               type: 'Software',
+               type: 'Program',
                args: { query: stringArg() },
                //    resolve: () => [
                //       {
@@ -218,10 +263,9 @@ export const main = (ctx: Context) => async (plugins: Plugin[]) => {
                //    ],
                resolve: async (_, { query }, ctx: Context) => {
                   return getStores(plugins).reduce(
-                     // prettier-ignore
                      async (acc, cur) => [
-                        ...(await acc), 
-                        ...(await cur?.search(ctx)({ query: query as string }))
+                        ...(await acc),
+                        ...(await cur?.search(ctx)({ query: query as string })),
                      ],
                      Promise.resolve(<Software[]>[]),
                   )
@@ -244,13 +288,17 @@ export const main = (ctx: Context) => async (plugins: Plugin[]) => {
             // StoreSearchResult,
             // Resource,
             // StoreItem,
+            Hash,
+            Program,
+            Patch,
+            PatchType,
+            PatchFormat,
             LauncherSupport,
             storeSearch,
             Application,
             Launcher,
             Location,
             Software,
-            SoftwareType,
             PlatformType,
             File,
             FileType,

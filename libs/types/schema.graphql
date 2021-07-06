@@ -30,6 +30,14 @@ type Game implements Application {
   software(platforms: [PlatformType!]): [Software]
 }
 
+type Hash {
+  crc32: String
+  md5: String
+  sha1: String
+  sha256: String
+  sha512: String
+}
+
 type Launcher implements Application {
   name: String
   software(platforms: [PlatformType!]): [Software]
@@ -45,27 +53,56 @@ interface Location {
   uri: String
 }
 
+type Patch implements Program {
+  applications(platforms: [PlatformType!]): [Application]
+  format: [PatchFormat]
+  locations: [Location]
+  name: String
+  patches: [Patch]
+  supports: [Hash]
+  type: [PatchType]
+  version: String
+}
+
+enum PatchFormat {
+  IPS
+}
+
+enum PatchType {
+  AUDIO
+  ENVIRONMENT
+  MECHANICS
+  OTHER
+  TRANSLATION
+  VISUAL
+}
+
 enum PlatformType {
   NINTENDO_ENTERTAINMENT_SYSTEM
   SUPER_NINTENDO_ENTERTAINMENT_SYSTEM
   WINDOWS_32
 }
 
+interface Program {
+  applications(platforms: [PlatformType!]): [Application]
+  locations: [Location]
+  name: String
+  patches: [Patch]
+  version: String
+}
+
 type Query {
   games: [Game]
   hello(name: String): String
   plugin__simonwjackson__hello(name: String): String
-  storeSearch(query: String): [Software]
+  storeSearch(query: String): [Program]
 }
 
-type Software {
+type Software implements Program {
   applications(platforms: [PlatformType!]): [Application]
   locations: [Location]
   name: String
+  patches: [Patch]
   platform: PlatformType
   version: String
-}
-
-enum SoftwareType {
-  LAUNCHER
 }
