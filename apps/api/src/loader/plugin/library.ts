@@ -4,15 +4,15 @@ import { trace } from 'console'
 import { Context } from '../../context'
 
 export default (ctx: Context) => (plugins: Plugin[]) =>
-   ctx.express.get('/~/:namespace/:name/store/:store', async (req: Request, res: Response) => {
-      const stores = plugins
+   ctx.express.get('/~/:namespace/:name/library/:library', async (req: Request, res: Response) => {
+      const libraries = plugins
          .filter((plugin) => plugin.meta.namespace === req.params.namespace)
-         .find((plugin) => plugin.meta.name === req.params.name)?.stores
+         .find((plugin) => plugin.meta.name === req.params.name)?.libraries
 
-      const store = (stores || []).find((store) => store.name === req.params.store)
+      const library = (libraries || []).find((library) => library.name === req.params.library)
 
       try {
-         const searchResults = await store?.search(ctx)({
+         const searchResults = await library?.search(ctx)({
             query: req?.query?.query as string,
          })
          res.json(searchResults)

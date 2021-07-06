@@ -38,7 +38,7 @@ export const launchers: Plugin.Launcher[] = [
    // },
 ]
 
-export const stores: Plugin.Store[] = [
+export const libraries: Plugin.Library[] = [
    {
       name: 'steam',
       // platforms: [Platforms.Windows10, Platforms.MacOS],

@@ -36,7 +36,7 @@ export type Software = {
    ]
 }
 
-export type Store = {
+export type Library = {
    name: string
    // prettier-ignore
    search:
@@ -61,7 +61,7 @@ export type Api = {
 
 export type Plugin = {
    meta: Meta
-   stores?: Store[]
+   libraries?: Library[]
    apis?: Api[]
    graphql?: Graphql[]
    launchers?: Launcher[]

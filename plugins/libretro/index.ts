@@ -43,7 +43,7 @@ export const launchers: Launchers & Launchable = {
    },
 }
 
-export const stores: Plugin.Store[] = [
+export const libraries: Plugin.Library[] = [
    {
       name: 'libretro',
       search: () => () => {

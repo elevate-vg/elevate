@@ -49,22 +49,38 @@ type LauncherSupport {
   platforms: [PlatformType]
 }
 
+union LibraryItem = PatchCode | PatchFile | Software
+
 interface Location {
   uri: String
 }
 
-type Patch implements Program {
+interface Patch {
+  supports: [Hash]
+  type: [PatchType]
+}
+
+type PatchCode implements Patch {
+  code: [String]
+  format: [PatchCodeFormat]
+  supports: [Hash]
+  type: [PatchType]
+}
+
+enum PatchCodeFormat {
+  GAME_GENIE
+}
+
+type PatchFile implements Patch & Program {
   applications(platforms: [PlatformType!]): [Application]
-  format: [PatchFormat]
-  locations: [Location]
+  format: [PatchFileFormat]
   name: String
-  patches: [Patch]
   supports: [Hash]
   type: [PatchType]
   version: String
 }
 
-enum PatchFormat {
+enum PatchFileFormat {
   IPS
 }
 
@@ -85,17 +101,16 @@ enum PlatformType {
 
 interface Program {
   applications(platforms: [PlatformType!]): [Application]
-  locations: [Location]
   name: String
-  patches: [Patch]
   version: String
 }
 
 type Query {
   games: [Game]
   hello(name: String): String
+  libraries(query: String): [Program]
+  library: [LibraryItem]
   plugin__simonwjackson__hello(name: String): String
-  storeSearch(query: String): [Program]
 }
 
 type Software implements Program {
