@@ -3,6 +3,8 @@ import expressApp, { Application } from 'express'
 import puppeteer, { Puppeteer } from 'puppeteer-core'
 import { join } from 'path'
 import { baseDir } from './constants'
+import * as axios from 'axios'
+import * as cheerio from 'cheerio'
 
 // TODO: Generate type for this monkey patch
 // TODO: Refactor into separate file
@@ -60,6 +62,8 @@ export interface Context {
    prisma: PrismaClient
    express: Application
    puppeteer: Puppeteer
+   axios: axios.AxiosStatic
+   cheerio: cheerio.CheerioAPI
 }
 
 export function createContext(): Context {
@@ -68,5 +72,7 @@ export function createContext(): Context {
       express,
       // @ts-ignore
       puppeteer: createPuppeteer(),
+      axios: axios.default,
+      cheerio: cheerio.default,
    }
 }

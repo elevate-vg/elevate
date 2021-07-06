@@ -1,4 +1,4 @@
-import { Plugin, Platforms } from '../../libs/types'
+import { Plugin, Platform } from '../../libs/types'
 // import { Response } from 'express'
 import { stringArg, extendType } from 'nexus'
 import { Context } from 'apps/api/src/context'
@@ -36,8 +36,8 @@ export const launchers: Launchers & Launchable = {
    name: 'bsnes',
    // TODO: Deal with version ranges / catchall
    version: '20210702T17:10',
-   platforms: [Platforms.SuperNintendo],
-   os: [Platforms.Windows10],
+   platforms: [Platform.SuperNintendo],
+   os: [Platform.Windows10],
    launch: ({ gamePath, launcherPath }) => {
       return `${launcherPath} --file ${gamePath} --core`
    },
@@ -55,8 +55,8 @@ export const stores: Plugin.Store[] = [
                   'https://buildbot.libretro.com/nightly/windows/x86_64/latest/bsnes_libretro.dll.zip',
                name: 'bsnes',
                version: '20210702T17:10',
-               platforms: [Platforms.SuperNintendo],
-               os: [Platforms.Windows10],
+               platforms: [Platform.SuperNintendo],
+               os: [Platform.Windows10],
             },
          ]
 

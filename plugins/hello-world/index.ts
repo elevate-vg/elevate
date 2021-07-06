@@ -1,7 +1,8 @@
-import { Platforms, Plugin } from '../../libs/types'
+import { Platform, Plugin } from '../../libs/types'
 import { Response } from 'express'
 import { stringArg, extendType } from 'nexus'
 import { Context } from 'apps/api/src/context'
+import { Software } from 'libs/types/Plugin'
 
 export const meta: Plugin.Meta = {
    namespace: '@simonwjackson',
@@ -42,40 +43,40 @@ export const stores: Plugin.Store[] = [
       name: 'steam',
       // platforms: [Platforms.Windows10, Platforms.MacOS],
       search:
-         ({ puppeteer }) =>
-         async ({ query }) => {
-            query
-            // TODO: Add launch type to puppeteer
-            // @ts-ignore
-            const browser = await puppeteer.launch()
-            const page = await browser.newPage()
+         ({ axios, cheerio }) =>
+         async () => {
+            const url = 'https://www.darrenstruthers.net/SNES_ROMS'
 
-            await page.goto('https://example.com')
-
-            const dimensions = await page.evaluate(() => {
-               return {
-                  width: document.documentElement.clientWidth,
-                  height: document.documentElement.clientHeight,
-                  deviceScaleFactor: window.devicePixelRatio,
-               }
+            const res = await axios({
+               method: 'GET',
+               url,
             })
 
-            dimensions
+            const $ = cheerio.load(res.data)
 
-            await browser.close()
+            return $('tr a')
+               .get()
+               .reduce((acc, e) => {
+                  const filename = $(e).text().trim()
+                  const uri = `${url}/${$(e).attr('href')}`
+                  const name = filename.replace(/\s\(.*\)\..*$/, '')
 
-            return [
-               {
-                  platform: Platforms.NINTENDO_ENTERTAINMENT_SYSTEM,
-                  name: 'Mario Bros. 2',
-                  applications: [
+                  if (!['.sfc', '.smc'].some((ends) => filename.endsWith(ends))) return acc
+
+                  return [
+                     ...acc,
                      {
-                        name: 'Mario Bros. 2',
+                        platform: Platform.SUPER_NINTENDO_ENTERTAINMENT_SYSTEM,
+                        name,
+                        applications: [
+                           {
+                              name,
+                           },
+                        ],
+                        locations: [{ uri }],
                      },
-                  ],
-                  locations: [{ uri: 'http://a.com/b.c.zip' }],
-               },
-            ]
+                  ]
+               }, <Software[]>[])
          },
    },
 ]

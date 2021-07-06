@@ -1,4 +1,4 @@
-import type { Platforms } from '.'
+import type { Platform } from '.'
 import type { Router } from 'express'
 import type { NexusExtendTypeDef } from 'nexus/dist/core'
 import type { Context } from 'apps/api/src/context'
@@ -12,7 +12,7 @@ export type Meta = {
 export type Launcher = {
    name: string
    version: string | number
-   platforms: Platforms[]
+   platforms: Platform[]
    os: string[]
 }
 
@@ -21,7 +21,7 @@ export type Launchable = {
 }
 
 export type Software = {
-   platform: Platforms
+   platform: Platform
    name: string
    version?: string
    applications?: [
