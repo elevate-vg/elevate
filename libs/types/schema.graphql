@@ -12,8 +12,6 @@ type Directory implements Location {
 }
 
 type File implements Location {
-  md5: String
-  sha256: String
   size: Int
   type: FileType
   uri: String

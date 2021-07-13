@@ -37,8 +37,6 @@ export interface NexusGenObjects {
     uri?: string | null; // String
   }
   File: { // root type
-    md5?: string | null; // String
-    sha256?: string | null; // String
     size?: number | null; // Int
     uri?: string | null; // String
   }
@@ -107,8 +105,6 @@ export interface NexusGenFieldTypes {
     uri: string | null; // String
   }
   File: { // field return type
-    md5: string | null; // String
-    sha256: string | null; // String
     size: number | null; // Int
     type: NexusGenEnums['FileType'] | null; // FileType
     uri: string | null; // String
@@ -185,8 +181,6 @@ export interface NexusGenFieldTypeNames {
     uri: 'String'
   }
   File: { // field return type name
-    md5: 'String'
-    sha256: 'String'
     size: 'Int'
     type: 'FileType'
     uri: 'String'

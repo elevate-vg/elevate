@@ -1,3 +1,4 @@
+import { Hash as PrismaHash } from 'nexus-prisma'
 import { ApolloServer } from 'apollo-server-express'
 import {
    makeSchema,
@@ -87,19 +88,18 @@ export const main =
                      return 'UNKNOWN'
                   },
                })
-               t.nullable.string('md5')
-               t.nullable.string('sha256')
             },
          })
 
          const Hash = objectType({
-            name: 'Hash',
+            name: PrismaHash.$name,
+            description: PrismaHash.$description,
             definition(t) {
-               t.string('crc32')
-               t.string('md5')
-               t.string('sha512')
-               t.string('sha256')
-               t.string('sha1')
+               t.field(PrismaHash.crc32)
+               t.field(PrismaHash.md5)
+               t.field(PrismaHash.sha512)
+               t.field(PrismaHash.sha256)
+               t.field(PrismaHash.sha1)
             },
          })
 
@@ -186,6 +186,14 @@ export const main =
             ],
          })
 
+         // const PlatformUnion = unionType({
+         //    name: 'PlatformUnion',
+         //    definition(t) {
+         //       t.members('Platform', 'PlatformType', 'Card')
+         //    },
+         //    resolveType: (item) => (typeof item === 'string' ? 'PlatformType' : 'Platform'),
+         // })
+
          const Software = objectType({
             name: 'Software',
             definition(t) {
@@ -199,6 +207,8 @@ export const main =
                t.field('platform', {
                   type: 'PlatformType',
                })
+
+               PlatformType
             },
          })
 

@@ -17,6 +17,7 @@
       "express": "^4.17.1",
       "graphql": "14.5.8",
       "nexus": "^1.1.0",
+      "nexus-prisma": "^0.29.1",
       "puppeteer-core": "^10.0.0",
       "request": "^2.88.2"
    },

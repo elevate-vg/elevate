@@ -1,6 +1,8 @@
 TODO
 =====
 
+Graphql Pagination
+
 
 Pipeline
 -----
@@ -20,3 +22,8 @@ Research
 
 Api plugin safe?
 bundle Move themes and apis into single plugin type
+
+Wishlist
+------
+
+Nexus Mods supprot

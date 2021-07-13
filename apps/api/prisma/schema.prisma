@@ -6,6 +6,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+generator nexusPrisma {
+   provider = "nexus-prisma"
+}
+
 generator client {
   provider = "prisma-client-js"
   binaryTargets = ["native", "darwin", "windows"]
@@ -15,4 +19,22 @@ model User {
   id    Int     @id @default(autoincrement())
   email String  @unique
   name  String?
+}
+
+model Platform {
+  id        String @id 
+  name      String
+  released  String
+  note      String?
+
+  @@unique([name, released], name: "Platform_name_released_unique_constraint")
+}
+
+model Hash {
+  id     String  @id @default(cuid())
+  crc32  String? @unique
+  md5    String? @unique
+  sha512 String? @unique
+  sha256 String? @unique
+  sha1   String? @unique
 }
