@@ -3,6 +3,16 @@ TODO
 
 Graphql Pagination
 
+Model
+  Patches
+  Launchers
+
+Title/name localization
+  https://www.prisma.io/docs/support/help-articles/working-with-many-to-many-relations#explicit-relations
+
+Seed DB with demo roms & launcher
+Plugin Hook support
+store DB/configs in user dir
 
 Pipeline
 -----

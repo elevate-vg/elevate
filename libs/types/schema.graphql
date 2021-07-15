@@ -4,101 +4,30 @@
 
 interface Application {
   name: String
-  software(platforms: [PlatformType!]): [Software]
-}
-
-type Directory implements Location {
-  uri: String
+  software: [Software]
 }
 
 type File implements Location {
-  size: Int
-  type: FileType
-  uri: String
-}
-
-enum FileType {
-  ARCHIVE
-  EXECUTABLE
-  UNKNOWN
-}
-
-type Game implements Application {
-  name: String
-  software(platforms: [PlatformType!]): [Software]
-}
-
-type Hash {
   crc32: String
   md5: String
   sha1: String
   sha256: String
   sha512: String
+  size: Int
+  uri: String
 }
 
-type Launcher implements Application {
+type Game implements Application {
   name: String
-  software(platforms: [PlatformType!]): [Software]
-  supports: [LauncherSupport]
+  software: [Software]
 }
-
-type LauncherSupport {
-  locations: [Location]
-  platforms: [PlatformType]
-}
-
-union LibraryItem = PatchCode | PatchFile | Software
 
 interface Location {
   uri: String
 }
 
-interface Patch {
-  supports: [Hash]
-  type: [PatchType]
-}
-
-type PatchCode implements Patch {
-  code: [String]
-  format: [PatchCodeFormat]
-  supports: [Hash]
-  type: [PatchType]
-}
-
-enum PatchCodeFormat {
-  GAME_GENIE
-}
-
-type PatchFile implements Patch & Program {
-  applications(platforms: [PlatformType!]): [Application]
-  format: [PatchFileFormat]
-  name: String
-  supports: [Hash]
-  type: [PatchType]
-  version: String
-}
-
-enum PatchFileFormat {
-  IPS
-}
-
-enum PatchType {
-  AUDIO
-  ENVIRONMENT
-  MECHANICS
-  OTHER
-  TRANSLATION
-  VISUAL
-}
-
-enum PlatformType {
-  NINTENDO_ENTERTAINMENT_SYSTEM
-  SUPER_NINTENDO_ENTERTAINMENT_SYSTEM
-  WINDOWS_32
-}
-
 interface Program {
-  applications(platforms: [PlatformType!]): [Application]
+  applications: [Application]
   name: String
   version: String
 }
@@ -106,16 +35,12 @@ interface Program {
 type Query {
   games: [Game]
   hello(name: String): String
-  libraries(query: String): [Program]
-  library: [LibraryItem]
   plugin__simonwjackson__hello(name: String): String
 }
 
 type Software implements Program {
-  applications(platforms: [PlatformType!]): [Application]
+  applications: [Application]
   locations: [Location]
   name: String
-  patches: [Patch]
-  platform: PlatformType
   version: String
 }

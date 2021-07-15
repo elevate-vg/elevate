@@ -22,19 +22,51 @@ model User {
 }
 
 model Platform {
-  id        String @id 
+  id        String     @id @default(cuid())
   name      String
-  released  String
-  note      String?
 
-  @@unique([name, released], name: "Platform_name_released_unique_constraint")
+  Software  Software[]
+  // @@unique([name, released], name: "Platform_name_released_unique_constraint")
 }
 
-model Hash {
-  id     String  @id @default(cuid())
-  crc32  String? @unique
-  md5    String? @unique
-  sha512 String? @unique
-  sha256 String? @unique
-  sha1   String? @unique
+model Software {
+  id         String     @id @default(cuid())
+  title      String
+
+  Games      Game[]
+  Platforms  Platform[]
+  Locations  Location[]
+}
+
+model Location {
+  id        String @id @default(cuid())
+  uri       String @unique
+
+  fileId    String?
+  File      File?   @relation(fields: [fileId], references: [id])
+
+  Software  Software[]
+}
+
+model File {
+  id        String @id @default(cuid())
+  crc32     String? @unique
+  md5       String? @unique
+  sha512    String? @unique
+  sha256    String? @unique
+  sha1      String? @unique
+  size      Int? 
+
+  successorId String?
+  successor   File?   @relation("FileSequence", fields: [successorId], references: [id])
+  predecessor File?   @relation("FileSequence")
+
+  Locations   Location[]
+}
+
+model Game {
+  id         String    @id @default(cuid())
+  name       String
+
+  Software   Software[]
 }
