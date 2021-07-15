@@ -1,0 +1,10 @@
+{
+   "name": "@elevate/lib-utils",
+   "version": "1.0.0",
+   "description": "",
+   "main": "index.ts",
+   "scripts": {},
+   "keywords": [],
+   "author": "",
+   "license": "ISC"
+}
