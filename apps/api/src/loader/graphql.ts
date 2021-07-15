@@ -46,10 +46,140 @@ export const main =
                   resolve: async () => {
                      return [
                         {
-                           name: 'Mario 2',
+                           titles: [
+                              {
+                                 name: 'Super Mario All-Stars',
+                                 language: 'en',
+                              },
+                           ],
+                           locations: [
+                              {
+                                 uri: 'file:///a/b/c.rom',
+                                 md5: null,
+                              },
+                           ],
+                           applications: [
+                              {
+                                 names: [
+                                    {
+                                       name: 'Super Mario Bros.',
+                                       language: 'en',
+                                    },
+                                 ],
+                              },
+                              {
+                                 names: [
+                                    {
+                                       name: 'Super Mario Bros. 2',
+                                       language: 'en',
+                                    },
+                                 ],
+                              },
+                              {
+                                 names: [
+                                    {
+                                       name: 'Super Mario Bros. 3',
+                                       language: 'en',
+                                    },
+                                 ],
+                              },
+                              {
+                                 names: [
+                                    {
+                                       name: 'Super Mario World',
+                                       language: 'en',
+                                    },
+                                 ],
+                              },
+                           ],
+                        },
+                        {
+                           names: [
+                              {
+                                 name: 'Super Mario Bros.',
+                                 language: 'en',
+                              },
+                           ],
                            software: [
                               {
-                                 title: null,
+                                 titles: [
+                                    {
+                                       name: 'Super Mario All-Stars',
+                                       language: 'en',
+                                    },
+                                 ],
+                                 locations: [
+                                    {
+                                       uri: 'file:///a/b/c.rom',
+                                       md5: null,
+                                    },
+                                 ],
+                              },
+                           ],
+                        },
+                        {
+                           names: [
+                              {
+                                 name: 'Super Mario Bros. 2',
+                                 language: 'en',
+                              },
+                           ],
+                           software: [
+                              {
+                                 titles: [
+                                    {
+                                       name: 'Super Mario All-Stars',
+                                       language: 'en',
+                                    },
+                                 ],
+                                 locations: [
+                                    {
+                                       uri: 'file:///a/b/c.rom',
+                                       md5: null,
+                                    },
+                                 ],
+                              },
+                           ],
+                        },
+                        {
+                           names: [
+                              {
+                                 name: 'Super Mario Bros. 3',
+                                 language: 'en',
+                              },
+                           ],
+                           software: [
+                              {
+                                 titles: [
+                                    {
+                                       name: 'Super Mario All-Stars',
+                                       language: 'en',
+                                    },
+                                 ],
+                                 locations: [
+                                    {
+                                       uri: 'file:///a/b/c.rom',
+                                       md5: null,
+                                    },
+                                 ],
+                              },
+                           ],
+                        },
+                        {
+                           names: [
+                              {
+                                 name: 'Super Mario World',
+                                 language: 'en',
+                              },
+                           ],
+                           software: [
+                              {
+                                 titles: [
+                                    {
+                                       name: 'Super Mario All-Stars',
+                                       language: 'en',
+                                    },
+                                 ],
                                  locations: [
                                     {
                                        uri: 'file:///a/b/c.rom',

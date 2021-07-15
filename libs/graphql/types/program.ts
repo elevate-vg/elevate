@@ -10,7 +10,9 @@ const Program = interfaceType({
          //    platforms: arg({ type: list(nonNull('PlatformType')) }),
          // },
       })
-      t.string('title')
+      t.nonNull.list.field('titles', {
+         type: 'Translation',
+      })
       t.string('version')
    },
 })
@@ -19,7 +21,7 @@ const Software = objectType({
    name: 'Software',
    // prettier-ignore
    isTypeOf: hasAny([
-      'title',
+      'titles',
       'locations',
    ]),
    definition(t) {

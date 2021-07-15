@@ -1,5 +1,6 @@
 import { File as PrismaFile } from 'nexus-prisma'
 import { objectType, interfaceType, extendType } from 'nexus'
+import { hasAny } from 'libs/utils'
 
 const Location = interfaceType({
    name: 'Location',
@@ -23,10 +24,7 @@ const Location = interfaceType({
 const File = objectType({
    name: PrismaFile.$name,
    description: PrismaFile.$description,
-   isTypeOf(data) {
-      // How to know if this is a file or a directory
-      return Boolean(typeof data.size === 'number')
-   },
+   isTypeOf: hasAny(['crc32', 'md5', 'sha512', 'sha256', 'sha1', 'size']),
    definition(t) {
       t.implements('Location')
       t.int('size')

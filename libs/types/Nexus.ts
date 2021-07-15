@@ -17,6 +17,7 @@ export interface NexusGenInputs {
 }
 
 export interface NexusGenEnums {
+  Language: "aa" | "ab" | "ae" | "af" | "ak" | "am" | "an" | "ar" | "as" | "av" | "ay" | "az" | "ba" | "be" | "bg" | "bh" | "bi" | "bm" | "bn" | "bo" | "br" | "bs" | "ca" | "ce" | "ch" | "co" | "cr" | "cs" | "cu" | "cv" | "cy" | "da" | "de" | "dv" | "dz" | "ee" | "el" | "en" | "eo" | "es" | "et" | "eu" | "fa" | "ff" | "fi" | "fj" | "fo" | "fr" | "fy" | "ga" | "gd" | "gl" | "gn" | "gu" | "gv" | "ha" | "he" | "hi" | "ho" | "hr" | "ht" | "hu" | "hy" | "hz" | "ia" | "id" | "ie" | "ig" | "ii" | "ik" | "io" | "is" | "it" | "iu" | "ja" | "jv" | "ka" | "kg" | "ki" | "kj" | "kk" | "kl" | "km" | "kn" | "ko" | "kr" | "ks" | "ku" | "kv" | "kw" | "ky" | "la" | "lb" | "lg" | "li" | "ln" | "lo" | "lt" | "lu" | "lv" | "mg" | "mh" | "mi" | "mk" | "ml" | "mn" | "mr" | "ms" | "mt" | "my" | "na" | "nb" | "nd" | "ne" | "ng" | "nl" | "nn" | "no" | "nr" | "nv" | "ny" | "oc" | "oj" | "om" | "or" | "os" | "pa" | "pi" | "pl" | "ps" | "pt" | "qu" | "rm" | "rn" | "ro" | "ru" | "rw" | "sa" | "sc" | "sd" | "se" | "sg" | "si" | "sk" | "sl" | "sm" | "sn" | "so" | "sq" | "sr" | "ss" | "st" | "su" | "sv" | "sw" | "ta" | "te" | "tg" | "th" | "ti" | "tk" | "tl" | "tn" | "to" | "tr" | "ts" | "tt" | "tw" | "ty" | "ug" | "uk" | "ur" | "uz" | "ve" | "vi" | "vo" | "wa" | "wo" | "xh" | "yi" | "yo" | "za" | "zh" | "zu"
 }
 
 export interface NexusGenScalars {
@@ -38,15 +39,19 @@ export interface NexusGenObjects {
     uri?: string | null; // String
   }
   Game: { // root type
-    name?: string | null; // String
+    names: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     software?: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
   }
   Query: {};
   Software: { // root type
     applications?: Array<NexusGenRootTypes['Application'] | null> | null; // [Application]
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
-    title?: string | null; // String
+    titles: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     version?: string | null; // String
+  }
+  Translation: { // root type
+    language: NexusGenEnums['Language']; // Language!
+    name: string; // String!
   }
 }
 
@@ -62,7 +67,7 @@ export interface NexusGenUnions {
 
 export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenUnions
 
-export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
+export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
   File: { // field return type
@@ -75,7 +80,7 @@ export interface NexusGenFieldTypes {
     uri: string | null; // String
   }
   Game: { // field return type
-    name: string | null; // String
+    names: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     software: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
   }
   Query: { // field return type
@@ -87,11 +92,15 @@ export interface NexusGenFieldTypes {
   Software: { // field return type
     applications: Array<NexusGenRootTypes['Application'] | null> | null; // [Application]
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
-    title: string | null; // String
+    titles: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     version: string | null; // String
   }
+  Translation: { // field return type
+    language: NexusGenEnums['Language']; // Language!
+    name: string; // String!
+  }
   Application: { // field return type
-    name: string | null; // String
+    names: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     software: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
   }
   Location: { // field return type
@@ -99,7 +108,7 @@ export interface NexusGenFieldTypes {
   }
   Program: { // field return type
     applications: Array<NexusGenRootTypes['Application'] | null> | null; // [Application]
-    title: string | null; // String
+    titles: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     version: string | null; // String
   }
 }
@@ -115,7 +124,7 @@ export interface NexusGenFieldTypeNames {
     uri: 'String'
   }
   Game: { // field return type name
-    name: 'String'
+    names: 'Translation'
     software: 'Software'
   }
   Query: { // field return type name
@@ -127,11 +136,15 @@ export interface NexusGenFieldTypeNames {
   Software: { // field return type name
     applications: 'Application'
     locations: 'Location'
-    title: 'String'
+    titles: 'Translation'
     version: 'String'
   }
-  Application: { // field return type name
+  Translation: { // field return type name
+    language: 'Language'
     name: 'String'
+  }
+  Application: { // field return type name
+    names: 'Translation'
     software: 'Software'
   }
   Location: { // field return type name
@@ -139,7 +152,7 @@ export interface NexusGenFieldTypeNames {
   }
   Program: { // field return type name
     applications: 'Application'
-    title: 'String'
+    titles: 'Translation'
     version: 'String'
   }
 }
@@ -172,7 +185,7 @@ export type NexusGenObjectNames = keyof NexusGenObjects;
 
 export type NexusGenInputNames = never;
 
-export type NexusGenEnumNames = never;
+export type NexusGenEnumNames = keyof NexusGenEnums;
 
 export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
