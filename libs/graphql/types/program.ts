@@ -1,3 +1,4 @@
+import { hasAny } from 'libs/utils'
 import { objectType, interfaceType } from 'nexus'
 
 const Program = interfaceType({
@@ -9,22 +10,21 @@ const Program = interfaceType({
          //    platforms: arg({ type: list(nonNull('PlatformType')) }),
          // },
       })
-      t.string('name')
+      t.string('title')
       t.string('version')
    },
 })
 
 const Software = objectType({
    name: 'Software',
-   isTypeOf: (data) => {
-      console.log(data, Boolean(data.locations))
-      return Boolean(data.locations)
-   },
+   // prettier-ignore
+   isTypeOf: hasAny([
+      'title',
+      'locations',
+   ]),
    definition(t) {
       t.implements('Program')
-      t.list.field('locations', {
-         type: 'Location',
-      })
+
       // t.list.field('patches', {
       //    type: 'Patch',
       // })

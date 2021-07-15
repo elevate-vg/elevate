@@ -1,5 +1,5 @@
 import { File as PrismaFile } from 'nexus-prisma'
-import { objectType, interfaceType } from 'nexus'
+import { objectType, interfaceType, extendType } from 'nexus'
 
 const Location = interfaceType({
    name: 'Location',
@@ -54,4 +54,13 @@ const File = objectType({
    },
 })
 
-export const types = [File, Location]
+const Software = extendType({
+   type: 'Software',
+   definition(t) {
+      t.list.field('locations', {
+         type: 'Location',
+      })
+   },
+})
+
+export const types = [File, Location, Software]

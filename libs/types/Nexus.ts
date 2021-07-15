@@ -45,7 +45,7 @@ export interface NexusGenObjects {
   Software: { // root type
     applications?: Array<NexusGenRootTypes['Application'] | null> | null; // [Application]
     locations?: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
-    name?: string | null; // String
+    title?: string | null; // String
     version?: string | null; // String
   }
 }
@@ -57,9 +57,10 @@ export interface NexusGenInterfaces {
 }
 
 export interface NexusGenUnions {
+  Media: NexusGenRootTypes['Game'] | NexusGenRootTypes['Software'];
 }
 
-export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects
+export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenUnions
 
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
@@ -80,12 +81,13 @@ export interface NexusGenFieldTypes {
   Query: { // field return type
     games: Array<NexusGenRootTypes['Game'] | null> | null; // [Game]
     hello: string | null; // String
+    library: Array<NexusGenRootTypes['Media'] | null> | null; // [Media]
     plugin__simonwjackson__hello: string | null; // String
   }
   Software: { // field return type
     applications: Array<NexusGenRootTypes['Application'] | null> | null; // [Application]
     locations: Array<NexusGenRootTypes['Location'] | null> | null; // [Location]
-    name: string | null; // String
+    title: string | null; // String
     version: string | null; // String
   }
   Application: { // field return type
@@ -97,7 +99,7 @@ export interface NexusGenFieldTypes {
   }
   Program: { // field return type
     applications: Array<NexusGenRootTypes['Application'] | null> | null; // [Application]
-    name: string | null; // String
+    title: string | null; // String
     version: string | null; // String
   }
 }
@@ -119,12 +121,13 @@ export interface NexusGenFieldTypeNames {
   Query: { // field return type name
     games: 'Game'
     hello: 'String'
+    library: 'Media'
     plugin__simonwjackson__hello: 'String'
   }
   Software: { // field return type name
     applications: 'Application'
     locations: 'Location'
-    name: 'String'
+    title: 'String'
     version: 'String'
   }
   Application: { // field return type name
@@ -136,7 +139,7 @@ export interface NexusGenFieldTypeNames {
   }
   Program: { // field return type name
     applications: 'Application'
-    name: 'String'
+    title: 'String'
     version: 'String'
   }
 }
@@ -153,6 +156,7 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
+  Media: "Game" | "Software"
   Application: "Game"
   Location: "File"
   Program: "Software"
@@ -174,7 +178,7 @@ export type NexusGenInterfaceNames = keyof NexusGenInterfaces;
 
 export type NexusGenScalarNames = keyof NexusGenScalars;
 
-export type NexusGenUnionNames = never;
+export type NexusGenUnionNames = keyof NexusGenUnions;
 
 export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = "File" | "Game" | "Software";
 

@@ -26,21 +26,25 @@ interface Location {
   uri: String
 }
 
+"""Any container type that can be rendered into the feed"""
+union Media = Game | Software
+
 interface Program {
   applications: [Application]
-  name: String
+  title: String
   version: String
 }
 
 type Query {
   games: [Game]
   hello(name: String): String
+  library: [Media]
   plugin__simonwjackson__hello(name: String): String
 }
 
 type Software implements Program {
   applications: [Application]
   locations: [Location]
-  name: String
+  title: String
   version: String
 }

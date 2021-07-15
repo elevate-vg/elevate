@@ -1,5 +1,5 @@
 import { ApolloServer } from 'apollo-server-express'
-import { makeSchema } from 'nexus'
+import { makeSchema, unionType, extendType } from 'nexus'
 
 import { join } from 'path'
 import { Graphql, Plugin } from 'libs/types/Plugin'
@@ -26,52 +26,44 @@ export const main =
    (ctx: Context) =>
    async (plugins: Plugin[] = []) => {
       try {
-         // const LibraryItem = unionType({
-         //    name: 'LibraryItem',
-         //    definition(t) {
-         //       t.members('Software') //, 'PatchFile', 'PatchCode')
-         //    },
-         //    resolveType: (data) => {
-         //       // if (allPass([has('code')])(data)) {
-         //       // return 'PatchCode'
-         //       // } else
-         //       if (allPass([has('platform')])(data)) return 'Software'
-         //       else return null
-         //       // } else {
-         //       // return 'PatchFile'
-         //       // }
-         //    },
-         // })
+         const Media = unionType({
+            name: 'Media',
+            description: 'Any container type that can be rendered into the feed',
+            definition(t) {
+               t.members('Software', 'Game')
+            },
+         })
 
          /*****************************************
           * Queries
           ******************************************/
 
-         // const libraryQuery = extendType({
-         //    type: 'Query',
-         //    definition(t) {
-         //       t.list.field('library', {
-         //          type: 'LibraryItem',
-         //          resolve: async () => {
-         //             return [
-         //                {
-         //                   supports: [{ md5: 'j3k4223j4k' }],
-         //                },
-         //                {
-         //                   platform: 'NINTENDO_ENTERTAINMENT_SYSTEM',
-         //                   name: 'Metroid',
-         //                   version: '1.03',
-         //                   applications: [
-         //                      {
-         //                         name: 'Metroid',
-         //                      },
-         //                   ],
-         //                },
-         //             ]
-         //          },
-         //       })
-         //    },
-         // })
+         const libraryQuery = extendType({
+            type: 'Query',
+            definition(t) {
+               t.list.field('library', {
+                  type: 'Media',
+                  resolve: async () => {
+                     return [
+                        {
+                           name: 'Mario 2',
+                           software: [
+                              {
+                                 title: null,
+                                 locations: [
+                                    {
+                                       uri: 'file:///a/b/c.rom',
+                                       md5: null,
+                                    },
+                                 ],
+                              },
+                           ],
+                        },
+                     ]
+                  },
+               })
+            },
+         })
 
          // const librariesQuery = extendType({
          //    type: 'Query',
@@ -95,8 +87,8 @@ export const main =
          const schema = makeSchema({
             types: [
                // librariesQuery,
-               // libraryQuery,
-               // LibraryItem,
+               libraryQuery,
+               Media,
                ...types,
                ...getExternalGraphqlTypes(plugins),
             ],

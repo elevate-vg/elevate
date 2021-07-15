@@ -1,3 +1,4 @@
+import { hasAny } from 'libs/utils'
 import { objectType, interfaceType, extendType } from 'nexus'
 
 const Application = interfaceType({
@@ -17,9 +18,7 @@ const Application = interfaceType({
 
 const Game = objectType({
    name: 'Game',
-   isTypeOf: (data) => {
-      return Boolean(data.name)
-   },
+   isTypeOf: hasAny(['name']),
    definition(t) {
       t.implements('Application')
    },
