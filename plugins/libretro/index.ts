@@ -1,4 +1,4 @@
-import { Plugin, Platform } from '../../libs/types'
+import { Plugin, Platform } from 'libs/types'
 // import { Response } from 'express'
 import { stringArg, extendType } from 'nexus'
 import { Context } from 'apps/api/src/context'

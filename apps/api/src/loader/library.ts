@@ -1,7 +1,7 @@
 import type { Response, Request } from 'express'
 import type Plugin from 'libs/types/Plugin'
 import { trace } from 'console'
-import { Context } from '../../context'
+import { Context } from '../context'
 
 export default (ctx: Context) => (plugins: Plugin[]) =>
    ctx.express.get('/~/:namespace/:name/library/:library', async (req: Request, res: Response) => {

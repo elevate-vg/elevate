@@ -3,13 +3,9 @@ import { makeSchema } from 'nexus'
 
 import { join } from 'path'
 import { Graphql, Plugin } from 'libs/types/Plugin'
-import { Context } from '../../context'
+import { Context } from '../context'
 // import { has, allPass } from 'ramda'
-import { types as location } from '../../graphql/types/location'
-import { types as program } from '../../graphql/types/program'
-import { types as modification } from '../../graphql/types/modification'
-import { types as platform } from '../../graphql/types/platform'
-import { types as application } from '../../graphql/types/application'
+import { types } from 'libs/graphql'
 
 // prettier-ignore
 // const getLibraries = (plugins: Plugin[]): Library[] =>
@@ -101,11 +97,7 @@ export const main =
                // librariesQuery,
                // libraryQuery,
                // LibraryItem,
-               ...application,
-               ...location,
-               ...modification,
-               ...platform,
-               ...program,
+               ...types,
                ...getExternalGraphqlTypes(plugins),
             ],
             features: {
@@ -117,8 +109,8 @@ export const main =
                process.env.NODE_ENV === 'production'
                   ? {}
                   : {
-                       schema: join(__dirname, '../../../../../../libs/types/schema.graphql'),
-                       typegen: join(__dirname, '../../../../../../libs/types/Nexus.ts'),
+                       schema: join(__dirname, '../../../../libs/types/schema.graphql'),
+                       typegen: join(__dirname, '../../../../libs/types/Nexus.ts'),
                     },
          })
 

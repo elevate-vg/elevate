@@ -3,9 +3,9 @@ import { Context } from '../context'
 import theme from './theme'
 
 // Loaders
-import graphql from './plugin/graphql'
-import library from './plugin/library'
-import api from './plugin/api'
+import graphql from './graphql'
+import library from './library'
+import api from './api'
 
 // Types
 import type { Plugin } from 'libs/types/Plugin'

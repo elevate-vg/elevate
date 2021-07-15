@@ -1,6 +1,6 @@
 import type { Plugin } from 'libs/types/Plugin'
 import express from 'express'
-import { Context } from '../../context'
+import { Context } from '../context'
 
 export default (ctx: Context) => (plugins: Plugin[]) => {
    plugins?.map((plugin) =>
