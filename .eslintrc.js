@@ -40,7 +40,7 @@ module.exports = {
       ],
       'prettier/prettier': ['error', {}, { usePrettierrc: true }],
    },
-   plugins: ['@typescript-eslint'],
+   plugins: ['@typescript-eslint', 'jest'],
    //    overrides: [
    //       {
    //          plugins: ['jest'],

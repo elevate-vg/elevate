@@ -23,7 +23,8 @@
       "skipLibCheck": true,
       "sourceMap": true,
       "strict": true,
-      "target": "ES2016"
+      "target": "ES2016",
+      "typeRoots": ["node_modules/@types/", "./lib/types/"]
    },
    "include": ["**/*.ts", "**/*.tsx"],
    "exclude": ["dist", ".next", "out", "next.config.js", "node_modules", "**/*.spec.ts"]
