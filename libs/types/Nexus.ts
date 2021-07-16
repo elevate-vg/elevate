@@ -29,6 +29,9 @@ export interface NexusGenScalars {
 }
 
 export interface NexusGenObjects {
+  Audio: { // root type
+    duration?: number | null; // Float
+  }
   File: { // root type
     crc32?: string | null; // String
     md5?: string | null; // String
@@ -42,6 +45,10 @@ export interface NexusGenObjects {
     names: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     software?: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
   }
+  Image: { // root type
+    height?: number | null; // Int
+    width?: number | null; // Int
+  }
   Query: {};
   Software: { // root type
     applications?: Array<NexusGenRootTypes['Application'] | null> | null; // [Application]
@@ -53,16 +60,24 @@ export interface NexusGenObjects {
     language: NexusGenEnums['Language']; // Language!
     name: string; // String!
   }
+  Video: { // root type
+    duration?: number | null; // Float
+    fps?: number | null; // Float
+    height?: number | null; // Int
+    width?: number | null; // Int
+  }
 }
 
 export interface NexusGenInterfaces {
   Application: NexusGenRootTypes['Game'];
+  Audible: NexusGenRootTypes['Audio'] | NexusGenRootTypes['Video'];
   Location: NexusGenRootTypes['File'];
   Program: NexusGenRootTypes['Software'];
+  Visual: NexusGenRootTypes['Image'] | NexusGenRootTypes['Video'];
 }
 
 export interface NexusGenUnions {
-  Media: NexusGenRootTypes['Game'] | NexusGenRootTypes['Software'];
+  Entry: NexusGenRootTypes['Audio'] | NexusGenRootTypes['Game'] | NexusGenRootTypes['Image'] | NexusGenRootTypes['Software'] | NexusGenRootTypes['Video'];
 }
 
 export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenUnions
@@ -70,6 +85,9 @@ export type NexusGenRootTypes = NexusGenInterfaces & NexusGenObjects & NexusGenU
 export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars & NexusGenEnums
 
 export interface NexusGenFieldTypes {
+  Audio: { // field return type
+    duration: number | null; // Float
+  }
   File: { // field return type
     crc32: string | null; // String
     md5: string | null; // String
@@ -83,10 +101,15 @@ export interface NexusGenFieldTypes {
     names: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     software: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
   }
+  Image: { // field return type
+    height: number | null; // Int
+    ratio: number | null; // Float
+    width: number | null; // Int
+  }
   Query: { // field return type
     games: Array<NexusGenRootTypes['Game'] | null> | null; // [Game]
     hello: string | null; // String
-    library: Array<NexusGenRootTypes['Media'] | null> | null; // [Media]
+    library: Array<NexusGenRootTypes['Entry'] | null> | null; // [Entry]
     plugin__simonwjackson__hello: string | null; // String
   }
   Software: { // field return type
@@ -99,9 +122,19 @@ export interface NexusGenFieldTypes {
     language: NexusGenEnums['Language']; // Language!
     name: string; // String!
   }
+  Video: { // field return type
+    duration: number | null; // Float
+    fps: number | null; // Float
+    height: number | null; // Int
+    ratio: number | null; // Float
+    width: number | null; // Int
+  }
   Application: { // field return type
     names: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     software: Array<NexusGenRootTypes['Software'] | null> | null; // [Software]
+  }
+  Audible: { // field return type
+    duration: number | null; // Float
   }
   Location: { // field return type
     uri: string | null; // String
@@ -111,9 +144,17 @@ export interface NexusGenFieldTypes {
     titles: Array<NexusGenRootTypes['Translation'] | null>; // [Translation]!
     version: string | null; // String
   }
+  Visual: { // field return type
+    height: number | null; // Int
+    ratio: number | null; // Float
+    width: number | null; // Int
+  }
 }
 
 export interface NexusGenFieldTypeNames {
+  Audio: { // field return type name
+    duration: 'Float'
+  }
   File: { // field return type name
     crc32: 'String'
     md5: 'String'
@@ -127,10 +168,15 @@ export interface NexusGenFieldTypeNames {
     names: 'Translation'
     software: 'Software'
   }
+  Image: { // field return type name
+    height: 'Int'
+    ratio: 'Float'
+    width: 'Int'
+  }
   Query: { // field return type name
     games: 'Game'
     hello: 'String'
-    library: 'Media'
+    library: 'Entry'
     plugin__simonwjackson__hello: 'String'
   }
   Software: { // field return type name
@@ -143,9 +189,19 @@ export interface NexusGenFieldTypeNames {
     language: 'Language'
     name: 'String'
   }
+  Video: { // field return type name
+    duration: 'Float'
+    fps: 'Float'
+    height: 'Int'
+    ratio: 'Float'
+    width: 'Int'
+  }
   Application: { // field return type name
     names: 'Translation'
     software: 'Software'
+  }
+  Audible: { // field return type name
+    duration: 'Float'
   }
   Location: { // field return type name
     uri: 'String'
@@ -154,6 +210,11 @@ export interface NexusGenFieldTypeNames {
     applications: 'Application'
     titles: 'Translation'
     version: 'String'
+  }
+  Visual: { // field return type name
+    height: 'Int'
+    ratio: 'Float'
+    width: 'Int'
   }
 }
 
@@ -169,16 +230,21 @@ export interface NexusGenArgTypes {
 }
 
 export interface NexusGenAbstractTypeMembers {
-  Media: "Game" | "Software"
+  Entry: "Audio" | "Game" | "Image" | "Software" | "Video"
   Application: "Game"
+  Audible: "Audio" | "Video"
   Location: "File"
   Program: "Software"
+  Visual: "Image" | "Video"
 }
 
 export interface NexusGenTypeInterfaces {
+  Audio: "Audible"
   File: "Location"
   Game: "Application"
+  Image: "Visual"
   Software: "Program"
+  Video: "Audible" | "Visual"
 }
 
 export type NexusGenObjectNames = keyof NexusGenObjects;
@@ -193,7 +259,7 @@ export type NexusGenScalarNames = keyof NexusGenScalars;
 
 export type NexusGenUnionNames = keyof NexusGenUnions;
 
-export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = "File" | "Game" | "Software";
+export type NexusGenObjectsUsingAbstractStrategyIsTypeOf = "Audio" | "File" | "Game" | "Image" | "Software" | "Video";
 
 export type NexusGenAbstractsUsingStrategyResolveType = never;
 

@@ -7,6 +7,17 @@ interface Application {
   software: [Software]
 }
 
+interface Audible {
+  duration: Float
+}
+
+type Audio implements Audible {
+  duration: Float
+}
+
+"""Any container type that can be rendered into the feed"""
+union Entry = Audio | Game | Image | Software | Video
+
 type File implements Location {
   crc32: String
   md5: String
@@ -20,6 +31,12 @@ type File implements Location {
 type Game implements Application {
   names: [Translation]!
   software: [Software]
+}
+
+type Image implements Visual {
+  height: Int
+  ratio: Float
+  width: Int
 }
 
 enum Language {
@@ -213,9 +230,6 @@ interface Location {
   uri: String
 }
 
-"""Any container type that can be rendered into the feed"""
-union Media = Game | Software
-
 interface Program {
   applications: [Application]
   titles: [Translation]!
@@ -225,7 +239,7 @@ interface Program {
 type Query {
   games: [Game]
   hello(name: String): String
-  library: [Media]
+  library: [Entry]
   plugin__simonwjackson__hello(name: String): String
 }
 
@@ -239,4 +253,18 @@ type Software implements Program {
 type Translation {
   language: Language!
   name: String!
+}
+
+type Video implements Audible & Visual {
+  duration: Float
+  fps: Float
+  height: Int
+  ratio: Float
+  width: Int
+}
+
+interface Visual {
+  height: Int
+  ratio: Float
+  width: Int
 }
