@@ -107,9 +107,9 @@ export interface NexusGenFieldTypes {
     width: number | null; // Int
   }
   Query: { // field return type
+    catalog: Array<NexusGenRootTypes['Entry'] | null> | null; // [Entry]
     games: Array<NexusGenRootTypes['Game'] | null> | null; // [Game]
     hello: string | null; // String
-    library: Array<NexusGenRootTypes['Entry'] | null> | null; // [Entry]
     plugin__simonwjackson__hello: string | null; // String
   }
   Software: { // field return type
@@ -174,9 +174,9 @@ export interface NexusGenFieldTypeNames {
     width: 'Int'
   }
   Query: { // field return type name
+    catalog: 'Entry'
     games: 'Game'
     hello: 'String'
-    library: 'Entry'
     plugin__simonwjackson__hello: 'String'
   }
   Software: { // field return type name

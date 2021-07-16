@@ -36,12 +36,12 @@ export type Software = {
    ]
 }
 
-export type Library = {
+export type Catalog = {
    name: string
    // prettier-ignore
    search:
       (ctx: Context) => 
-      (arg0: { query?: string }) =>
+      (arg0: { query?: string, after?: string, limit?: number }) =>
          Software[] | Promise<Software[]>
 }
 
@@ -61,7 +61,7 @@ export type Api = {
 
 export type Plugin = {
    meta: Meta
-   libraries?: Library[]
+   catalogs?: Catalog[]
    apis?: Api[]
    graphql?: Graphql[]
    launchers?: Launcher[]

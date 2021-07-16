@@ -4,7 +4,7 @@ import theme from './theme'
 
 // Loaders
 import graphql from './graphql'
-import library from './library'
+import catalog from './catalog'
 import api from './api'
 
 // Types
@@ -15,7 +15,7 @@ import * as hello from 'plugins/hello-world'
 
 const normalizePlugin = (plugin: Plugin): Plugin => ({
    graphql: [],
-   libraries: [],
+   catalogs: [],
    launchers: [],
    apis: [],
    ...plugin,
@@ -28,7 +28,7 @@ const plugins = [hello].map(normalizePlugin)
 export const main = async (ctx: Context) => {
    await theme(ctx)
    await graphql(ctx)(plugins)
-   await library(ctx)(plugins)
+   await catalog(ctx)(plugins)
    await api(ctx)(plugins)
 
    return ctx.express

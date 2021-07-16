@@ -7,7 +7,7 @@ export default (ctx: Context) => (plugins: Plugin[]) =>
    ctx.express.get('/~/:namespace/:name/library/:library', async (req: Request, res: Response) => {
       const libraries = plugins
          .filter((plugin) => plugin.meta.namespace === req.params.namespace)
-         .find((plugin) => plugin.meta.name === req.params.name)?.libraries
+         .find((plugin) => plugin.meta.name === req.params.name)?.catalogs
 
       const library = (libraries || []).find((library) => library.name === req.params.library)
 

@@ -1,8 +1,10 @@
+import { AxiosStatic } from 'axios'
 import { Platform, Plugin } from '../../libs/types'
 import { Response } from 'express'
 import { stringArg, extendType } from 'nexus'
 import { Context } from 'apps/api/src/context'
 import { Software } from 'libs/types/Plugin'
+import { identity, memoizeWith } from 'libs/utils'
 
 export const meta: Plugin.Meta = {
    namespace: '@simonwjackson',
@@ -38,20 +40,30 @@ export const launchers: Plugin.Launcher[] = [
    // },
 ]
 
-export const libraries: Plugin.Library[] = [
+// TODO: memoize based on query, after and limit
+const getResource = (axios: AxiosStatic) =>
+   // @ts-ignore
+   memoizeWith(identity, (url) =>
+      axios({
+         method: 'GET',
+         url,
+      }),
+   )
+
+export const catalogs: Plugin.Catalog[] = [
    {
       name: 'steam',
       // platforms: [Platforms.Windows10, Platforms.MacOS],
       search:
          ({ axios, cheerio }) =>
-         async () => {
+         async ({ query, after, limit }) => {
+            query
+            after
+            limit
+
             const url = 'https://www.darrenstruthers.net/SNES_ROMS'
 
-            const res = await axios({
-               method: 'GET',
-               url,
-            })
-
+            const res = await getResource(axios)(url)
             const $ = cheerio.load(res.data)
 
             return $('tr a')

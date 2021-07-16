@@ -237,9 +237,9 @@ interface Program {
 }
 
 type Query {
+  catalog: [Entry]
   games: [Game]
   hello(name: String): String
-  library: [Entry]
   plugin__simonwjackson__hello(name: String): String
 }
 

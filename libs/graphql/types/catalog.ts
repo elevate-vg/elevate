@@ -8,10 +8,10 @@ const Entry = unionType({
    },
 })
 
-const libraryQuery = extendType({
+const catalogQuery = extendType({
    type: 'Query',
    definition(t) {
-      t.list.field('library', {
+      t.list.field('catalog', {
          type: 'Entry',
          resolve: async () => {
             return [
@@ -169,4 +169,4 @@ const libraryQuery = extendType({
    },
 })
 
-export const types = [Entry, libraryQuery]
+export const types = [Entry, catalogQuery]

@@ -47,7 +47,7 @@ const tryLoad = (win) => {
    // TODO: Show timeout message in electron if max tries reached
    let tries = 0
    // TODO: Don't assume host and port
-   const url = 'http://localhost:31348/~/@simonwjackson/hello/library/steam'
+   const url = 'http://localhost:31348/~/@simonwjackson/hello/catalog/steam'
 
    const fetch = () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
