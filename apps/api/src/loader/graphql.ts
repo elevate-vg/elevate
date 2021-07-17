@@ -6,6 +6,7 @@ import { Catalog, CatalogResult, CatalogSearch, Graphql, Plugin } from 'libs/typ
 import { Context } from '../context'
 import { types } from 'libs/graphql'
 import { applyTo, compose, concat, map } from 'libs/utils'
+import { baseDir } from '../constants'
 
 // prettier-ignore
 const searchCatalogs = 
@@ -67,6 +68,9 @@ export const main =
          })
 
          const schema = makeSchema({
+            prettierConfig: join(baseDir, 'prettier.config.js'),
+
+            shouldGenerateArtifacts: process.env.NODE_ENV !== 'production',
             // prettier-ignore
             types: [
                catalogQuery,
@@ -78,13 +82,10 @@ export const main =
                   isTypeOf: true,
                },
             },
-            outputs:
-               process.env.NODE_ENV === 'production'
-                  ? {}
-                  : {
-                       schema: join(__dirname, '../../../../libs/types/schema.graphql'),
-                       typegen: join(__dirname, '../../../../libs/types/Nexus.ts'),
-                    },
+            outputs: {
+               schema: join(baseDir, 'libs/types/schema.graphql'),
+               typegen: join(baseDir, 'libs/types/Nexus.ts'),
+            },
          })
 
          const apollo = new ApolloServer({
