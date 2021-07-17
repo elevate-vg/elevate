@@ -16,10 +16,6 @@ export type Launcher = {
    os: string[]
 }
 
-export type Launchable = {
-   launch: (arg0: { gamePath: string; launcherPath: string }) => Promise<string> | string
-}
-
 export enum Language {
    'aa' = 'aa',
    'ab' = 'ab',
@@ -249,16 +245,6 @@ export type Catalog = {
       }) => 
          | Entry[]
          | Promise<Entry[]>
-}
-
-export enum DownloadableType {
-   Launcher = 'launcher',
-   Game = 'game',
-}
-
-export type Downloadable = {
-   type: DownloadableType
-   uri: string | ((ctx: Context) => string)
 }
 
 export type Api = {
