@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { ApolloServer } from 'apollo-server-express'
 import { arg, extendType, makeSchema, nonNull } from 'nexus'
 
