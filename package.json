@@ -11,7 +11,7 @@
       "node": "^14.16"
    },
    "scripts": {
-      "dev": "yarn lerna exec --scope \"@elevate/api\" yarn dev",
+      "dev": "yarn lerna exec --scope \"@elevate/core\" yarn dev",
       "test:watch": "jest --watch",
       "bootstrap": "lerna bootstrap",
       "build": "lerna run build --stream",

@@ -2,7 +2,7 @@ import { AxiosStatic } from 'axios'
 import { /* Platform,*/ Plugin } from '../../libs/types'
 import { Response } from 'express'
 import { stringArg, extendType } from 'nexus'
-import { Context } from 'apps/api/src/context'
+import { Context } from 'apps/core/src/context'
 import { Entry, Language } from 'libs/types/Plugin'
 import { identity, memoizeWith } from 'libs/utils'
 

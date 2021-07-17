@@ -1,11 +1,11 @@
 {
-   "name": "@elevate/api",
+   "name": "@elevate/core",
    "version": "1.0.0",
    "scripts": {
       "dev": "nodemon",
       "build": "prisma generate && webpack && DATABASE_URL=\"file:../../../assets/all/elevate.db\" prisma db push",
-      "//package": "mkdir -p ../../dist/raw/api && cp -R dist/* ../../dist/raw/api && package:install",
-      "//package:install": "npm install --prefix ../../dist/raw/api"
+      "//package": "mkdir -p ../../dist/raw/core && cp -R dist/* ../../dist/raw/core && package:install",
+      "//package:install": "npm install --prefix ../../dist/raw/core"
    },
    "dependencies": {
       "@prisma/client": "^2.26.0",

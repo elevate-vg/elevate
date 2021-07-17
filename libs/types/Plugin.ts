@@ -1,7 +1,7 @@
 import type { Platform } from '.'
 import type { Router } from 'express'
 import type { NexusExtendTypeDef } from 'nexus/dist/core'
-import type { Context } from 'apps/api/src/context'
+import type { Context } from 'apps/core/src/context'
 
 export type Meta = {
    namespace: string
