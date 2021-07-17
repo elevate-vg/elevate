@@ -220,6 +220,9 @@ export interface NexusGenFieldTypeNames {
 
 export interface NexusGenArgTypes {
   Query: {
+    catalog: { // args
+      query: string; // String!
+    }
     hello: { // args
       name?: string | null; // String
     }

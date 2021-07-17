@@ -237,7 +237,10 @@ interface Program {
 }
 
 type Query {
-  catalog: [Entry]
+  catalog(
+    """Search query"""
+    query: String!
+  ): [Entry]
   games: [Game]
   hello(name: String): String
   plugin__simonwjackson__hello(name: String): String

@@ -1,10 +1,161 @@
 import { AxiosStatic } from 'axios'
-import { Platform, Plugin } from '../../libs/types'
+import { /* Platform,*/ Plugin } from '../../libs/types'
 import { Response } from 'express'
 import { stringArg, extendType } from 'nexus'
 import { Context } from 'apps/api/src/context'
-import { Software } from 'libs/types/Plugin'
+import { Entry, Language } from 'libs/types/Plugin'
 import { identity, memoizeWith } from 'libs/utils'
+
+// const exampleResult = [
+//    {
+//       width: 100,
+//       height: 100,
+//    },
+//    {
+//       titles: [
+//          {
+//             name: 'Super Mario All-Stars',
+//             language: 'en',
+//          },
+//       ],
+//       locations: [
+//          {
+//             uri: 'file:///a/b/c.rom',
+//             md5: null,
+//          },
+//       ],
+//       applications: [
+//          {
+//             names: [
+//                {
+//                   name: 'Super Mario Bros.',
+//                   language: 'en',
+//                },
+//             ],
+//          },
+//          {
+//             names: [
+//                {
+//                   name: 'Super Mario Bros. 2',
+//                   language: 'en',
+//                },
+//             ],
+//          },
+//          {
+//             names: [
+//                {
+//                   name: 'Super Mario Bros. 3',
+//                   language: 'en',
+//                },
+//             ],
+//          },
+//          {
+//             names: [
+//                {
+//                   name: 'Super Mario World',
+//                   language: 'en',
+//                },
+//             ],
+//          },
+//       ],
+//    },
+//    {
+//       names: [
+//          {
+//             name: 'Super Mario Bros.',
+//             language: 'en',
+//          },
+//       ],
+//       software: [
+//          {
+//             titles: [
+//                {
+//                   name: 'Super Mario All-Stars',
+//                   language: 'en',
+//                },
+//             ],
+//             locations: [
+//                {
+//                   uri: 'file:///a/b/c.rom',
+//                   md5: null,
+//                },
+//             ],
+//          },
+//       ],
+//    },
+//    {
+//       names: [
+//          {
+//             name: 'Super Mario Bros. 2',
+//             language: 'en',
+//          },
+//       ],
+//       software: [
+//          {
+//             titles: [
+//                {
+//                   name: 'Super Mario All-Stars',
+//                   language: 'en',
+//                },
+//             ],
+//             locations: [
+//                {
+//                   uri: 'file:///a/b/c.rom',
+//                   md5: null,
+//                },
+//             ],
+//          },
+//       ],
+//    },
+//    {
+//       names: [
+//          {
+//             name: 'Super Mario Bros. 3',
+//             language: 'en',
+//          },
+//       ],
+//       software: [
+//          {
+//             titles: [
+//                {
+//                   name: 'Super Mario All-Stars',
+//                   language: 'en',
+//                },
+//             ],
+//             locations: [
+//                {
+//                   uri: 'file:///a/b/c.rom',
+//                   md5: null,
+//                },
+//             ],
+//          },
+//       ],
+//    },
+//    {
+//       names: [
+//          {
+//             name: 'Super Mario World',
+//             language: 'en',
+//          },
+//       ],
+//       software: [
+//          {
+//             titles: [
+//                {
+//                   name: 'Super Mario All-Stars',
+//                   language: 'en',
+//                },
+//             ],
+//             locations: [
+//                {
+//                   uri: 'file:///a/b/c.rom',
+//                   md5: null,
+//                },
+//             ],
+//          },
+//       ],
+//    },
+// ]
 
 export const meta: Plugin.Meta = {
    namespace: '@simonwjackson',
@@ -42,12 +193,14 @@ export const launchers: Plugin.Launcher[] = [
 
 // TODO: memoize based on query, after and limit
 const getResource = (axios: AxiosStatic) =>
-   // @ts-ignore
-   memoizeWith(identity, (url) =>
-      axios({
-         method: 'GET',
-         url,
-      }),
+   memoizeWith(
+      // @ts-ignore
+      identity,
+      (url) =>
+         axios({
+            method: 'GET',
+            url,
+         }),
    )
 
 export const catalogs: Plugin.Catalog[] = [
@@ -55,41 +208,44 @@ export const catalogs: Plugin.Catalog[] = [
       name: 'steam',
       // platforms: [Platforms.Windows10, Platforms.MacOS],
       search:
+         // prettier-ignore
          ({ axios, cheerio }) =>
-         async ({ query, after, limit }) => {
-            query
-            after
-            limit
+            async ({ query, after, limit }) => {
+               query
+               after
+               limit
 
-            const url = 'https://www.darrenstruthers.net/SNES_ROMS'
+               const url = 'https://www.darrenstruthers.net/SNES_ROMS'
 
-            const res = await getResource(axios)(url)
-            const $ = cheerio.load(res.data)
+               const res = await getResource(axios)(url)
+               const $ = cheerio.load(res.data)
 
-            return $('tr a')
-               .get()
-               .reduce((acc, e) => {
-                  const filename = $(e).text().trim()
-                  const uri = `${url}/${$(e).attr('href')}`
-                  const name = filename.replace(/\s\(.*\)\..*$/, '')
+               return $('tr a')
+                  .get()
+                  .reduce((acc, e) => {
+                     const filename = $(e).text().trim()
+                     const uri = `${url}/${$(e).attr('href')}`
+                     const name = filename.replace(/\s\(.*\)\..*$/, '')
 
-                  if (!['.sfc', '.smc'].some((ends) => filename.endsWith(ends))) return acc
+                     if (!['.sfc', '.smc'].some((ends) => filename.endsWith(ends))) return acc
 
-                  return [
-                     ...acc,
-                     {
-                        platform: Platform.SUPER_NINTENDO_ENTERTAINMENT_SYSTEM,
-                        name,
-                        applications: [
-                           {
-                              name,
-                           },
-                        ],
-                        locations: [{ uri }],
-                     },
-                  ]
-               }, <Software[]>[])
-         },
+                     return [ ...acc, {
+                           titles: [
+                              {
+                                 name,
+                                 language: Language.en,
+                              },
+                           ],
+                           locations: [
+                              {
+                                 uri,
+                                 md5: null,
+                              },
+                           ],
+                        }
+                     ]
+                  }, <Entry[]>[])
+            },
    },
 ]
 
