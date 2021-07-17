@@ -233,18 +233,24 @@ export type Entry =
    | Software
    | Application
 
+// prettier-ignore
+export type CatalogResult =
+   | Entry[]
+   | Promise<Entry[]>
+
+export type CatalogSearch = {
+   query?: string
+   after?: string
+   limit?: number
+}
+
 export type Catalog = {
    name: string
    // prettier-ignore
    search:
       (ctx: Context) => 
-      (args: { 
-         query?: string,
-         after?: string,
-         limit?: number
-      }) => 
-         | Entry[]
-         | Promise<Entry[]>
+      (args: CatalogSearch) => 
+         CatalogResult
 }
 
 export type Api = {

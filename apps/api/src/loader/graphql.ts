@@ -2,9 +2,21 @@ import { ApolloServer } from 'apollo-server-express'
 import { arg, extendType, makeSchema, nonNull } from 'nexus'
 
 import { join } from 'path'
-import { Catalog, Graphql, Plugin } from 'libs/types/Plugin'
+import { Catalog, CatalogResult, CatalogSearch, Graphql, Plugin } from 'libs/types/Plugin'
 import { Context } from '../context'
 import { types } from 'libs/graphql'
+import { applyTo, compose, concat, map } from 'libs/utils'
+
+// prettier-ignore
+const searchCatalogs = 
+   (catalogs: Catalog[]) =>
+   (ctx: Context) =>
+   async (args: CatalogSearch): Promise<CatalogResult> => {
+      const result = await map(catalog => catalog.search(ctx)(args), catalogs)
+      return result.reduce(async (acc = [], cur = []) => 
+         concat(await acc, await cur)
+     , [])
+   }
 
 // prettier-ignore
 const getCatalogs = (plugins: Plugin[]): Catalog[] =>
@@ -41,10 +53,15 @@ export const main =
                   },
                   // prettier-ignore
                   // @ts-ignore
-                  resolve: async (_, args) => 
-                    // HACK: Only referencing first catalog
-                    getCatalogs(plugins)?.[0]
-                      ?.search(ctx)(args),
+                  resolve: async (_, args) =>
+                     compose(
+                        applyTo(args),
+                        // @ts-ignore
+                        applyTo(ctx),
+                        searchCatalogs,
+                        getCatalogs
+                        // @ts-ignore
+                     )(plugins),
                })
             },
          })
