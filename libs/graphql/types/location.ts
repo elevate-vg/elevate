@@ -1,4 +1,3 @@
-import { File as PrismaFile } from 'nexus-prisma'
 import { objectType, interfaceType, extendType } from 'nexus'
 import { hasAny } from 'libs/utils'
 
@@ -22,17 +21,16 @@ const Location = interfaceType({
 // })
 
 const File = objectType({
-   name: PrismaFile.$name,
-   description: PrismaFile.$description,
+   name: 'File',
    isTypeOf: hasAny(['crc32', 'md5', 'sha512', 'sha256', 'sha1', 'size']),
    definition(t) {
       t.implements('Location')
       t.int('size')
-      t.field(PrismaFile.crc32)
-      t.field(PrismaFile.md5)
-      t.field(PrismaFile.sha512)
-      t.field(PrismaFile.sha256)
-      t.field(PrismaFile.sha1)
+      t.string('crc32')
+      t.string('md5')
+      t.string('sha512')
+      t.string('sha256')
+      t.string('sha1')
       // t.field('type', {
       //    type: 'FileType',
       //    resolve: (data) => {

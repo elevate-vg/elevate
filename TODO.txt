@@ -1,5 +1,12 @@
+FIX
+=====
+
+nexus-prisma is causing build to break
+
+
 TODO
 =====
+
 
 Graphql Pagination
 
