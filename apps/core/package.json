@@ -14,6 +14,7 @@
       "axios": "^0.21.1",
       "cheerio": "^1.0.0-rc.10",
       "cross-env": "^7.0.2",
+      "env-paths": "^2.2.1",
       "express": "^4.17.1",
       "graphql": "14.5.8",
       "nexus": "^1.1.0",

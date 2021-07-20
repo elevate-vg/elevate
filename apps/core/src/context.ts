@@ -1,10 +1,16 @@
-import { PrismaClient } from '@prisma/client'
-import expressApp, { Application } from 'express'
-import puppeteer, { Puppeteer } from 'puppeteer-core'
 import { join } from 'path'
-import { baseDir } from './constants'
+import { PrismaClient } from '@prisma/client'
 import * as axios from 'axios'
 import * as cheerio from 'cheerio'
+import envPaths from 'env-paths'
+import expressApp, { Application } from 'express'
+import puppeteer, { Puppeteer } from 'puppeteer-core'
+
+import { baseDir } from './constants'
+
+const paths = envPaths('elevate', {
+   suffix: '',
+})
 
 // TODO: Generate type for this monkey patch
 // TODO: Refactor into separate file
@@ -59,6 +65,13 @@ const createPuppeteer = () => {
 }
 
 export interface Context {
+   paths: {
+      data: string
+      config: string
+      cache: string
+      log: string
+      temp: string
+   }
    prisma: PrismaClient
    express: Application
    puppeteer: Puppeteer
@@ -68,6 +81,7 @@ export interface Context {
 
 export function createContext(): Context {
    return {
+      paths,
       prisma,
       express,
       // @ts-ignore

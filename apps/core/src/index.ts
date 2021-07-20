@@ -4,10 +4,13 @@ import downloadElectron from './init/download-electron'
 import setEnvs from './init/set-env'
 import { createContext } from './context'
 
-setEnvs()
+const ctx = createContext()
+
+setEnvs(ctx)
 
 // TODO: Host downloads should happen in CLI
 downloadChrome(process.platform)
 downloadElectron(process.platform)
 
-serve(createContext())
+// prettier-ignore
+serve(ctx)

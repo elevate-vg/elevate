@@ -1,7 +1,17 @@
 FIX
 =====
 
-nexus-prisma is causing build to break
+install prisma
+  https://github.com/prisma/prisma/blob/6e05fcca90efee74e2ae988f547cd67edd29637f/src/packages/client/src/utils/generateInFolder.ts#L111
+init (blocking)
+  check/install prisma 
+  if no DB
+    npx prisma db push
+  if db
+    backup
+    migrate?
+    restore?
+
 
 
 TODO

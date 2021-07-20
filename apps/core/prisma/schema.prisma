@@ -6,9 +6,9 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-generator nexusPrisma {
-   provider = "nexus-prisma"
-}
+// generator nexusPrisma {
+//    provider = "nexus-prisma"
+// }
 
 generator client {
   provider = "prisma-client-js"

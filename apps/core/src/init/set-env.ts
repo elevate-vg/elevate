@@ -1,15 +1,19 @@
 import { join } from 'path'
+import { Context } from '../context'
 
-const production = {
-   DATABASE_URL: 'file:./elevate.db',
-}
+export default (ctx: Context) => {
+   const production = {
+      DATABASE_URL: `file:${ctx.paths.data}/elevate.db`,
+   }
 
-const development = {
-   DATABASE_URL: `file:${join(__dirname, `../prisma/dev.db`)}`,
-}
+   const development = {
+      DATABASE_URL: `file:${join(__dirname, `../prisma/dev.db`)}`,
+   }
 
-export default () =>
-   (process.env =
+   process.env =
       process.env.NODE_ENV === 'production'
          ? { ...process.env, ...production }
-         : { ...process.env, ...development })
+         : { ...process.env, ...development }
+
+   return ctx
+}
