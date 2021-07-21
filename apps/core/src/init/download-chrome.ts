@@ -7,7 +7,7 @@ import { baseDir } from '../constants'
 
 const unlinkAsync = promisify(fs.unlink.bind(fs))
 
-const main = async (platform: string) => {
+const main = async (platform: NodeJS.Platform) => {
    try {
       const binDir =
          process.env.NODE_ENV !== 'production' ? join(baseDir, `bin`) : join(__dirname, `./bin`)
