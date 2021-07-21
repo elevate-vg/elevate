@@ -1,20 +1,9 @@
 import { join } from 'path'
-import { PrismaClient } from '@prisma/client'
-import * as axios from 'axios'
-import * as cheerio from 'cheerio'
-import envPaths from 'env-paths'
-import expressApp, { Application } from 'express'
 import puppeteer, { Puppeteer } from 'puppeteer-core'
-
-import { baseDir } from './constants'
-
-const paths = envPaths('elevate', {
-   suffix: '',
-})
+import { baseDir } from '../constants'
 
 // TODO: Generate type for this monkey patch
-// TODO: Refactor into separate file
-const getPuppeteer = () => {
+const getChromePath = () => {
    switch (process.env.NODE_ENV) {
       case 'production': {
          switch (process.platform) {
@@ -46,9 +35,7 @@ const getPuppeteer = () => {
    }
 }
 
-const prisma = new PrismaClient({ log: ['query'] })
-const express = expressApp()
-const createPuppeteer = () => {
+const createPuppeteer = (): Puppeteer => {
    // @ts-ignore
    puppeteer._launch = puppeteer.launch
 
@@ -57,36 +44,12 @@ const createPuppeteer = () => {
       // @ts-ignore
       return puppeteer._launch({
          ...opts,
-         executablePath: getPuppeteer(),
+         executablePath: getChromePath(),
       })
    }
 
+   // @ts-ignore
    return puppeteer
 }
 
-export interface Context {
-   paths: {
-      data: string
-      config: string
-      cache: string
-      log: string
-      temp: string
-   }
-   prisma: PrismaClient
-   express: Application
-   puppeteer: Puppeteer
-   axios: axios.AxiosStatic
-   cheerio: cheerio.CheerioAPI
-}
-
-export function createContext(): Context {
-   return {
-      paths,
-      prisma,
-      express,
-      // @ts-ignore
-      puppeteer: createPuppeteer(),
-      axios: axios.default,
-      cheerio: cheerio.default,
-   }
-}
+export default createPuppeteer()
