@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const { resolve } = require('path')
-const webpack = require('webpack')
 const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = [
@@ -58,7 +57,7 @@ module.exports = [
          },
          mode: 'production',
          optimization: {
-            minimize: false,
+            minimize: true,
          },
          output: {
             filename: 'server.js',

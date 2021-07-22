@@ -1,63 +1,68 @@
 import { join } from 'path'
-import winston, { format } from 'winston'
+import { createLogger, format, transports } from 'winston'
 import chalk from 'chalk'
 
 const { combine, timestamp, label, printf } = format
 
-const consoleFormat = printf(({ level, message, label }) => {
-   const levelUpper = level.toUpperCase()
-   const levelPadded = ' ' + level + ' '
+const coloredFormat = printf(({ level, message, label }) => {
+   const levelPadded = ` ${level} `
+   const output = (level: string, message: string) =>
+      `${chalk.rgb(0, 0, 0).bgBlue.bold(' ' + label + ' ')}${level}  ${message}`
 
-   switch (levelUpper) {
-      case 'INFO':
-         level = chalk.rgb(0, 0, 0).bgGreenBright.bold(levelPadded)
-         break
-
+   switch (level.toUpperCase()) {
       case 'WARN':
-         message = chalk.yellow(message)
-         level = chalk.rgb(0, 0, 0).black.bgYellowBright.bold(levelPadded)
-         break
+         return output(
+            chalk.rgb(0, 0, 0).black.bgYellowBright.bold(levelPadded),
+            chalk.yellow(message),
+         )
 
+      // prettier-ignore
       case 'ERROR':
-         message = chalk.red(message)
-         level = chalk.rgb(0, 0, 0).black.bgRedBright.bold(levelPadded)
-         break
+         return output(
+            chalk.rgb(0, 0, 0).black.bgRedBright.bold(levelPadded),
+            chalk.red(message)
+         )
 
+      case 'INFO':
       default:
-         break
+         // prettier-ignore
+         return output(
+            chalk.rgb(0, 0, 0).bgGreenBright.bold(levelPadded), 
+            message
+         )
    }
-
-   return `${chalk.rgb(0, 0, 0).bgBlue.bold(' ' + label + ' ')}${level}  ${message}`
 })
 
 export default (dir: string) => {
-   const logger = winston.createLogger({
+   const logger = createLogger({
       level: 'info',
-      format: winston.format.json(),
+      format: format.json(),
       defaultMeta: { service: 'user-service' },
-      transports: [
-         new winston.transports.File({
-            filename: join(dir, 'error.log'),
-            level: 'error',
-         }),
-         new winston.transports.File({
-            filename: join(dir, 'combined.log'),
-         }),
-      ],
    })
 
-   if (process.env.NODE_ENV !== 'production') {
-      logger.add(
-         new winston.transports.Console({
-            format: combine(
-               label({ label: 'elevate' }),
-               timestamp(),
-               format.splat(),
-               consoleFormat,
-            ),
-         }),
-      )
-   }
+   logger.add(
+      new transports.File({
+         filename: join(dir, 'combined.log'),
+      }),
+   )
+
+   logger.add(
+      new transports.File({
+         filename: join(dir, 'error.log'),
+         level: 'error',
+      }),
+   )
+
+   logger.add(
+      new transports.Console({
+         // prettier-ignore
+         format: combine(
+            label({ label: 'elevate' }),
+            timestamp(),
+            format.splat(),
+            coloredFormat),
+      }),
+   )
 
    return logger
 }
