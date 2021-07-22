@@ -9,10 +9,10 @@ const getChromePath = () => {
          switch (process.platform) {
             case 'win32': {
                // TODO: Is this the correct path
-               return './bin/chrome-win/chrome.exe'
+               return './bin/chromium/chrome.exe'
             }
             case 'darwin': {
-               return './bin/chrome-mac/Chromium.app/Contents/MacOS/Chromium'
+               return './bin/chromium/Chromium.app/Contents/MacOS/Chromium'
             }
          }
          break
@@ -23,11 +23,11 @@ const getChromePath = () => {
                return join(
                   baseDir,
                   // TODO: Is this the correct path
-                  './bin/chrome-win/chrome.exe',
+                  './bin/chromium/chrome.exe',
                )
             }
             case 'darwin': {
-               return join(baseDir, './bin/chrome-mac/Chromium.app/Contents/MacOS/Chromium')
+               return join(baseDir, './bin/chromium/Chromium.app/Contents/MacOS/Chromium')
             }
          }
          break

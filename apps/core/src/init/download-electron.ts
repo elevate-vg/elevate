@@ -31,11 +31,11 @@ const main =
          case 'darwin': {
             // TODO: Find faster CDN for electron download
             const url = `https://cdn.npm.taobao.org/dist/electron/13.1.5/electron-v13.1.5-darwin-x64.zip`
-            const containerDir = join(binDir, 'electron-darwin')
+            const containerDir = join(binDir, 'electron')
             const bin = join(containerDir, 'Electron.app/Contents/MacOS/Electron')
             const appTemplateFrom = join(__dirname, `./assets/electron`)
             const appTemplateDest = join(containerDir, 'Electron.app/Contents/Resources/app')
-            const archive = '/tmp/electron-darwin.zip'
+            const archive = '/tmp/electron.zip'
 
             // TODO: Detecting if node exists by filename only is a bit naive
             if (!existsSync(bin)) {
