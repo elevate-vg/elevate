@@ -54,3 +54,6 @@ dist/
 /bin
 *.db
 assets/**/query-engine-*
+
+# Logs
+*.log

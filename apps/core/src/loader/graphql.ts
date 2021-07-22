@@ -1,12 +1,10 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-
 import { ApolloServer } from 'apollo-server-express'
 import { arg, extendType, makeSchema, nonNull } from 'nexus'
 
 import { Catalog, CatalogResult, CatalogSearch, Graphql, Plugin } from 'libs/types/Plugin'
 import { Context } from '../context'
 import { types } from 'libs/graphql'
-import { applyTo, compose, concat, map } from 'libs/utils'
+import { applyTo, compose, concat, curry, map, tap } from 'libs/utils'
 import { rootDir } from '../constants'
 
 // prettier-ignore
@@ -39,6 +37,12 @@ const getExternalGraphqlTypes =
 export const main =
    (ctx: Context) =>
    async (plugins: Plugin[] = []) => {
+      // prettier-ignore
+      const msg = 
+         curry(((message: string, value: unknown) =>
+            tap(() => ctx.logger.log('info', message))(value)
+         ))
+
       try {
          const catalogQuery = extendType({
             type: 'Query',
@@ -53,16 +57,15 @@ export const main =
                         }),
                      ),
                   },
-                  // prettier-ignore
                   // @ts-ignore
                   resolve: async (_, args) =>
                      compose(
                         applyTo(args),
-                        // @ts-ignore
+                        // @ts-ignore: Incorrect Ramda type issue
                         applyTo(ctx),
-                        searchCatalogs,
-                        getCatalogs
-                        // @ts-ignore
+                        msg('Searching catalogs', searchCatalogs),
+                        msg('Gathering catalogs', getCatalogs),
+                        // @ts-ignore: Incorrect Ramda type issue
                      )(plugins),
                })
             },
@@ -71,12 +74,7 @@ export const main =
          const schema = makeSchema({
             prettierConfig: rootDir('prettier.config.js'),
             shouldGenerateArtifacts: process.env.NODE_ENV !== 'production',
-            // prettier-ignore
-            types: [
-               catalogQuery,
-               ...types, 
-               ...getExternalGraphqlTypes(plugins)
-            ],
+            types: [catalogQuery, ...types, ...getExternalGraphqlTypes(plugins)],
             features: {
                abstractTypeStrategies: {
                   isTypeOf: true,
@@ -98,9 +96,9 @@ export const main =
 
          apollo.applyMiddleware({ app: ctx.express })
 
-         console.log(`🚀 Graphql server started..`)
+         ctx.logger.info(`🚀 Graphql server started..`)
       } catch (e) {
-         console.error(e)
+         ctx.logger.log('error', e)
       }
 
       return ctx.express

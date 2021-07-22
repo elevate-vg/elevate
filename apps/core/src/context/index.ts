@@ -5,7 +5,9 @@ import envPaths from 'env-paths'
 import expressApp, { Application } from 'express'
 import prisma from './prisma'
 import puppeteer from './puppeteer'
+import logger from './logger'
 import { Puppeteer } from 'puppeteer-core'
+import type winston from 'winston'
 
 const paths = envPaths('elevate', {
    suffix: '',
@@ -26,6 +28,7 @@ export interface Context {
    puppeteer: Puppeteer
    axios: axios.AxiosStatic
    cheerio: cheerio.CheerioAPI
+   logger: winston.Logger
 }
 
 export function createContext(): Context {
@@ -36,5 +39,6 @@ export function createContext(): Context {
       puppeteer,
       axios: axios.default,
       cheerio: cheerio.default,
+      logger: logger(paths.log),
    }
 }

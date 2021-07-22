@@ -1,6 +1,5 @@
 import type { Response, Request } from 'express'
 import type Plugin from 'libs/types/Plugin'
-import { trace } from 'console'
 import { Context } from '../context'
 
 export default (ctx: Context) => (plugins: Plugin[]) =>
@@ -17,7 +16,7 @@ export default (ctx: Context) => (plugins: Plugin[]) =>
          })
          res.json(searchResults)
       } catch (e) {
-         trace(e)
+         ctx.logger.log('error', e)
          res.json({ issue: 'Plugin issue or not found', error: e.message })
       }
    })
