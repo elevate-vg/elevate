@@ -1,18 +1,30 @@
-import serve from './loader'
+import loader from './loader'
 import downloadChrome from './init/download-chrome'
 import downloadElectron from './init/download-electron'
-// import downloadPrisma from './init/download-prisma'
 import setEnvs from './init/set-env'
 import { createContext } from './context'
+import { equals, when, __ } from 'libs/utils'
+import { initFns } from './utils'
 
 const ctx = createContext()
 
-setEnvs(ctx)
+export const init = initFns(ctx)(process.platform)
 
-// TODO: Host downloads should happen in CLI
-downloadChrome(ctx)(process.platform)
-downloadElectron(ctx)(process.platform)
-// prettier-ignore
-// downloadPrisma(ctx)(process.platform).then(() =>
-serve(ctx)
-// )
+export const serve = () => loader(ctx)
+
+export const main = () => {
+   setEnvs(ctx)
+
+   // prettier-ignore
+   init([
+      downloadElectron, 
+      downloadChrome
+   ])
+
+   serve()
+}
+
+export default main
+
+// Script called directly?
+when(equals(require.main), main, module)
