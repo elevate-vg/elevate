@@ -1,50 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const path = require('path')
+const { resolve } = require('path')
+const webpack = require('webpack')
 const CopyPlugin = require('copy-webpack-plugin')
 
 module.exports = [
-   // {
-   //    entry: '../../node_modules/prisma/build/index.js',
-   //    target: 'node',
-   //    externals: ['_http_common'], // in order to ignore all modules in node_modules folder
-   //    module: {
-   //       rules: [
-   //          {
-   //             test: /\.tsx?$/,
-   //             use: 'ts-loader',
-   //             exclude: /node_modules/,
-   //          },
-   //          {
-   //             test: /\.mjs$/,
-   //             include: /node_modules/,
-   //             type: 'javascript/auto',
-   //             // graphql module needs this
-   //             resolve: {
-   //                fullySpecified: false,
-   //             },
-   //          },
-   //          {
-   //             test: /\.js$/,
-   //             exclude: /node_modules/,
-   //             use: {
-   //                loader: 'babel-loader',
-   //             },
-   //             // graphql module needs this
-   //             // resolve: {
-   //             //    fullySpecified: false,
-   //             // },
-   //          },
-   //       ],
-   //    },
-   //    mode: 'production',
-   //    optimization: {
-   //       minimize: false,
-   //    },
-   //    output: {
-   //       filename: 'prisma.js',
-   //       path: path.resolve('/Users/simonwjackson/storage/code/elevate/apps/core'),
-   //    },
-   // },
    (env) => {
       // TODO: Detect env to determine what to pack
       // const mode = env.mode === 'prod' ? 'prod' : 'dev'
@@ -92,9 +51,9 @@ module.exports = [
          resolve: {
             extensions: ['.tsx', '.ts', '.js', '.mjs'],
             alias: {
-               plugins: path.resolve(__dirname, '../../plugins/'),
-               libs: path.resolve(__dirname, '../../libs/'),
-               themes: path.resolve(__dirname, '../../themes/'),
+               plugins: resolve(__dirname, '../../plugins/'),
+               libs: resolve(__dirname, '../../libs/'),
+               themes: resolve(__dirname, '../../themes/'),
             },
          },
          mode: 'production',
@@ -103,7 +62,7 @@ module.exports = [
          },
          output: {
             filename: 'server.js',
-            path: path.resolve(__dirname, '../../dist'),
+            path: resolve(__dirname, '../../dist'),
          },
       }
    },

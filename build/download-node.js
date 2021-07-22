@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-var tar = require('tar-stream')
-var zlib = require('zlib')
+const tar = require('tar-stream')
+const zlib = require('zlib')
 const { chmodSync, createWriteStream, mkdirSync, readFileSync, writeFileSync, existsSync } = require('fs')
 const { join } = require('path')
 const request = require('request')
@@ -24,12 +24,12 @@ const main = async (platform) => {
    const url = `https://nodejs.org/dist/${version}/${filename}`
 
    try {
-      const assetDir = join(__dirname, `../assets/${platform}`)
-      mkdirSync(assetDir, { recursive: true })
+      const binDir = join(__dirname, '../bin', platform)
+      mkdirSync(binDir, { recursive: true })
 
       switch (platform) {
          case 'darwin': {
-            const nodePath = join(assetDir, 'node')
+            const nodePath = join(binDir, 'node')
 
             // TODO: Detecting if node exists by filename only is a bit naive
             if (!existsSync(nodePath)){
@@ -66,7 +66,7 @@ const main = async (platform) => {
          }
          case 'win':
          default: {
-            const nodePath = join(assetDir, 'node.exe')
+            const nodePath = join(binDir, 'node.exe')
             // TODO: Detecting if node exists by filename only is a bit naive
             if (!existsSync(nodePath)){
                const zip = request(url).pipe(unzipper.Parse({ forceStream: true }))

@@ -6,7 +6,9 @@ switch to prisma migrate (currently forcing db changes, could loose data)
 FIX
 =====
 
-run prisma-bin.js during build
+move inits to cli
+add winston logging
+  wrap plugin exports
 
 init (blocking)
   check/install prisma 

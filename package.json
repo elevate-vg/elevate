@@ -15,7 +15,7 @@
       "test:watch": "jest --watch",
       "bootstrap": "lerna bootstrap",
       "build": "lerna run build --stream",
-      "assets": "node ./build/download-node",
+      "assets": "node ./build/download-node && node ./build/prisma-bin",
       "package": "node ./build/package",
       "make": "yarn build && yarn assets && yarn package"
    },
