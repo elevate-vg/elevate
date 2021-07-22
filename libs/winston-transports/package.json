@@ -1,0 +1,14 @@
+{
+   "name": "@elevate/winston-transports",
+   "version": "1.0.0",
+   "description": "",
+   "main": "index.ts",
+   "scripts": {},
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "dependencies": {
+      "chalk": "^4.1.1",
+      "winston": "^3.3.3"
+   }
+}

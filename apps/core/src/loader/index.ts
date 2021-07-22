@@ -37,10 +37,8 @@ export const main = async (ctx: Context) => {
       })
       .listen(port, (err?: unknown) => {
          if (err) throw err
-         ctx.logger.log(
-            'info',
-            `Ready on http://localhost:${port} - env ${process.env.NODE_ENV || 'development'}`,
-         )
+         ctx.logger.log('info', `Ready on http://localhost:${port}`)
+         ctx.logger.log('info', `env: ${process.env.NODE_ENV || 'development'}`)
       })
 }
 

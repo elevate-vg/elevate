@@ -96,7 +96,7 @@ export const main =
 
          apollo.applyMiddleware({ app: ctx.express })
 
-         ctx.logger.info(`🚀 Graphql server started..`)
+         ctx.logger.log('info', `🚀 Graphql server started..`)
       } catch (e) {
          ctx.logger.log('error', e)
       }
