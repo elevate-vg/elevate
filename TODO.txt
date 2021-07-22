@@ -1,3 +1,8 @@
+Alpha -> Beta
+=====
+
+switch to prisma migrate (currently forcing db changes, could loose data)
+
 FIX
 =====
 
@@ -12,6 +17,22 @@ init (blocking)
     migrate?
     restore?
 
+Build step
+  require('@vercel/ncc')('/path/to/input', {
+    externals: [],
+    minify: true,
+    sourceMapRegister: false,
+  }).then(({ code, map, assets }) => {
+    console.log(code);
+    // Assets is an object of asset file names to { source, permissions, symlinks }
+    // expected relative to the output code (if any)
+  })
+
+Init stage (spawn)
+  DATABASE_URL="file:${full_dp_path}" node ${path_to_prisma_cli} db push --schema ${full_schema_path}
+
+Replace this value in server.js
+  / +?"value": ?"(.+\/node_modules\/@prisma\/client)",?/gm
 
 
 TODO
@@ -53,4 +74,5 @@ bundle Move themes and apis into single plugin type
 Wishlist
 ------
 
-Nexus Mods supprot
+Nexus Mods support
+Prisma migrate via native API (non-existant)

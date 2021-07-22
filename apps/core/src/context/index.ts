@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import type { PrismaClient } from '@prisma/client'
 import * as axios from 'axios'
 import * as cheerio from 'cheerio'
 import envPaths from 'env-paths'

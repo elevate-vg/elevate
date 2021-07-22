@@ -3,7 +3,7 @@ import https from 'https'
 import { join } from 'path'
 import extractZip from 'extract-zip'
 import { promisify } from 'util'
-import { baseDir } from '../constants'
+import { Context } from '../context'
 
 const copyDir = async (src: string, dest: string) => {
    await fsP.mkdir(dest, { recursive: true })
@@ -19,10 +19,12 @@ const copyDir = async (src: string, dest: string) => {
 
 const unlinkAsync = promisify(fs.unlink.bind(fs))
 
-const main = async (platform: NodeJS.Platform) => {
+// prettier-ignore
+const main = 
+   (ctx: Context) => 
+   async (platform: NodeJS.Platform) => {
    try {
-      const binDir =
-         process.env.NODE_ENV !== 'production' ? join(baseDir, `bin`) : join(__dirname, `./bin`)
+      const binDir = join(ctx.paths.data, 'bin')
       mkdirSync(binDir, { recursive: true })
 
       switch (platform) {

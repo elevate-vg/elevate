@@ -1,8 +1,9 @@
 import type { Platform as PrismaPlatform } from '@prisma/get-platform'
+import type { Context } from '../context'
 import { enginesVersion } from '@prisma/engines'
 import { download } from '@prisma/fetch-engine'
-import { existsSync } from 'fs'
-import { rootDir } from '../constants'
+import { join } from 'path'
+import { mkdirSync, existsSync } from 'fs'
 
 // prettier-ignore
 const buildBinaryTargets = 
@@ -19,28 +20,36 @@ const buildBinaryTargets =
    }
 }
 
-const shouldDownload = (platform: NodeJS.Platform): boolean => {
-   switch (platform) {
-      case 'win32': {
-         return (
-            !existsSync(rootDir('bin', 'query-engine-windows.exe')) ||
-            !existsSync(rootDir('bin', 'migration-engine-windows.exe'))
-         )
+const shouldDownload =
+   (root: string) =>
+   (platform: NodeJS.Platform): boolean => {
+      switch (platform) {
+         case 'win32': {
+            return (
+               !existsSync(join(root, 'query-engine-windows.exe')) ||
+               !existsSync(join(root, 'migration-engine-windows.exe'))
+            )
+         }
+         case 'darwin': {
+            return (
+               !existsSync(join(root, 'query-engine-darwin')) ||
+               !existsSync(join(root, 'migration-engine-darwin'))
+            )
+         }
+         default:
+            return false
       }
-      case 'darwin': {
-         return (
-            !existsSync(rootDir('bin', 'query-engine-darwin')) ||
-            !existsSync(rootDir('bin', 'migration-engine-darwin'))
-         )
-      }
-      default:
-         return false
    }
-}
 
-const main = async (platform: NodeJS.Platform) => {
+// prettier-ignore
+const main = 
+   (ctx: Context) => 
+   async (platform: NodeJS.Platform) => {
    try {
-      if (shouldDownload(platform)) {
+      const binDir = join(ctx.paths.data, 'bin', 'prisma')
+      mkdirSync(binDir, { recursive: true })
+
+      if (shouldDownload(binDir)(platform)) {
          console.log('Downloading prisma..')
          await download({
             progressCb: (num) => {
@@ -48,8 +57,8 @@ const main = async (platform: NodeJS.Platform) => {
             },
             binaryTargets: buildBinaryTargets(process.platform),
             binaries: {
-               'query-engine': __dirname,
-               'migration-engine': __dirname,
+               'query-engine': binDir,
+               'migration-engine': binDir,
             },
             version: enginesVersion,
          })
