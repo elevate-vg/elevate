@@ -1,5 +1,16 @@
 import type { Context } from './context'
-import { applyTo, compose, juxt } from 'libs/utils'
+import {
+   applyTo,
+   // call,
+   compose,
+   // ifElse,
+   // equals,
+   // isNil,
+   juxt,
+   // path,
+   // unless,
+   // when
+} from 'libs/utils'
 
 // prettier-ignore
 export const initFns = 
@@ -12,3 +23,23 @@ export const initFns =
       juxt(fns),
       // @ts-ignore
    )(ctx)
+
+export type environment = 'production' | 'development'
+
+export const isFunction = <T>(fn: T) => {
+   if (typeof fn === 'function') {
+      return true
+   }
+   return false
+}
+
+export const whenProduction = (fn: () => void) => {
+   switch (process.env.NODE_ENV as environment) {
+      case 'production': {
+         return fn()
+      }
+      default: {
+         return
+      }
+   }
+}

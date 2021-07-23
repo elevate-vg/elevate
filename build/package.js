@@ -6,7 +6,7 @@ const replace = require("replace-in-file")
 
 const distDir = join(__dirname, '../dist')
 const pkgDir = join(__dirname, `../pkg`)
-const assetDir = join(__dirname, `../assets/all`)
+const assetDir = join(__dirname, `../assets`)
 
 mkdirSync(distDir, { recursive: true })
 mkdirSync(pkgDir, { recursive: true })
