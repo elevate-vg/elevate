@@ -50,7 +50,7 @@ const main =
       mkdirSync(binDir, { recursive: true })
 
       if (shouldDownload(binDir)(platform)) {
-         ctx.logger.log('info', 'Downloading prisma..')
+         ctx.logger.http('Prisma: Downloading')
          await download({
             progressCb: (num) => {
                num
@@ -62,10 +62,10 @@ const main =
             },
             version: enginesVersion,
          })
-         ctx.logger.log('info', '..complete')
+         ctx.logger.http('Prisma: Download complete')
       }
    } catch (e) {
-      ctx.logger.log('error', e)
+      ctx.logger.error(  e)
    }
 }
 

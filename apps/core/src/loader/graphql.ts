@@ -4,7 +4,7 @@ import { arg, extendType, makeSchema, nonNull } from 'nexus'
 import { Catalog, CatalogResult, CatalogSearch, Graphql, Plugin } from 'libs/types/Plugin'
 import { Context } from '../context'
 import { types } from 'libs/graphql'
-import { applyTo, compose, concat, curry, map, tap } from 'libs/utils'
+import { compose, concat, map } from 'libs/utils'
 import { rootDir } from '../constants'
 
 // prettier-ignore
@@ -37,11 +37,7 @@ const getExternalGraphqlTypes =
 export const main =
    (ctx: Context) =>
    async (plugins: Plugin[] = []) => {
-      // prettier-ignore
-      const msg = 
-         curry(((message: string, value: unknown) =>
-            tap(() => ctx.logger.log('info', message))(value)
-         ))
+      const { info } = ctx.logger.tap
 
       try {
          const catalogQuery = extendType({
@@ -60,11 +56,12 @@ export const main =
                   // @ts-ignore
                   resolve: async (_, args) =>
                      compose(
-                        applyTo(args),
                         // @ts-ignore: Incorrect Ramda type issue
-                        applyTo(ctx),
-                        msg('Searching catalogs', searchCatalogs),
-                        msg('Gathering catalogs', getCatalogs),
+                        (catalogs) => catalogs(ctx)(args),
+                        info('Searching catalogs', searchCatalogs),
+                        info('Gathering catalogs', getCatalogs),
+                        // searchCatalogs,
+                        // getCatalogs,
                         // @ts-ignore: Incorrect Ramda type issue
                      )(plugins),
                })
@@ -96,9 +93,9 @@ export const main =
 
          apollo.applyMiddleware({ app: ctx.express })
 
-         ctx.logger.log('info', `🚀 Graphql server started..`)
+         ctx.logger.info(`Graphql server started`)
       } catch (e) {
-         ctx.logger.log('error', e)
+         ctx.logger.error(e)
       }
 
       return ctx.express

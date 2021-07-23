@@ -39,20 +39,20 @@ const main =
 
             // TODO: Detecting if node exists by filename only is a bit naive
             if (!existsSync(bin)) {
-               ctx.logger.log('info', 'Downloading Electron..')
+               ctx.logger.http('Electron: Downloading')
                https.get(url, (res) => {
                   const filePath = createWriteStream(archive)
                   res.pipe(filePath)
 
                   filePath.on('finish', () => {
                      filePath.close()
-                     ctx.logger.log('info', '..Download Completed')
+                     ctx.logger.http('Electron: Download complete')
                      extractZip(archive, { dir: containerDir })
                         .then(() => unlinkAsync(archive))
                         .then(() => {
                            if (existsSync(appTemplateFrom)) {
                               if (!existsSync(appTemplateDest)) {
-                                 ctx.logger.log('info', 'Installing electron template..')
+                                 ctx.logger.info('Electron: Installing template')
                                  copyDir(appTemplateFrom, appTemplateDest)
                               }
                            }
@@ -69,7 +69,7 @@ const main =
          }
       }
    } catch (e) {
-      ctx.logger.log('error', e)
+      ctx.logger.error(  e)
    }
 }
 

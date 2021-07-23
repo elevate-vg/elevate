@@ -24,7 +24,7 @@ const main =
 
             // TODO: Detecting if node exists by filename only is a bit naive
             if (!existsSync(chromeBinPath)) {
-               ctx.logger.log('log', 'Downloading Chrome..')
+               ctx.logger.http('Chrome: Downloading')
                if (url.endsWith('.zip')) {
                   https.get(url, (res) => {
                      const filePath = createWriteStream(archiveDownloadPath)
@@ -32,7 +32,7 @@ const main =
 
                      filePath.on('finish', () => {
                         filePath.close()
-                        ctx.logger.log('log', '..Download Completed')
+                        ctx.logger.http('Chrome: Download complete')
                         extractZip(archiveDownloadPath, { dir: binDir }).then(() =>
                            unlinkAsync(archiveDownloadPath),
                         )
@@ -50,7 +50,7 @@ const main =
          }
       }
    } catch (e) {
-      ctx.logger.log('error', e)
+      ctx.logger.error( e)
    }
 }
 

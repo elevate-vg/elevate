@@ -19,6 +19,7 @@ export const hasNone =
          allFalse,
          // @ts-ignore
          mapTo(props),
+         // @ts-ignore
          objHas
       // @ts-ignore
       )(obj)
