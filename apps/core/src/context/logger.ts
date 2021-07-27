@@ -4,8 +4,8 @@ import winston, { createLogger, format, transports } from 'winston'
 import { console as prettyConsole } from 'libs/winston-transports'
 import { compose, curry, fromPairs, map, toPairs } from 'libs/utils'
 
-type logger = (message: string) => void
-type tappedLogger = Curry<(message: string, value: unknown) => unknown>
+export type logger = (message: string) => void
+export type tappedLogger = Curry<(message: string, value: unknown) => unknown>
 
 type loggers = {
    error: logger
@@ -27,9 +27,28 @@ type tappedLoggers = {
    silly: tappedLogger
 }
 
+export type Logger = {
+   error: logger
+   warn: logger
+   info: logger
+   http: logger
+   verbose: logger
+   debug: logger
+   silly: logger
+   tap: {
+      error: tappedLogger
+      warn: tappedLogger
+      info: tappedLogger
+      http: tappedLogger
+      verbose: tappedLogger
+      debug: tappedLogger
+      silly: tappedLogger
+   }
+}
+
 export default (dir: string) => {
    const winston = createLogger({
-      level: 'verbose',
+      level: 'silly',
       format: format.json(),
       defaultMeta: { service: 'user-service' },
    })
