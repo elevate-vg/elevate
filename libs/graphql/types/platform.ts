@@ -1,19 +1,18 @@
+import { enumType } from 'nexus'
+import { Platform } from 'libs/types'
+
 // TODO: Add platforms via plugins
-// const PlatformType = enumType({
-//    name: 'PlatformType',
-//    members: [
-//       'SUPER_NINTENDO_ENTERTAINMENT_SYSTEM',
-//       'NINTENDO_ENTERTAINMENT_SYSTEM',
-//       'WINDOWS_32',
-//    ],
+export const PlatformEnum = enumType({
+   name: 'Platform',
+   members: Platform,
+})
+
+// const PlatformUnion = unionType({
+//    name: 'PlatformUnion',
+//    definition(t) {
+//       t.members('Platform', 'PlatformType', 'Card')
+//    },
+//    resolveType: (item) => (typeof item === 'string' ? 'PlatformType' : 'Platform'),
 // })
 
-// // const PlatformUnion = unionType({
-// //    name: 'PlatformUnion',
-// //    definition(t) {
-// //       t.members('Platform', 'PlatformType', 'Card')
-// //    },
-// //    resolveType: (item) => (typeof item === 'string' ? 'PlatformType' : 'Platform'),
-// // })
-
-export const types = []
+export const types = [PlatformEnum]

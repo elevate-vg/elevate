@@ -206,46 +206,47 @@ const getResource = (axios: AxiosStatic) =>
 export const catalogs: Plugin.Catalog[] = [
    {
       name: 'steam',
-      // platforms: [Platforms.Windows10, Platforms.MacOS],
       search:
-         // prettier-ignore
          ({ axios, cheerio }) =>
-            async ({ query, after, limit }) => {
-               query
-               after
-               limit
+         async ({ query, after, limit }) => {
+            query
+            after
+            limit
 
-               const url = 'https://www.darrenstruthers.net/SNES_ROMS'
+            const url = 'https://www.darrenstruthers.net/SNES_ROMS'
 
-               const res = await getResource(axios)(url)
-               const $ = cheerio.load(res.data)
+            const res = await getResource(axios)(url)
+            const $ = cheerio.load(res.data)
 
-               return $('tr a')
-                  .get()
-                  .reduce((acc, e) => {
-                     const filename = $(e).text().trim()
-                     const uri = `${url}/${$(e).attr('href')}`
-                     const name = filename.replace(/\s\(.*\)\..*$/, '')
+            return $('tr a')
+               .get()
+               .reduce((acc, e) => {
+                  const filename = $(e).text().trim()
+                  const uri = `${url}/${$(e).attr('href')}`
+                  const name = filename.replace(/\s\(.*\)\..*$/, '')
 
-                     if (!['.sfc', '.smc'].some((ends) => filename.endsWith(ends))) return acc
+                  if (!['.sfc', '.smc'].some((ends) => filename.endsWith(ends))) return acc
 
-                     return [ ...acc, {
-                           titles: [
-                              {
-                                 name,
-                                 language: Language.en,
-                              },
-                           ],
-                           locations: [
-                              {
-                                 uri,
-                                 md5: null,
-                              },
-                           ],
-                        }
-                     ]
-                  }, <Entry[]>[])
-            },
+                  return [
+                     ...acc,
+                     {
+                        titles: [
+                           {
+                              name,
+                              language: Language.en,
+                           },
+                        ],
+
+                        locations: [
+                           {
+                              uri,
+                              md5: null,
+                           },
+                        ],
+                     },
+                  ]
+               }, <Entry[]>[])
+         },
    },
 ]
 

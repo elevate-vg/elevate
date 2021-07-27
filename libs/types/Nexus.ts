@@ -195,6 +195,7 @@ export interface NexusGenEnums {
       | 'za'
       | 'zh'
       | 'zu'
+   Platform: 1 | 2 | 0 | 3
 }
 
 export interface NexusGenScalars {
@@ -304,6 +305,7 @@ export interface NexusGenFieldTypes {
       catalog: Array<NexusGenRootTypes['Entry'] | null> | null // [Entry]
       games: Array<NexusGenRootTypes['Game'] | null> | null // [Game]
       hello: string | null // String
+      launch: number | null // Int
       plugin__simonwjackson__hello: string | null // String
    }
    Software: {
@@ -384,6 +386,7 @@ export interface NexusGenFieldTypeNames {
       catalog: 'Entry'
       games: 'Game'
       hello: 'String'
+      launch: 'Int'
       plugin__simonwjackson__hello: 'String'
    }
    Software: {
@@ -442,6 +445,11 @@ export interface NexusGenArgTypes {
       hello: {
          // args
          name?: string | null // String
+      }
+      launch: {
+         // args
+         platform: NexusGenEnums['Platform'] // Platform!
+         uri: string // String!
       }
       plugin__simonwjackson__hello: {
          // args

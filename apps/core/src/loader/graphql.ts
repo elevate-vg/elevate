@@ -6,6 +6,9 @@ import { Context } from '../context'
 import { types } from 'libs/graphql'
 import { compose, concat, map } from 'libs/utils'
 import { rootDir } from '../constants'
+import launch from '../launch'
+import { Platforms } from 'libs/graphql/types/platform'
+import { Platform } from 'libs/types'
 
 // prettier-ignore
 const searchCatalogs = 
@@ -40,6 +43,37 @@ export const main =
       const { info } = ctx.logger.tap
 
       try {
+         const launchQuery = extendType({
+            type: 'Query',
+            definition(t) {
+               t.field('launch', {
+                  type: 'Int',
+                  args: {
+                     platform: nonNull(
+                        arg({
+                           type: 'Platform',
+                           description: 'Software platform',
+                        }),
+                     ),
+                     uri: nonNull(
+                        arg({
+                           type: 'String',
+                           description: 'URI of software',
+                        }),
+                     ),
+                  },
+                  resolve: async (_, args) => {
+                     const cmd = await launch(ctx, {
+                        ...args,
+                     })
+
+                     if (!cmd?.pid) return null
+                     return cmd.pid
+                  },
+               })
+            },
+         })
+
          const catalogQuery = extendType({
             type: 'Query',
             definition(t) {
@@ -71,7 +105,7 @@ export const main =
          const schema = makeSchema({
             prettierConfig: rootDir('prettier.config.js'),
             shouldGenerateArtifacts: process.env.NODE_ENV !== 'production',
-            types: [catalogQuery, ...types, ...getExternalGraphqlTypes(plugins)],
+            types: [catalogQuery, launchQuery, ...types, ...getExternalGraphqlTypes(plugins)],
             features: {
                abstractTypeStrategies: {
                   isTypeOf: true,

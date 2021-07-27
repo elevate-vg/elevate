@@ -231,6 +231,13 @@ interface Location {
    uri: String
 }
 
+enum Platform {
+   GAME_BOY_ADVANCED
+   NINTENDO_ENTERTAINMENT_SYSTEM
+   SUPER_NINTENDO_ENTERTAINMENT_SYSTEM
+   WINDOWS_32
+}
+
 interface Program {
    applications: [Application]
    titles: [Translation]!
@@ -246,6 +253,17 @@ type Query {
    ): [Entry]
    games: [Game]
    hello(name: String): String
+   launch(
+      """
+      Software platform
+      """
+      platform: Platform!
+
+      """
+      URI of software
+      """
+      uri: String!
+   ): Int
    plugin__simonwjackson__hello(name: String): String
 }
 
