@@ -19,6 +19,14 @@ init (blocking)
 TODO
 =====
 
+URL,PLATFORM
+if https?://
+  create cache uri
+  if not exists
+    DL to uri
+
+run game at local uri
+
 Show alpha version in theme header
 Graphql Pagination
 force push db during dev
