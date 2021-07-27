@@ -13,6 +13,9 @@ const Program = interfaceType({
       t.nonNull.list.field('titles', {
          type: 'Translation',
       })
+      t.nonNull.list.field('platforms', {
+         type: 'Platform',
+      })
       t.string('version')
    },
 })

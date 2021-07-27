@@ -236,6 +236,7 @@ export interface NexusGenObjects {
       // root type
       applications?: Array<NexusGenRootTypes['Application'] | null> | null // [Application]
       locations?: Array<NexusGenRootTypes['Location'] | null> | null // [Location]
+      platforms: Array<NexusGenEnums['Platform'] | null> // [Platform]!
       titles: Array<NexusGenRootTypes['Translation'] | null> // [Translation]!
       version?: string | null // String
    }
@@ -312,6 +313,7 @@ export interface NexusGenFieldTypes {
       // field return type
       applications: Array<NexusGenRootTypes['Application'] | null> | null // [Application]
       locations: Array<NexusGenRootTypes['Location'] | null> | null // [Location]
+      platforms: Array<NexusGenEnums['Platform'] | null> // [Platform]!
       titles: Array<NexusGenRootTypes['Translation'] | null> // [Translation]!
       version: string | null // String
    }
@@ -344,6 +346,7 @@ export interface NexusGenFieldTypes {
    Program: {
       // field return type
       applications: Array<NexusGenRootTypes['Application'] | null> | null // [Application]
+      platforms: Array<NexusGenEnums['Platform'] | null> // [Platform]!
       titles: Array<NexusGenRootTypes['Translation'] | null> // [Translation]!
       version: string | null // String
    }
@@ -393,6 +396,7 @@ export interface NexusGenFieldTypeNames {
       // field return type name
       applications: 'Application'
       locations: 'Location'
+      platforms: 'Platform'
       titles: 'Translation'
       version: 'String'
    }
@@ -425,6 +429,7 @@ export interface NexusGenFieldTypeNames {
    Program: {
       // field return type name
       applications: 'Application'
+      platforms: 'Platform'
       titles: 'Translation'
       version: 'String'
    }

@@ -1,5 +1,5 @@
 import { AxiosStatic } from 'axios'
-import { /* Platform,*/ Plugin } from '../../libs/types'
+import { /* Platform,*/ Platform, Plugin } from '../../libs/types'
 import { Response } from 'express'
 import { stringArg, extendType } from 'nexus'
 import { Context } from 'apps/core/src/context'
@@ -236,7 +236,7 @@ export const catalogs: Plugin.Catalog[] = [
                               language: Language.en,
                            },
                         ],
-
+                        platforms: [Platform.SUPER_NINTENDO_ENTERTAINMENT_SYSTEM],
                         locations: [
                            {
                               uri,
