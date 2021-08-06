@@ -1,0 +1,86 @@
+{
+  "name": "@noriginmedia/react-spatial-navigation",
+  "version": "2.12.8",
+  "description": "HOC-based Spatial Navigation (key navigation) solution for React",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "eslint": "eslint src",
+    "dist": "./node_modules/.bin/babel src --out-dir dist --copy-files --plugins=transform-object-rest-spread --presets=env,react",
+    "start": "parcel example/src/index.html -d parcel",
+    "test": "jest",
+    "prepublishOnly": "npm run eslint",
+    "prepare": "npm run dist",
+    "publish": "npm publish --access public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NoriginMedia/react-spatial-navigation.git"
+  },
+  "keywords": [
+    "react",
+    "recompose",
+    "spatial-navigation",
+    "hoc"
+  ],
+  "author": "Dmitriy Bryokhin <dmitriy.bryokhin@noriginmedia.com>",
+  "contributors": [
+    "Dmitriy Bryokhin <dmitriy.bryokhin@noriginmedia.com>",
+    "Jamie Birch <jamie.birch@s-and-t.com>",
+    "Antonio Salvati <antonio.salvati@noriginmedia.com>",
+    "Enrico Bardelli <enrico.bardelli@noriginmedia.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NoriginMedia/react-spatial-navigation/issues"
+  },
+  "homepage": "https://github.com/NoriginMedia/react-spatial-navigation#readme",
+  "peerDependencies": {
+    "react": ">=16.5.1",
+    "react-dom": ">=16.5.1",
+    "react-native-web": "^0.11.2"
+  },
+  "dependencies": {
+    "lodash": "^4.17.13",
+    "prop-types": "^15.6.2",
+    "recompose": "^0.30.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.4.6",
+    "@types/react": "^17.0.15",
+    "@types/react-dom": "^17.0.9",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/preset-typescript": "^7.14.5",
+    "@typescript-eslint/eslint-plugin": "^4.28.5",
+    "@typescript-eslint/parser": "^4.28.5",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.3",
+    "babel-eslint": "8.2.3",
+    "babel-jest": "^23.6.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-react": "^6.24.1",
+    "eslint": "^7.31.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^3.4.0",
+    "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-react-hooks": "^4.2.0",
+    "jest": "^23.6.0",
+    "parcel-bundler": "^1.11.0",
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.3.1",
+    "react": "^16.5.2",
+    "react-dom": "^16.5.2",
+    "react-native-web": "^0.11.2",
+    "typescript": "^4.3.5"
+  },
+  "pre-commit": [
+    "eslint"
+  ],
+  "alias": {
+    "react-native": "react-native-web"
+  }
+}

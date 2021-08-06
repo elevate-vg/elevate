@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef } from 'react'
 import { ScrollView } from 'react-native-web'
-import { withFocusable } from '@noriginmedia/react-spatial-navigation'
+import { withFocusable } from './react-spatial-navigation/src'
 import styles from '../styles'
 import { CategoryFocusable } from './Category'
 import shuffle from 'lodash/shuffle'
@@ -21,10 +22,11 @@ export type CategoriesProps = {
    realFocusKey: string
 }
 
+// @ts-ignore
 export const Categories = ({ onProgramPress, realFocusKey }: CategoriesProps): JSX.Element => {
    const scrollRef = useRef<ScrollView>()
    const onCategoryFocused = ({ y }: { y: number }) => {
-      scrollRef?.current.scrollTo({ y })
+      scrollRef?.current?.scrollTo({ y })
    }
 
    return (

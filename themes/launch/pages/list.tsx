@@ -1,8 +1,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import Head from 'next/head'
-import styles from '../styles/Home.module.css'
-import { useLazyQuery, useQuery, gql } from '@apollo/client'
+// import Head from 'next/head'
+// import styles from '../styles/Home.module.css'
+import { useLazyQuery, useQuery } from '@apollo/client'
 
 import launchQueryGql from '../queries/launchQuery.gql'
 import myQueryGql from '../queries/myQuery.gql'

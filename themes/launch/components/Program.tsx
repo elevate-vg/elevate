@@ -1,7 +1,7 @@
 import React from 'react'
 import { View, Text, TouchableOpacity } from 'react-native-web'
 import styles from '../styles'
-import { withFocusable } from '@noriginmedia/react-spatial-navigation'
+import { withFocusable } from './react-spatial-navigation/src'
 
 export type ProgramProps = {
    title: string

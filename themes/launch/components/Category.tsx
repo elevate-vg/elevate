@@ -1,13 +1,15 @@
-import React, { useRef } from 'react'
+/* eslint-disable @typescript-eslint/no-unused-vars */
+import React, { useContext, useRef, useState } from 'react'
 import { View, Text, ScrollView } from 'react-native-web'
-import { withFocusable } from '@noriginmedia/react-spatial-navigation'
+import { withFocusable } from './react-spatial-navigation/src'
 import styles from '../styles'
 import { ProgramFocusable } from './Program'
 import shuffle from 'lodash/shuffle'
 import { categories } from './Categories'
-import { useLazyQuery, useQuery } from '@apollo/client'
-import launchQueryGql from '../queries/launchQuery.gql'
+import { useQuery } from '@apollo/client'
 import myQueryGql from '../queries/myQuery.gql'
+import { StateContext } from './StateContext'
+import { useLaunch } from '../utils'
 
 export type Program = {
    title: string
@@ -63,29 +65,27 @@ export type CategoryProps = {
 
 export const Category = ({
    title,
-   onProgramPress,
+   // onProgramPress,
    realFocusKey,
    categoryIndex,
    setFocus,
 }: CategoryProps): JSX.Element => {
+   const launch = useLaunch()
+   const { setFocusedItem } = useContext(StateContext)
    const { loading, error, data } = useQuery(myQueryGql)
-   const [launch, { loading: launchLoading, data: launchData, variables: launchVariables }] =
-      useLazyQuery<{ launch: number }>(launchQueryGql)
-
-   const launchHandler = (entry) =>
-      launch({
-         variables: {
-            uri: entry?.locations?.[0]?.uri,
-            platform: entry?.platforms?.[0],
-         },
-      })
 
    const scrollRef = useRef()
 
-   const onProgramFocused = ({ x }) => {
-      scrollRef?.current?.scrollTo({ x })
-   }
+   const onProgramFocused =
+      (entry) =>
+      ({ x }) => {
+         console.log(entry)
+         // @ts-ignore
+         scrollRef?.current?.scrollTo({ x })
+         setFocusedItem(entry)
+      }
 
+   // @ts-ignore
    const onProgramArrowPress = (direction, { categoryIndex, programIndex }) => {
       if (
          direction === 'right' &&
@@ -103,21 +103,27 @@ export const Category = ({
    if (loading) return null
    if (error) return <ul>{error}</ul>
 
-   console.log({ pid: launchData?.launch, launchVariables })
+   // console.log({ pid: launchData?.launch, launchVariables })
 
    return (
       <View style={styles.categoryWrapper}>
          <Text style={styles.categoryTitle}>{title}</Text>
-         <ScrollView horizontal ref={scrollRef}>
-            {data?.catalog.map((entry, index) => (
+         <ScrollView showsVerticalScrollIndicator={false} horizontal ref={scrollRef}>
+            {data?.catalog?.slice(0, 10).map((entry, index) => (
                <ProgramFocusable
-                  title={(entry?.titles?.[0]?.name || '').split('').splice(0, 8).join('')}
+                  title={entry?.titles?.[0]?.name.split('').splice(0, 8).join('')}
                   color="#000000"
                   focusKey={`PROGRAM-${realFocusKey}-${index}`}
-                  onPress={() => launchHandler(entry)}
-                  onEnterPress={() => launchHandler(entry)}
+                  onPress={() => {
+                     console.log(entry)
+                     launch(entry)
+                  }}
+                  onEnterPress={() => {
+                     launch(entry)
+                     console.log(entry)
+                  }}
                   key={index}
-                  onBecameFocused={onProgramFocused}
+                  onBecameFocused={onProgramFocused(entry)}
                   // onArrowPress={onProgramArrowPress}
                   programIndex={index}
                   categoryIndex={categoryIndex}

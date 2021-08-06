@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "jsx": "react",
+    "esModuleInterop": true,
+    "lib": ["esnext", "dom", "dom.iterable"],
+    "types": ["@types/node", "@types/react", "@types/react-dom", "@types/jest"]
+  },
+  "include": ["**/*.ts", "**/*.tsx", "src/spatialNavigation.js"],
+  "exclude": ["node_modules"]
+}

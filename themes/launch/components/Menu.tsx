@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { View, TouchableOpacity } from 'react-native-web'
-import { withFocusable } from '@noriginmedia/react-spatial-navigation'
-import { RETURN_KEY } from '../constants'
+import { withFocusable } from './react-spatial-navigation/src'
+// import { RETURN_KEY } from '../constants'
 import styles from '../styles'
 
 export type MenuItemProps = {
@@ -19,6 +19,7 @@ export type MenuProps = {
    hasFocusedChild: boolean
 }
 
+// @ts-ignore
 export const Menu = ({ setFocus, hasFocusedChild }: MenuProps): JSX.Element => {
    // useEffect(() => {
    //    const onPressKey = (event) => {

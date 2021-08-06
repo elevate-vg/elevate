@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native-web'
-import { withFocusable } from '@noriginmedia/react-spatial-navigation'
+import { withFocusable } from './react-spatial-navigation/src'
 import styles from '../styles'
 import { KEY_ENTER, B_KEY, RETURN_KEY } from '../constants'
-import { Active } from './Active'
+// import { Active } from './Active'
 import { CategoriesFocusable } from './Categories'
 
 const useOnPressKey = (keyCode, fn) => {
@@ -23,6 +24,7 @@ const useOnPressKey = (keyCode, fn) => {
 }
 
 export const Content = ({ setFocus }): JSX.Element => {
+   // @ts-ignore
    const [currentProgram, setCurrentProgram] = useState(null)
    const [blockNavigationOut, setBlockNavigationOut] = useState(false)
 
@@ -38,6 +40,7 @@ export const Content = ({ setFocus }): JSX.Element => {
       setBlockNavigationOut((bool) => !bool)
    })
 
+   // @ts-ignore
    const onProgramPress = (programProps, { pressedKeys } = {}) => {
       if (pressedKeys && pressedKeys[KEY_ENTER] > 1) {
          return
