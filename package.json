@@ -11,7 +11,7 @@
       "node": "^14.16"
    },
    "scripts": {
-      "dev": "NODE_ENV=\"development\" yarn lerna exec --scope \"@elevate/core\" yarn dev",
+      "dev": "cross-env NODE_ENV=development yarn lerna exec --scope \"@elevate/core\" yarn dev",
       "test:watch": "jest --watch",
       "bootstrap": "lerna bootstrap",
       "build": "lerna run build --stream",
@@ -23,6 +23,7 @@
       "ramda": "0.27.1"
    },
    "devDependencies": {
+      "cross-env": "^7.0.3",
       "@babel/preset-env": "^7.14.7",
       "@babel/preset-typescript": "^7.14.5",
       "@types/jest": "^26.0.24",

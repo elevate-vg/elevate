@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useRef } from 'react'
 import { View, Text, ScrollView } from 'react-native-web'
 import { withFocusable } from './react-spatial-navigation/src'
 import styles from '../styles'

@@ -1,5 +1,5 @@
 {
    "watch": ["../../"],
-   "exec": "TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true ts-node -r tsconfig-paths/register ./src/index.ts",
+   "exec": "cross-env TS_NODE_FILES=true TS_NODE_TRANSPILE_ONLY=true ts-node -r tsconfig-paths/register ./src/index.ts",
    "ext": "js ts tsx jsx prisma css"
 }
