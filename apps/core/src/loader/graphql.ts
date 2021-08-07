@@ -6,7 +6,7 @@ import { Context } from '../context'
 import { types } from 'libs/graphql'
 import { compose, concat, map } from 'libs/utils'
 import { rootDir } from '../constants'
-import launch from '../launch'
+import { launch, download } from '../launch'
 import { Platforms } from 'libs/graphql/types/platform'
 import { Platform } from 'libs/types'
 
