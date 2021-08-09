@@ -1,6 +1,8 @@
 export * from 'ramda'
 import { anyPass, map, has, __, compose, equals, all, flip } from 'ramda'
 
+export const invokableCompose = <any>compose
+
 export const allFalse = all(equals(false))
 
 // prettier-ignore

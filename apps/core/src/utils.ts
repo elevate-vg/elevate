@@ -1,12 +1,16 @@
 import type { Context } from './context'
 import {
+   append,
    applyTo,
    // call,
    compose,
+   curry,
+   equals,
    // ifElse,
    // equals,
    // isNil,
    juxt,
+   when,
    // path,
    // unless,
    // when
@@ -43,3 +47,15 @@ export const whenProduction = (fn: () => void) => {
       }
    }
 }
+
+// prettier-ignore
+export const appendWhenTrue = curry((
+    bool: boolean | undefined,
+    toAppend: string, 
+    arr: string[]) =>
+    when(
+       () => equals(true, bool), 
+       append(toAppend), 
+       arr
+    ),
+)
