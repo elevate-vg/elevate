@@ -1,4 +1,4 @@
-import { tap, curry, invokableCompose as compose } from './index'
+import { tap, curry, compose } from './index'
 import { join } from 'path'
 import { createHash } from 'crypto'
 import { openSync, createWriteStream, existsSync, mkdirSync, utimesSync, closeSync } from 'fs'

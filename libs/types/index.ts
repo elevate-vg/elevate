@@ -22,5 +22,20 @@ export enum Platform {
    'WINDOWS_32',
 }
 
+export type LaunchSettingsOptional = {
+   fullscreen?: true
+   activate?: true
+}
+
+export type LaunchSettings = {
+   uri: string
+   platform: Platform
+} & LaunchSettingsOptional
+
+export type Launch = {
+   uri: string
+   platform: Platform
+}
+
 export * as Plugin from './Plugin'
 export * as Nexus from './Nexus'

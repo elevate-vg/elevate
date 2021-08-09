@@ -1,13 +1,22 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export * from 'ramda'
-import { anyPass, map, has, __, compose, equals, all, flip } from 'ramda'
+import { anyPass, map, has, __, compose as Rcompose, equals, all, flip, when } from 'ramda'
 
-export const invokableCompose = <any>compose
+export const compose = <any>Rcompose
 
-export const allFalse = all(equals(false))
+// prettier-ignore
+export const allFalse = compose(
+   all,
+   equals
+)(false)
 
 // prettier-ignore
 export const hasAny = (props: string[]) => 
-   anyPass(map(has, props))
+   compose(
+      anyPass,
+      map(has)
+   )(props)
 
 export const mapTo = flip(map)
 
@@ -19,9 +28,12 @@ export const hasNone =
    (obj: Record<string, any>) =>
       compose(
          allFalse,
-         // @ts-ignore
          mapTo(props),
-         // @ts-ignore
          objHas
-      // @ts-ignore
       )(obj)
+
+// prettier-ignore
+export const whenTrue = compose(
+    when,
+    equals
+)(true)
