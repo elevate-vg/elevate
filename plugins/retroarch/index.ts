@@ -4,7 +4,7 @@ import { ChildProcessWithoutNullStreams } from 'child_process'
 import extractZip from 'extract-zip'
 
 import { LaunchSettings, LaunchSettingsOptional, Platform } from 'libs/types'
-import { curry, equals, compose as compose, mergeLeft, when, whenTrue } from 'libs/utils'
+import { curry, compose, mergeLeft, whenTrue } from 'libs/utils'
 import { cacheFile } from 'libs/utils/io'
 import { command } from 'libs/utils/runner'
 import { activate } from 'libs/utils/activate'
@@ -16,11 +16,56 @@ export const launchSettingsPluginDefaults: LaunchSettingsOptional = {
    activate: true,
 }
 
+export const getRetroArchPackage = (platform: NodeJS.Platform) => {
+   switch (platform) {
+      case 'win32':
+         return {
+            uri: 'https://buildbot.libretro.com/stable/1.9.7/windows/x86_64/RetroArch.7z',
+            exePath: 'RetroArch.exe',
+         }
+      case 'darwin':
+         return {
+            uri: 'https://buildbot.libretro.com/stable/1.9.7/apple/osx/x86_64/RetroArch.dmg',
+            exePath: 'Contents/MacOS/RetroArch',
+         }
+
+      // BUG: Find a better way to handle non-supported platforms
+      default:
+         return {
+            uri: '',
+            exePath: '',
+         }
+   }
+}
+
+// TODO: Write a facade utility to handle archive extraction
+// extract(archiveType: 'zip' | '7z', path: string)
+const getRetroArch = curry(
+   async (ctx: Context, platform: NodeJS.Platform): Promise<string | undefined> => {
+      const { uri, exePath } = getRetroArchPackage(platform)
+
+      try {
+         const zip = await cacheFile(ctx, uri)
+
+         await extractZip(zip, {
+            dir: ctx.paths.cache,
+         })
+
+         return join(ctx.paths.cache, exePath)
+      } catch (error) {
+         ctx.logger.error(`Failed to get RetroArch`)
+      }
+   },
+)
+
 export const buildLibraryObject = (platform: NodeJS.Platform) => (name: string) => {
    const platformMap = (platform: NodeJS.Platform) => {
       switch (platform) {
          case 'win32':
             return 'windows'
+         case 'darwin':
+            return 'apple/osx'
+
          default:
             return platform
       }
@@ -42,6 +87,7 @@ const getRetroArchLibPath = curry(
          [Platform.GAME_BOY_ADVANCED as Platform]: lib('mgba_libretro.dylib'),
       }
 
+      console.log(platformLibraryMap)
       try {
          const { uri, name } = platformLibraryMap[platform]
          const zip = await cacheFile(ctx, uri)
@@ -61,12 +107,29 @@ export const launch = curry(
    async (ctx: Context, launchConfig: LaunchSettings): Promise<ChildProcessWithoutNullStreams> => {
       const launchSettings = mergeLeft(launchSettingsDefaults, launchConfig)
 
+      // let retroArchExe = ''
+      const retroArchExe = '/Applications/RetroArch.app/Contents/MacOS/RetroArch'
+      let retroArchPlatformLib = ''
+
+      // try {
+      //    retroArchExe = await getRetroArch(ctx, process.platform)
+      // } catch (e) {
+      //    ctx.logger.error('Could not find RetroArch')
+      // }
+
+      try {
+         retroArchPlatformLib = await getRetroArchLibPath(ctx, launchConfig.platform)
+      } catch (e) {
+         ctx.logger.error('Could not find RetroArch Library')
+      }
+
       // TODO: Cache RetroArch
       const retroArchCommands = [
-         'C:\\Users\\simonwjackson\\Downloads\\RetroArch\\retroarch.exe',
+         // 'C:\\Users\\simonwjackson\\Downloads\\RetroArch\\retroarch.exe',
+         retroArchExe,
          '-L',
-         (await getRetroArchLibPath(ctx, launchConfig.platform)) || '',
-         launchConfig.uri || '',
+         retroArchPlatformLib,
+         launchConfig.uri,
       ]
 
       // prettier-ignore

@@ -29,6 +29,7 @@ export const launch = curry(
                uri,
             })
 
+            ctx.logger.info(`onLauch callback: ${'RetroArch'}`)
             // TODO: Return something here
             onRetroArchLaunch(ctx, launchObj, theProcess)
 
