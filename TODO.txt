@@ -64,3 +64,16 @@ Wishlist
 
 Nexus Mods support
 Prisma migrate via native API (non-existant)
+
+Gamepad event array:
+[
+  { 
+    type: Button0, 
+    change: up | down | hold
+  },
+  {
+    type: AxisYPos,
+    value: 0.23487234,
+    delta: 0.004564,
+  }
+]
