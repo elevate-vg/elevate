@@ -15,7 +15,7 @@ export const serve = () => loader(ctx)
 export const main = async () => {
    setEnvs(ctx)
 
-   setupDependencies(ctx, dependencyList(ctx)).then(console.log)
+   setupDependencies(ctx, dependencyList(ctx))
 
    // prettier-ignore
    // init([

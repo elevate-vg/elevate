@@ -1,6 +1,7 @@
+import { chmodSync, existsSync, rmdirSync, rmSync, unlinkSync } from 'fs'
 import { join } from 'path'
 import { Context } from 'vm'
-import { FileType, InitDownloadObject } from './dependencies'
+import { FileType, InitDownloadObject, renameSync } from '../utils'
 
 export type DependencyList = [
    Base: InitDownloadObject[],
@@ -24,5 +25,24 @@ export default (ctx: Context) => {
       },
    ] as InitDownloadObject[]
 
-   return [[...sevenZip], [], []] as DependencyList
+   const chromium = [
+      {
+         platform: 'darwin',
+         filetype: FileType.ZIP,
+         url: `https://storage.googleapis.com/chromium-browser-snapshots/Mac/884014/chrome-mac.zip`,
+         output: join(ctx.paths.cache, 'utils', 'chrome'),
+         isReady: () => existsSync(join(ctx.paths.cache, 'utils', 'Chromium.app')),
+         events: {
+            onFinish: (path) => {
+               renameSync(
+                  join(path, 'chrome-mac/Chromium.app'),
+                  join(ctx.paths.cache, 'utils', 'Chromium.app'),
+               )
+               rmSync(join(path, 'chrome-mac'), { recursive: true, force: true })
+            },
+         },
+      },
+   ] as InitDownloadObject[]
+
+   return [[...sevenZip], [...chromium], []] as DependencyList
 }
