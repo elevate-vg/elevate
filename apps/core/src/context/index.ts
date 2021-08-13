@@ -28,6 +28,7 @@ export interface Context {
    axios: axios.AxiosStatic
    cheerio: cheerio.CheerioAPI
    logger: Logger
+   platform: NodeJS.Platform
 }
 
 export function createContext(): Context {
@@ -39,5 +40,6 @@ export function createContext(): Context {
       axios: axios.default,
       cheerio: cheerio.default,
       logger: logger(paths.log),
+      platform: process.platform,
    }
 }

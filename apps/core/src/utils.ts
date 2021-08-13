@@ -15,6 +15,7 @@ import {
    // unless,
    // when
 } from 'libs/utils'
+import { mkdirSync } from 'fs'
 
 // prettier-ignore
 export const initFns = 
@@ -25,7 +26,6 @@ export const initFns =
       applyTo(platform),
       juxt,
       juxt(fns),
-      // @ts-ignore
    )(ctx)
 
 export type environment = 'production' | 'development'
@@ -59,3 +59,13 @@ export const appendWhenTrue = curry((
        arr
     ),
 )
+
+export const touchDir = (dir: string) => {
+   try {
+      mkdirSync(dir)
+   } catch (e) {
+      // TODO: Better fail support, ex: permissions errors
+   }
+
+   return dir
+}

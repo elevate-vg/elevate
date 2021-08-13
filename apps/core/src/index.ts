@@ -1,11 +1,10 @@
 import loader from './loader'
-import setupChrome from './init/setup-chrome'
-import setupElectron from './init/setup-electron'
-import setupPrisma from './init/setup-prisma'
 import setEnvs from './init/set-env'
 import { createContext } from './context'
 import { equals, when } from 'libs/utils'
 import { initFns } from './utils'
+import { setupDependencies } from './init/dependencies'
+import dependencyList from './init/dependencyList'
 
 const ctx = createContext()
 
@@ -16,12 +15,14 @@ export const serve = () => loader(ctx)
 export const main = async () => {
    setEnvs(ctx)
 
+   setupDependencies(ctx, dependencyList(ctx)).then(console.log)
+
    // prettier-ignore
-   init([
-      setupElectron,
-      setupChrome,
-      setupPrisma
-   ])
+   // init([
+   //    setupElectron,
+   //    setupChrome,
+   //    setupPrisma
+   // ])
 
    serve()
 }
