@@ -1,30 +1,16 @@
-import loader from './loader'
-import setEnvs from './init/set-env'
+import serve from './loader'
+import environment from './init/environment'
 import { createContext } from './context'
-import { equals, when } from 'libs/utils'
-import { initFns } from './utils'
-import { setupDependencies } from './init/dependencies'
-import dependencyList from './init/dependencyList'
+import { compose, equals, when } from 'libs/utils'
+import dependencies from './init/dependencies'
 
-const ctx = createContext()
-
-export const init = initFns(ctx)(process.platform)
-
-export const serve = () => loader(ctx)
-
-export const main = async () => {
-   setEnvs(ctx)
-
-   setupDependencies(ctx, dependencyList(ctx))
-
-   // prettier-ignore
-   // init([
-   //    setupElectron,
-   //    setupPrisma
-   // ])
-
-   serve()
-}
+// prettier-ignore
+export const main = async () => 
+   compose(
+      serve,
+      dependencies,
+      environment, 
+   )(createContext())
 
 export default main
 
