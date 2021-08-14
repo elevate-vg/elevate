@@ -25,6 +25,7 @@ export const isFunction = <T>(fn: T) => {
    if (typeof fn === 'function') {
       return true
    }
+
    return false
 }
 
@@ -68,8 +69,8 @@ export type DownloadObject = {
 }
 
 export enum FileType {
-   'EXE',
-   'ZIP',
+   'EXECUTABLE',
+   'ARCHIVE',
 }
 
 export type InitDownloadObject = {
@@ -87,17 +88,18 @@ export type DownloadEvents = {
 
 export const renameSync = curry((from: string, to: string) => fsRenameSync(from, to))
 
-export const downloadExe = curry(async (ctx: Context, obj: InitDownloadObject) =>
-   download(ctx, obj)
-      .then((path) => {
-         chmodSync(path, 0o755)
-         return path
-      })
-      .then(renameSync(__, obj.output)),
-)
+export const downloadExe = curry(async (ctx: Context, obj: InitDownloadObject) => {
+   const path = await download(ctx, obj)
+   if (obj.isReady(path)) return obj.output
 
-// TODO: Rename downloadZip. This downloads and unzips
-export const downloadZip = curry(async (ctx: Context, obj: InitDownloadObject) =>
+   chmodSync(path, 0o755)
+   renameSync(path, obj.output)
+
+   return obj.output
+})
+
+// TODO: Rename downloadArchive... This function both downloads and unarchives
+export const downloadArchive = curry(async (ctx: Context, obj: InitDownloadObject) =>
    download(ctx, obj).then((path) => {
       if (obj.isReady(path)) return Promise.resolve(obj.output)
 
@@ -106,7 +108,10 @@ export const downloadZip = curry(async (ctx: Context, obj: InitDownloadObject) =
             $bin: join(ctx.paths.cache, 'utils', `7za${ctx.platform === 'win32' ? '.exe' : ''}`),
          })
             .on('end', () => {
-               obj.events?.onFinish && obj.events?.onFinish(obj.output)
+               if (typeof obj.events?.onFinish === 'function') {
+                  obj.events.onFinish(obj.output)
+               }
+
                res(obj.output)
             })
             .on('error', (e) => rej(e))
@@ -166,11 +171,11 @@ export const download = curry(async (ctx: Context, obj: DownloadObject): Promise
 // TODO: rename downloadType to something a bit more idiomatic
 export const downloadType = curry(async (ctx: Context, obj: InitDownloadObject) => {
    switch (obj.filetype) {
-      case FileType.EXE: {
+      case FileType.EXECUTABLE: {
          return downloadExe(ctx, obj)
       }
-      case FileType.ZIP: {
-         return downloadZip(ctx, obj)
+      case FileType.ARCHIVE: {
+         return downloadArchive(ctx, obj)
       }
       default: {
          return download(ctx, obj)

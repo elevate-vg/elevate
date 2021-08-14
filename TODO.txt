@@ -64,6 +64,7 @@ Wishlist
 
 Nexus Mods support
 Prisma migrate via native API (non-existant)
+progress (emitter?) for downloads
 
 Gamepad event array:
 [

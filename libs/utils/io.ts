@@ -1,7 +1,15 @@
 import { tap, curry, compose } from './index'
 import { join } from 'path'
 import { createHash } from 'crypto'
-import { openSync, createWriteStream, existsSync, mkdirSync, utimesSync, closeSync } from 'fs'
+import fs, {
+   openSync,
+   createWriteStream,
+   existsSync,
+   mkdirSync,
+   utimesSync,
+   closeSync,
+   promises as fsP,
+} from 'fs'
 import { promisify } from 'util'
 import * as stream from 'stream'
 import { Context } from 'apps/core/src/context'
@@ -65,3 +73,17 @@ export const touchFile = (filename: string) => {
 }
 
 export const finished = promisify(stream.finished)
+
+export const copyDir = async (src: string, dest: string) => {
+   await fsP.mkdir(dest, { recursive: true })
+   const entries = await fsP.readdir(src, { withFileTypes: true })
+
+   for (const entry of entries) {
+      const srcPath = join(src, entry.name)
+      const destPath = join(dest, entry.name)
+
+      entry.isDirectory() ? await copyDir(srcPath, destPath) : await fsP.copyFile(srcPath, destPath)
+   }
+}
+
+export const unlinkAsync = promisify(fs.unlink.bind(fs))
