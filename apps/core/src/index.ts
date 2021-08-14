@@ -20,7 +20,6 @@ export const main = async () => {
    // prettier-ignore
    // init([
    //    setupElectron,
-   //    setupChrome,
    //    setupPrisma
    // ])
 

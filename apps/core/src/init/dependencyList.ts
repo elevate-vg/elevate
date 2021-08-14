@@ -1,4 +1,4 @@
-import { chmodSync, existsSync, rmdirSync, rmSync, unlinkSync } from 'fs'
+import { existsSync, rmSync } from 'fs'
 import { join } from 'path'
 import { Context } from 'vm'
 import { FileType, InitDownloadObject, renameSync } from '../utils'
@@ -25,7 +25,22 @@ export default (ctx: Context) => {
       },
    ] as InitDownloadObject[]
 
+   // url: `https://npm.taobao.org/mirrors/electron/13.1.5/electron-v13.1.5-win32-x64.zip`,
+
    const chromium = [
+      {
+         platform: 'win32',
+         filetype: FileType.ZIP,
+         url: 'https://storage.googleapis.com/chromium-browser-snapshots/Win/884014/chrome-win.zip',
+         output: join(ctx.paths.cache, 'utils', 'chrome'),
+         isReady: () => existsSync(join(ctx.paths.cache, 'utils', 'chromium', 'chrome.exe')),
+         events: {
+            onFinish: (path) => {
+               renameSync(join(path, 'chromium'), join(ctx.paths.cache, 'utils', 'chromium'))
+               rmSync(join(path, 'chrome-win'), { recursive: true, force: true })
+            },
+         },
+      },
       {
          platform: 'darwin',
          filetype: FileType.ZIP,
