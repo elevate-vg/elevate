@@ -194,7 +194,7 @@ export const launchers: Plugin.Launcher[] = [
 // TODO: memoize based on query, after and limit
 const getResource = (axios: AxiosStatic) =>
    memoizeWith(
-      // @ts-ignore
+      // @ts-expect-error: Ramda false positive
       identity,
       (url) =>
          axios({

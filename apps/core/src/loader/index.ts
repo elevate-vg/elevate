@@ -6,26 +6,27 @@ import theme from './theme'
 import graphql from './graphql'
 import catalog from './catalog'
 import api from './api'
+import dependencies from './dependencies'
 
 // Types
 import type { Plugin } from 'libs/types/Plugin'
-
-// Plugins
-import * as hello from 'plugins/hello-world'
-
-const normalizePlugin = (plugin: Plugin): Plugin => ({
-   graphql: [],
-   catalogs: [],
-   launchers: [],
-   apis: [],
-   ...plugin,
-})
+import * as rawPlugins from 'plugins'
 
 const port = parseInt(process.env.PORT || '31348', 10)
 
-const plugins = [hello].map(normalizePlugin)
-
 export const main = async (ctx: Context) => {
+   const normalizePlugin = (plugin: Plugin): Plugin => ({
+      graphql: [],
+      catalogs: [],
+      launchers: [],
+      apis: [],
+      dependencies: [],
+      ...plugin,
+   })
+
+   const plugins = Object.values(rawPlugins).map(normalizePlugin)
+
+   await dependencies(ctx, plugins)
    await theme(ctx)
    await graphql(ctx)(plugins)
    await catalog(ctx)(plugins)

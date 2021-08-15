@@ -1,7 +1,9 @@
-import type { Platform } from '.'
+import type { ChildProcessWithoutNullStreams } from 'child_process'
+import type { LaunchSettings, Platform } from '.'
 import type { Router } from 'express'
 import type { NexusExtendTypeDef } from 'nexus/dist/core'
 import type { Context } from 'apps/core/src/context'
+import type { InitDownloadObject } from 'apps/core/src/utils'
 
 export type Meta = {
    namespace: string
@@ -258,14 +260,30 @@ export type Api = {
    fn: (arg0: Router) => Router
 }
 
+export type Dependency = (ctx: Context) => InitDownloadObject
+
+export type Graphql = NexusExtendTypeDef<any>
+
+export type OnLaunch = (
+   ctx: Context,
+   launchConfig: LaunchSettings,
+   command: ChildProcessWithoutNullStreams,
+) => void
+
+export type Launch = (
+   ctx: Context,
+   launchConfig: LaunchSettings,
+) => Promise<ChildProcessWithoutNullStreams>
+
 export type Plugin = {
    meta: Meta
    catalogs?: Catalog[]
    apis?: Api[]
    graphql?: Graphql[]
    launchers?: Launcher[]
+   dependencies?: Dependency[]
+   launch?: Launch
+   onLaunch?: OnLaunch
 }
-
-export type Graphql = NexusExtendTypeDef<any>
 
 export default Plugin

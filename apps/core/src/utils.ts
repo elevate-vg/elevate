@@ -147,11 +147,31 @@ export const download = curry(async (ctx: Context, obj: DownloadObject): Promise
 
       const writer = createWriteStream(tempPath)
 
+      const followRedirect = (response: http.IncomingMessage) => {
+         if (
+            (response.statusCode || 0) >= 300 &&
+            (response.statusCode || Infinity) < 400 &&
+            response.headers?.location
+         ) {
+            return response.headers?.location
+         }
+         return false
+      }
+
       // prettier-ignore
-      getProtocolModule(obj.url)
-         .get(obj.url, (res) => {
-            res.pipe(writer)
-         })
+      getProtocolModule(obj.url).get(obj.url, (response) => {
+         const url = followRedirect(response)
+
+         // BUG: This only handles one redirect
+         if (obj.url !== url && url !== false) {
+            console.log(url)
+            getProtocolModule(url).get(url, (response) => {
+               response.pipe(writer)
+            })
+         } else {
+            response.pipe(writer)
+         }
+      })
 
       writer.on('finish', () => {
          writer.close()

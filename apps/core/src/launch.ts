@@ -24,14 +24,14 @@ export const launch = curry(
       switch (launchObj.platform) {
          case Platform.SUPER_NINTENDO_ENTERTAINMENT_SYSTEM as Platform:
          case Platform.GAME_BOY_ADVANCED as Platform: {
-            const theProcess = await retroArchLaunch(ctx, {
+            const theProcess = await curry(retroArchLaunch)(ctx, {
                ...launchObj,
                uri,
             })
 
             ctx.logger.info(`onLauch callback: ${'RetroArch'}`)
             // TODO: Return something here
-            onRetroArchLaunch(ctx, launchObj, theProcess)
+            curry(onRetroArchLaunch)(ctx, launchObj, theProcess)
 
             return theProcess
          }

@@ -4,11 +4,12 @@ import { FileType, InitDownloadObject, renameSync } from '../utils'
 import { Context } from '../context'
 import { curry } from 'libs/utils'
 import { downloadType } from '../utils'
+import { Plugin } from 'libs/types/Plugin'
 
-export default (ctx: Context) => {
-   setup(ctx, list(ctx))
+export default curry(async (ctx: Context, plugins: Plugin[] = []) => {
+   setup(ctx, list(ctx, plugins))
    return ctx
-}
+})
 
 export const setup = curry(async (ctx: Context, dependencyList: DependencyList) => {
    let level = 0
@@ -38,7 +39,7 @@ export type DependencyList = [
 ]
 
 // TODO: Find a way to advertize entrypoint(s) (exe, etc)
-export const list = (ctx: Context) => {
+export const list = curry((ctx: Context, plugins: Plugin[] = []) => {
    const sevenZip = [
       {
          platform: 'darwin',
@@ -120,5 +121,9 @@ export const list = (ctx: Context) => {
       },
    ] as InitDownloadObject[]
 
-   return [[...sevenZip], [...chromium, ...electron], []] as DependencyList
-}
+   const fromPlugins = plugins.reduce((acc, plugin) => {
+      return [...acc, ...(plugin.dependencies?.map((dep) => dep(ctx)) || [])]
+   }, [] as InitDownloadObject[])
+
+   return [[...sevenZip], [...chromium, ...electron], fromPlugins] as DependencyList
+})
