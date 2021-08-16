@@ -270,10 +270,13 @@ export type OnLaunch = (
    command: ChildProcessWithoutNullStreams,
 ) => void
 
+export type OnError = (ctx: Context, launchConfig: LaunchSettings, error: string) => void
+export type OnExit = (ctx: Context, launchConfig: LaunchSettings, code: string) => void
+
 export type Launch = (
    ctx: Context,
    launchConfig: LaunchSettings,
-) => Promise<ChildProcessWithoutNullStreams>
+) => Promise<string[] | (() => ChildProcessWithoutNullStreams)>
 
 export type Plugin = {
    meta: Meta
@@ -284,6 +287,8 @@ export type Plugin = {
    dependencies?: Dependency[]
    launch?: Launch
    onLaunch?: OnLaunch
+   onExit?: OnExit
+   onError?: OnError
 }
 
 export default Plugin

@@ -32,10 +32,5 @@ export type LaunchSettings = {
    platform: Platform
 } & LaunchSettingsOptional
 
-export type Launch = {
-   uri: string
-   platform: Platform
-}
-
 export * as Plugin from './Plugin'
 export * as Nexus from './Nexus'

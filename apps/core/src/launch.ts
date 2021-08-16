@@ -1,10 +1,16 @@
 import { ChildProcessWithoutNullStreams } from 'child_process'
 
 import { Context } from './context'
-import { Launch, LaunchSettingsOptional, Platform } from 'libs/types'
-import { curry } from 'libs/utils'
+import { LaunchSettings, LaunchSettingsOptional, Platform } from 'libs/types'
 import { cacheFile } from 'libs/utils/io'
-import { launch as retroArchLaunch, onLaunch as onRetroArchLaunch } from 'plugins/retroarch'
+import {
+   launch as retroArchLaunch,
+   onLaunch as onRetroArchLaunch,
+   onExit as onRetroArchExit,
+   onError as onRetroArchError,
+} from 'plugins/retroarch'
+import { command } from 'libs/utils/runner'
+import { curry } from 'ramda'
 
 // command to exit ("wait") on PID
 // const cmd = isDarwin ?
@@ -16,25 +22,39 @@ export const launchSettingsDefaults: LaunchSettingsOptional = {
    activate: true,
 }
 
-export const launch = curry(
-   async (ctx: Context, launchObj: Launch): Promise<ChildProcessWithoutNullStreams | undefined> => {
-      const uri = await cacheFile(ctx, launchObj.uri)
+export type Launch = (
+   ctx: Context,
+   launchObj: LaunchSettings,
+) => Promise<ChildProcessWithoutNullStreams | undefined>
 
-      // HACK: Quick fix to achieve launching POC. This only supports RetroArch
-      switch (launchObj.platform) {
-         case Platform.SUPER_NINTENDO_ENTERTAINMENT_SYSTEM as Platform:
-         case Platform.GAME_BOY_ADVANCED as Platform: {
-            const theProcess = await curry(retroArchLaunch)(ctx, {
-               ...launchObj,
-               uri,
-            })
+export const launch: Launch = async (ctx, launchSettings) => {
+   const uri = await cacheFile(ctx, launchSettings.uri)
 
-            ctx.logger.info(`onLauch callback: ${'RetroArch'}`)
-            // TODO: Return something here
-            curry(onRetroArchLaunch)(ctx, launchObj, theProcess)
+   // HACK: Quick fix to achieve launching POC. This only supports RetroArch
+   switch (launchSettings.platform) {
+      case Platform.NINTENDO_ENTERTAINMENT_SYSTEM as Platform:
+      case Platform.SUPER_NINTENDO_ENTERTAINMENT_SYSTEM as Platform:
+      case Platform.GAME_BOY_ADVANCED as Platform: {
+         const toLaunch = await retroArchLaunch(ctx, {
+            ...launchSettings,
+            uri,
+         })
 
-            return theProcess
+         const curriedEvents = Object.fromEntries(
+            Object.entries({
+               onLaunch: onRetroArchLaunch,
+               onExit: onRetroArchExit,
+               onError: onRetroArchError,
+            }).map(([key, value]) => {
+               return [key, curry(value)(ctx, launchSettings)]
+            }),
+         )
+
+         if (Array.isArray(toLaunch)) {
+            return command(ctx, toLaunch, curriedEvents)
+         } else {
+            return toLaunch()
          }
       }
-   },
-)
+   }
+}

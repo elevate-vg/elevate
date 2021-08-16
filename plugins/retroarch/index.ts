@@ -2,7 +2,6 @@ import { join } from 'path'
 import { existsSync } from 'fs'
 import { LaunchSettingsOptional, Plugin } from 'libs/types'
 import { compose, mergeLeft, whenTrue } from 'libs/utils'
-import { command } from 'libs/utils/runner'
 import { activate } from 'libs/utils/activate'
 import { appendWhenTrue, FileType } from 'apps/core/src/utils'
 import { launchSettingsDefaults } from 'apps/core/src/launch'
@@ -24,18 +23,26 @@ export const launch: Plugin.Launch = async (ctx, launchConfig) => {
 
    // prettier-ignore
    return compose(
-         command(ctx),
-         appendWhenTrue(launchSettings?.fullscreen || false, '--fullscreen')
-      )([
-         getRetroArchExe(ctx),
-         '-L',
-         await getRetroArchLibPath(ctx, launchConfig.platform),
-         launchConfig.uri
-      ])
+      appendWhenTrue(launchSettings?.fullscreen || false, '--fullscreen')
+   )([
+      getRetroArchExe(ctx),
+      '-L',
+      await getRetroArchLibPath(ctx, launchConfig.platform),
+      launchConfig.uri
+   ])
 }
 
-export const onLaunch: Plugin.OnLaunch = (_, launchConfig, command) => {
-   whenTrue(() => activate(`${command.pid}`), launchConfig.activate)
+export const onLaunch: Plugin.OnLaunch = (_, config, command) => {
+   console.log('side effect')
+   whenTrue(() => activate(`${command.pid}`), config.activate)
+}
+
+export const onError: Plugin.OnError = (_, __, message) => {
+   console.log('error', message)
+}
+
+export const onExit: Plugin.OnExit = (_, __, code) => {
+   console.log('code', code)
 }
 
 // TODO: Add patch support
