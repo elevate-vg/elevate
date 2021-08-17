@@ -16,7 +16,20 @@ export type Launcher = {
    version: string | number
    platforms: Platform[]
    os: string[]
+   launch: MyNewLaunchObj
 }
+
+export type MyNewLaunchObj = (ctx: Context, launchConfig: LaunchSettings) => MyNewLaunchObjReturn
+
+export type SimpleLauncherObject = {
+   command: LaunchCommand
+   onLaunch?: OnLaunch
+   onExit?: OnExit
+   onError?: OnError
+}
+export type ComplexLauncherFunction = () => ChildProcessWithoutNullStreams
+
+export type MyNewLaunchObjReturn = Promise<SimpleLauncherObject | ComplexLauncherFunction>
 
 export enum Language {
    'aa' = 'aa',
@@ -221,7 +234,6 @@ export type Game = {
 // prettier-ignore
 export type Application = 
    | Game
-// | Launcher
 
 export type Software = {
    version?: string
@@ -262,34 +274,26 @@ export type Api = {
 
 export type Dependency = (ctx: Context) => InitDownloadObject
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type Graphql = NexusExtendTypeDef<any>
 
-export type OnLaunch = (
-   ctx: Context,
-   launchConfig: LaunchSettings,
-   command: ChildProcessWithoutNullStreams,
-) => void
+export type OnLaunch = (command: ChildProcessWithoutNullStreams) => void
 
-export type OnError = (ctx: Context, launchConfig: LaunchSettings, error: string) => void
+export type OnError = (error: string) => void
 
-export type OnExit = (ctx: Context, launchConfig: LaunchSettings, code: string) => void
+export type OnExit = (code: string) => void
 
-export type LaunchReturn = Promise<string[] | (() => ChildProcessWithoutNullStreams)>
+export type LaunchCommand = string[]
 
-export type Launch = (ctx: Context, launchConfig: LaunchSettings) => LaunchReturn
+export type LaunchReturn = Promise<LaunchCommand | (() => ChildProcessWithoutNullStreams)>
 
 export type Plugin = {
    meta: Meta
    catalogs?: Catalog[]
    apis?: Api[]
    graphql?: Graphql[]
-   launchers?: Launcher[]
+   launchers?: Launcher[] | Launcher
    dependencies?: Dependency[]
-   platformSupport?: Platform[]
-   launch?: Launch
-   onLaunch?: OnLaunch
-   onExit?: OnExit
-   onError?: OnError
 }
 
 export default Plugin

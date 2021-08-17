@@ -1,17 +1,18 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
-import { LaunchSettingsOptional, Platform, Plugin } from 'libs/types'
+import { LaunchSettingsOptional, Platform } from 'libs/types'
 import { compose, mergeLeft, whenTrue } from 'libs/utils'
 import { activate } from 'libs/utils/activate'
 import { appendWhenTrue, FileType } from 'apps/core/src/utils'
 import { launchSettingsDefaults } from 'apps/core/src/launch'
 import { getRetroArchExe, getRetroArchLibPath } from './utils'
+import { LaunchCommand, Plugin } from 'libs/types/Plugin'
 
 /*********************************
  * Meta Info
  ********************************/
 
-export const meta: Plugin.Meta = {
+export const meta: Plugin['meta'] = {
    namespace: '@simonwjackson',
    name: 'retroarch',
    version: 'latest',
@@ -32,44 +33,43 @@ export const platformSupport: Platform[] = [
 ]
 
 /*********************************
- * Launcher
+ * Launcher(s)
  ********************************/
+export const launchers: Plugin['launchers'] = {
+   name: 'retroarch',
+   version: '1.9.7',
+   platforms: [Platform.GAME_BOY_ADVANCED, Platform.SUPER_NINTENDO_ENTERTAINMENT_SYSTEM],
+   os: ['win32', 'darwin'],
+   launch: async (ctx, config) => {
+      const launchSettings = mergeLeft(launchSettingsDefaults, config)
+      const command: LaunchCommand = compose(
+         appendWhenTrue(launchSettings?.fullscreen || false, '--fullscreen'),
+      )([getRetroArchExe(ctx), '-L', await getRetroArchLibPath(ctx, config.platform), config.uri])
 
-export const launch: Plugin.Launch = async (ctx, launchConfig) => {
-   const launchSettings = mergeLeft(launchSettingsDefaults, launchConfig)
-
-   // prettier-ignore
-   return compose(
-      appendWhenTrue(launchSettings?.fullscreen || false, '--fullscreen')
-   )([
-      getRetroArchExe(ctx),
-      '-L',
-      await getRetroArchLibPath(ctx, launchConfig.platform),
-      launchConfig.uri
-   ])
+      return {
+         command,
+         onLaunch: (command) => {
+            whenTrue(() => activate(`${command.pid}`), config.activate)
+         },
+         onError: (message) => {
+            console.log('error', message)
+         },
+         onExit: (code) => {
+            console.log('code', code)
+         },
+      }
+   },
 }
 
 /*********************************
  * Launcher / Events
  ********************************/
 
-export const onLaunch: Plugin.OnLaunch = (_, config, command) => {
-   whenTrue(() => activate(`${command.pid}`), config.activate)
-}
-
-export const onError: Plugin.OnError = (_, __, message) => {
-   console.log('error', message)
-}
-
-export const onExit: Plugin.OnExit = (_, __, code) => {
-   console.log('code', code)
-}
-
 /*********************************
  * Dependencies
  ********************************/
 
-export const dependencies: Plugin.Dependency[] = [
+export const dependencies: Plugin['dependencies'] = [
    (ctx) => ({
       platform: 'darwin',
       filetype: FileType.ARCHIVE,

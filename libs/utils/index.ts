@@ -1,7 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 export * from 'ramda'
-import { anyPass, map, has, __, compose as Rcompose, equals, all, flip, when, apply } from 'ramda'
+import {
+   anyPass,
+   map,
+   has,
+   __,
+   compose as Rcompose,
+   equals,
+   all,
+   flip,
+   when,
+   apply,
+   append,
+} from 'ramda'
 
 export type SameLength<T extends any[]> = Extract<{ [K in keyof T]: any }, any[]>
 
@@ -58,3 +70,5 @@ export const whenTrue = compose(
 // @ts-expect-error: Ramda placeholder
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const applyOver = (args: any[]) => (fns: any[]) => map(apply(__, args), fns)
+
+export const appendTo = flip(append)

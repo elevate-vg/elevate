@@ -8,12 +8,15 @@ import { compose, concat, map } from 'libs/utils'
 import { rootDir } from '../constants'
 import { launch } from '../launch'
 
+type SearchCatalog = (ctx: Context, args: CatalogSearch) => CatalogResult
+type SearchCatalogs = (catalogs: Catalog[]) => SearchCatalog
+
 // prettier-ignore
-const searchCatalogs = 
-   (catalogs: Catalog[]) =>
-   (ctx: Context) =>
-   async (args: CatalogSearch): Promise<CatalogResult> => {
-      const result = await map(catalog => catalog.search(ctx)(args), catalogs)
+const searchCatalogs: SearchCatalogs =
+   (catalogs) =>
+   (ctx, args) => {
+      const result = map(catalog => catalog.search(ctx)(args), catalogs)
+
       return result.reduce(async (acc = [], cur = []) => 
          concat(await acc, await cur)
      , [])
@@ -61,12 +64,9 @@ export const main =
                      ),
                   },
                   resolve: async (_, args) => {
-                     const cmd = await launch(ctx, {
-                        ...args,
-                     })
+                     const cmd = await launch(ctx, plugins, args)
 
-                     if (!cmd?.pid) return null
-                     return cmd.pid
+                     return cmd?.pid || null
                   },
                })
             },
@@ -85,16 +85,13 @@ export const main =
                         }),
                      ),
                   },
-                  // @ts-ignore
                   resolve: async (_, args) =>
                      compose(
-                        // @ts-ignore: Incorrect Ramda type issue
-                        (catalogs) => catalogs(ctx)(args),
+                        (search: SearchCatalog) => search(ctx, args),
                         info('Searching catalogs', searchCatalogs),
                         info('Gathering catalogs', getCatalogs),
                         // searchCatalogs,
                         // getCatalogs,
-                        // @ts-ignore: Incorrect Ramda type issue
                      )(plugins),
                })
             },
