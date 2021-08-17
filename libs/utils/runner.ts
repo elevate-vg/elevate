@@ -9,7 +9,7 @@ type Noop = () => void
 const noop: Noop = () => {}
 
 export type CommandEvents = {
-   onError?: (mesage: string) => void | Noop
+   onError?: (message: string) => void | Noop
    onExit?: (code: string) => void | Noop
    onLaunch?: (command: ChildProcessWithoutNullStreams) => void | Noop
 }
@@ -41,6 +41,7 @@ export const command = (ctx: Context, args: string[], events: CommandEvents) => 
    // cmd.stderr.on('data', error)
    cmd.on('error', errorMessage)
    cmd.once('close', close)
+
    debug(`PID: ${cmd.pid}`)
 
    return cmd

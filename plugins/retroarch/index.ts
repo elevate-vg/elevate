@@ -1,11 +1,15 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
-import { LaunchSettingsOptional, Plugin } from 'libs/types'
+import { LaunchSettingsOptional, Platform, Plugin } from 'libs/types'
 import { compose, mergeLeft, whenTrue } from 'libs/utils'
 import { activate } from 'libs/utils/activate'
 import { appendWhenTrue, FileType } from 'apps/core/src/utils'
 import { launchSettingsDefaults } from 'apps/core/src/launch'
 import { getRetroArchExe, getRetroArchLibPath } from './utils'
+
+/*********************************
+ * Meta Info
+ ********************************/
 
 export const meta: Plugin.Meta = {
    namespace: '@simonwjackson',
@@ -17,6 +21,19 @@ export const launchSettingsPluginDefaults: LaunchSettingsOptional = {
    fullscreen: true,
    activate: true,
 }
+
+/*********************************
+ * Platform Support
+ ********************************/
+
+export const platformSupport: Platform[] = [
+   Platform.GAME_BOY_ADVANCED,
+   Platform.SUPER_NINTENDO_ENTERTAINMENT_SYSTEM,
+]
+
+/*********************************
+ * Launcher
+ ********************************/
 
 export const launch: Plugin.Launch = async (ctx, launchConfig) => {
    const launchSettings = mergeLeft(launchSettingsDefaults, launchConfig)
@@ -32,8 +49,11 @@ export const launch: Plugin.Launch = async (ctx, launchConfig) => {
    ])
 }
 
+/*********************************
+ * Launcher / Events
+ ********************************/
+
 export const onLaunch: Plugin.OnLaunch = (_, config, command) => {
-   console.log('side effect')
    whenTrue(() => activate(`${command.pid}`), config.activate)
 }
 
@@ -45,8 +65,9 @@ export const onExit: Plugin.OnExit = (_, __, code) => {
    console.log('code', code)
 }
 
-// TODO: Add patch support
-// '--bps="/Users/simonwjackson/Downloads/Super\ Mario\ World\ DX\ Special\ 14-1/Super\ Mario\ World\ DX\ Starring\ Luigi\ \(Special\).bps"',
+/*********************************
+ * Dependencies
+ ********************************/
 
 export const dependencies: Plugin.Dependency[] = [
    (ctx) => ({
@@ -64,3 +85,6 @@ export const dependencies: Plugin.Dependency[] = [
       isReady: () => existsSync(join(ctx.paths.data, 'launchers', 'retroarch', 'retroarch.exe')),
    }),
 ]
+
+// TODO: Add patch support
+// '--bps="/Users/simonwjackson/Downloads/Super\ Mario\ World\ DX\ Special\ 14-1/Super\ Mario\ World\ DX\ Starring\ Luigi\ \(Special\).bps"',
