@@ -6,9 +6,9 @@ import type { AppProps } from 'next/app'
 import { StateProvider } from '../components/StateContext'
 
 const client = new ApolloClient({
-   uri: 'http://192.168.1.214:31348/graphql',
+   // uri: 'http://192.168.1.214:31348/graphql',
    // uri: 'http://192.168.239.216:31348/graphql',
-   // uri: 'http://localhost:31348/graphql',
+   uri: 'http://localhost:31348/graphql',
    cache: new InMemoryCache(),
 })
 

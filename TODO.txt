@@ -63,7 +63,7 @@ Wishlist
 ------
 
 Nexus Mods support
-Prisma migrate via native API (non-existant)
+Prisma migrate via native API (non-existent)
 progress (emitter?) for downloads
 
 Gamepad event array:
@@ -83,3 +83,7 @@ Gamepad event array:
 Launchers should not be databsed. They are simply plugins that can describe their features (via an export) which graphql can consume.
 
 dont enforce currying at the plugin level. Instead, curry functions as you load them in
+
+need app [in]active events
+
+downloading can be slow, user might try to launch before downloads are ready

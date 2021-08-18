@@ -9,17 +9,26 @@ export interface JSONObject {
 export type JSONArray = Array<JSONValue>
 
 export enum Architecture {
-   IA32,
-   x86_64,
-   ARMv7,
-   ARM64,
+   'arm',
+   'arm64',
+   'armv7',
+   'ia32',
+   'mips',
+   'mipsel',
+   'ppc',
+   'ppc64',
+   's390',
+   's390x',
+   'x32',
+   'x64',
 }
-
 export enum Platform {
    'SUPER_NINTENDO_ENTERTAINMENT_SYSTEM',
    'GAME_BOY_ADVANCED',
    'NINTENDO_ENTERTAINMENT_SYSTEM',
    'WINDOWS_32',
+   'DARWIN',
+   'LINUX',
 }
 
 export type LaunchSettingsOptional = {

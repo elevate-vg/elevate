@@ -1,5 +1,5 @@
 import type { ChildProcessWithoutNullStreams } from 'child_process'
-import type { LaunchSettings, Platform } from '.'
+import type { Architecture, LaunchSettings, Platform } from '.'
 import type { Router } from 'express'
 import type { NexusExtendTypeDef } from 'nexus/dist/core'
 import type { Context } from 'apps/core/src/context'
@@ -15,7 +15,8 @@ export type Launcher = {
    name: string
    version: string | number
    platforms: Platform[]
-   os: string[]
+   os: string | string[]
+   arch: Architecture | Architecture[]
    launch: MyNewLaunchObj
 }
 

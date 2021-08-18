@@ -1,6 +1,6 @@
 import { join } from 'path'
 import { existsSync } from 'fs'
-import { LaunchSettingsOptional, Platform } from 'libs/types'
+import { Architecture, LaunchSettingsOptional, Platform } from 'libs/types'
 import { compose, mergeLeft, whenTrue } from 'libs/utils'
 import { activate } from 'libs/utils/activate'
 import { appendWhenTrue, FileType } from 'apps/core/src/utils'
@@ -40,6 +40,7 @@ export const launchers: Plugin['launchers'] = {
    version: '1.9.7',
    platforms: [Platform.GAME_BOY_ADVANCED, Platform.SUPER_NINTENDO_ENTERTAINMENT_SYSTEM],
    os: ['win32', 'darwin'],
+   arch: Architecture.x64,
    launch: async (ctx, config) => {
       const launchSettings = mergeLeft(launchSettingsDefaults, config)
       const command: LaunchCommand = compose(
@@ -48,23 +49,23 @@ export const launchers: Plugin['launchers'] = {
 
       return {
          command,
+
+         /*********************************
+          * Launcher / Events
+          ********************************/
+
          onLaunch: (command) => {
             whenTrue(() => activate(`${command.pid}`), config.activate)
          },
          onError: (message) => {
-            console.log('error', message)
+            ctx.logger.error('RetroArch:' + message)
          },
          onExit: (code) => {
-            console.log('code', code)
+            ctx.logger.debug('RetroArch exit:' + code)
          },
       }
    },
 }
-
-/*********************************
- * Launcher / Events
- ********************************/
-
 /*********************************
  * Dependencies
  ********************************/
@@ -82,7 +83,10 @@ export const dependencies: Plugin['dependencies'] = [
       filetype: FileType.ARCHIVE,
       url: `https://buildbot.libretro.com/stable/1.9.7/windows/x86_64/RetroArch.7z`,
       output: join(ctx.paths.data, 'launchers', 'retroarch'),
-      isReady: () => existsSync(join(ctx.paths.data, 'launchers', 'retroarch', 'retroarch.exe')),
+      isReady: () =>
+         existsSync(
+            join(ctx.paths.data, 'launchers', 'retroarch', 'RetroArch-Win64', 'retroarch.exe'),
+         ),
    }),
 ]
 

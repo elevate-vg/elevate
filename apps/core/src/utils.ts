@@ -3,10 +3,12 @@ import https from 'https'
 import http from 'http'
 import { Context } from './context'
 import { chmodSync, createWriteStream, existsSync, renameSync as fsRenameSync } from 'fs'
-import { append, applyTo, compose, curry, equals, juxt, when, __ } from 'libs/utils'
+import { append, applyTo, compose, curry, equals, juxt, when } from 'libs/utils'
+import { dirname } from 'path'
 import { mkdirSync } from 'fs'
 import { join } from 'path'
 import { tempName } from 'libs/utils/io'
+import { Platform } from 'libs/types'
 
 // prettier-ignore
 export const initFns = 
@@ -86,7 +88,11 @@ export type DownloadEvents = {
    onError?: (e: Error) => void
 }
 
-export const renameSync = curry((from: string, to: string) => fsRenameSync(from, to))
+export const renameSync = curry((from: string, to: string) => {
+   // TODO: Does this fail if `to` is a directory
+   touchDir(dirname(to))
+   fsRenameSync(from, to)
+})
 
 export const downloadExe = curry(async (ctx: Context, obj: InitDownloadObject) => {
    const path = await download(ctx, obj)
@@ -144,7 +150,6 @@ export const download = curry(async (ctx: Context, obj: DownloadObject): Promise
    return new Promise((res, rej) => {
       // HACK: Nieve cache check, will fail if DL is incomplete
       if (existsSync(tempPath)) return res(tempPath)
-
       const writer = createWriteStream(tempPath)
 
       const followRedirect = (response: http.IncomingMessage) => {
@@ -164,7 +169,7 @@ export const download = curry(async (ctx: Context, obj: DownloadObject): Promise
 
          // BUG: This only handles one redirect
          if (obj.url !== url && url !== false) {
-            console.log(url)
+            
             getProtocolModule(url).get(url, (response) => {
                response.pipe(writer)
             })
@@ -202,3 +207,31 @@ export const downloadType = curry(async (ctx: Context, obj: InitDownloadObject) 
       }
    }
 })
+
+export const nodeToElevatePlatformMap = (platform: NodeJS.Platform): Platform => {
+   switch (platform) {
+      case 'darwin': {
+         return Platform.DARWIN
+      }
+      case 'win32': {
+         return Platform.WINDOWS_32
+      }
+      default: {
+         throw new Error(`Platform '${platform}' not supported`)
+      }
+   }
+}
+
+export const elevateToNodePlatformMap = (platform: Platform): NodeJS.Platform => {
+   switch (platform) {
+      case Platform.DARWIN: {
+         return 'darwin'
+      }
+      case Platform.WINDOWS_32: {
+         return 'win32'
+      }
+      default: {
+         throw new Error(`Platform '${platform}' not supported`)
+      }
+   }
+}
