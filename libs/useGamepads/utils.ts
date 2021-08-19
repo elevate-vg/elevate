@@ -2,7 +2,7 @@
  * Types
  */
 
-import { allTrue, always, cond, curry, equals, T, whenNotNil } from '../../../../libs/utils'
+import { allTrue, always, cond, curry, equals, T, whenNotNil } from '../utils'
 
 export enum ButtonAction {
    released = -1,

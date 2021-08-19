@@ -1,4 +1,4 @@
-import { isFunction, whenNotEmpty } from 'libs/utils'
+import { isFunction } from 'libs/utils'
 import { always, identity, ifElse } from 'ramda'
 import React, { useEffect } from 'react'
 import { useAnimationFrame } from './useAnimationFrame'
@@ -8,8 +8,8 @@ import { getAllButtonChanges, pollAllGamepads } from './utils'
  * Main
  */
 
-export const usePollGamepads = (callback, dependencies, gamepadsFunction = undefined) => {
-   const tick = React.useRef<number>()
+export const useGamepadPoll = (callback, dependencies: any = [], gamepadsFunction = undefined) => {
+   const tickNum = React.useRef<number>(0)
    const previousGamepads = React.useRef({})
 
    const getGamepads = () => window.navigator?.getGamepads() || {}
@@ -24,15 +24,18 @@ export const usePollGamepads = (callback, dependencies, gamepadsFunction = undef
    // const haveEvents = () =>
    //    'GamepadEvent' in window || 'WebKitGamepadEvent' in window || 'ongamepadconnected' in window
 
-   const animate = () => {
+   const tick = () => {
       const nextGamepads = pollAllGamepads(getGamepadsFn)
+      // HACK: only checking first controller
+      // HACK: only checking buttons
       const changes = getAllButtonChanges(previousGamepads?.current?.[0], nextGamepads?.[0])
       previousGamepads.current = nextGamepads
 
-      // @ts-expect-error: Ramda false positive
-      whenNotEmpty(callback, changes)
+      if (changes) {
+         callback(nextGamepads, changes)
+      }
 
-      tick.current = requestAnimationFrame(animate)
+      tickNum.current = requestAnimationFrame(tick)
    }
 
    useEffect(() => {
@@ -41,5 +44,5 @@ export const usePollGamepads = (callback, dependencies, gamepadsFunction = undef
       }))
    }, [])
 
-   useAnimationFrame(tick, animate, dependencies)
+   useAnimationFrame(tickNum, tick, dependencies)
 }

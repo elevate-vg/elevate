@@ -9,7 +9,8 @@ module.exports = {
             // prettier-ignore
             rule.include = [
                ...rule.include,
-               join(__dirname, '../../libs/utils')
+               join(__dirname, '../../libs/utils'),
+               join(__dirname, '../../libs/useGamepads')
             ]
          }
       })

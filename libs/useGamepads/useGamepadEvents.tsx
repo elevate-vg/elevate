@@ -1,13 +1,10 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-
 import { useCallback } from 'react'
-import { usePollGamepads } from './usePollGamepads'
+import { useGamepadPoll } from './useGamepadPoll'
 import { ButtonAction } from './utils'
 
-export const useGamepads = (mapping, dependencies) => {
-   const callback = useCallback((buttonEvents) => {
+export const useGamepadEvents = (mapping, dependencies) => {
+   const callback = useCallback((_, buttonEvents) => {
       buttonEvents.forEach((event) => {
-         // console.log(event)
          const button = mapping?.buttons?.[event.index]
 
          switch (event.type) {
@@ -23,7 +20,7 @@ export const useGamepads = (mapping, dependencies) => {
       })
    }, dependencies)
 
-   usePollGamepads(callback, dependencies)
+   useGamepadPoll(callback, dependencies)
 }
 
 /**

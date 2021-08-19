@@ -1,5 +1,5 @@
 import { createContext, useState } from 'react'
-import { useGamepads } from './useGamepads/useGamepads'
+import { useGamepadEvents, useGamepadState } from 'libs/useGamepads'
 import { useLaunch } from '../utils'
 import SpatialNavigation from '../components/react-spatial-navigation/src/spatialNavigation'
 
@@ -53,7 +53,7 @@ export const StateProvider = ({ children }) => {
    const [focusedItem, setFocusedItem] = useState()
    const launch = useLaunch()
 
-   useGamepads(buildGamepadMapping({ launch, focusedItem }), [focusedItem])
+   useGamepadEvents(buildGamepadMapping({ launch, focusedItem }), [focusedItem])
 
    return (
       <StateContext.Provider
