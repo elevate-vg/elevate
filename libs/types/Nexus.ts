@@ -195,7 +195,7 @@ export interface NexusGenEnums {
       | 'za'
       | 'zh'
       | 'zu'
-   Platform: 1 | 2 | 0 | 3
+   Platform: 4 | 1 | 5 | 2 | 0 | 3
 }
 
 export interface NexusGenScalars {

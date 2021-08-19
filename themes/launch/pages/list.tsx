@@ -15,7 +15,7 @@ export default function Home() {
    if (loading) return null
    if (error) return <ul>{error}</ul>
 
-   console.log({ pid: launchData?.launch, launchVariables })
+   // console.log({ pid: launchData?.launch, launchVariables })
 
    return (
       <ul>

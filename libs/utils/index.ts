@@ -13,6 +13,9 @@ import {
    when,
    apply,
    append,
+   complement,
+   isNil,
+   isEmpty,
 } from 'ramda'
 
 export type SameLength<T extends any[]> = Extract<{ [K in keyof T]: any }, any[]>
@@ -72,3 +75,15 @@ export const whenTrue = compose(
 export const applyOver = (args: any[]) => (fns: any[]) => map(apply(__, args), fns)
 
 export const appendTo = flip(append)
+
+export const allTrue = all(equals(true))
+
+export const notNil = complement(isNil)
+
+// @ts-expect-error: Ramda false positive
+export const whenNotNil = when(notNil)
+
+export const isFunction = <T>(arg: T) => typeof arg === 'function'
+
+// @ts-expect-error: Ramda false positive
+export const whenNotEmpty = when(complement(isEmpty))

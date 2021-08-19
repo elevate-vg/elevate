@@ -1,32 +1,59 @@
 import { createContext, useState } from 'react'
-import { usePollGamepads } from './useGamepads'
-import SpatialNavigation from './react-spatial-navigation/src/spatialNavigation'
+import { useGamepads } from './useGamepads/useGamepads'
+import { useLaunch } from '../utils'
+import SpatialNavigation from '../components/react-spatial-navigation/src/spatialNavigation'
 
-const myCustomGamepadList = () => {
-   const randBool = Math.random() < 0.01
-
-   const gamepadList = {
+const buildGamepadMapping = ({ launch, focusedItem }) => ({
+   buttons: {
       0: {
-         axes: [0, 0, 0, 0],
-         buttons: [{ pressed: randBool, touched: false, value: randBool ? 1 : 0 }],
-         connected: true,
-         id: 'xbox 360',
-         index: 0,
-         mapping: 'standard',
-         timestamp: 1231231231.234324534545,
-         vibrationActuator: {
-            type: 'dual-rumble',
+         release: () => {
+            console.log('A release')
+            console.log(focusedItem)
+
+            if (focusedItem) {
+               console.log('trying to launch..', focusedItem)
+               launch(focusedItem)
+            }
          },
       },
-   }
+      12: {
+         release: () => {
+            SpatialNavigation.navigateByDirection('up')
+            console.log('up')
+         },
+      },
 
-   return gamepadList
-}
+      13: {
+         release: () => {
+            SpatialNavigation.navigateByDirection('down')
+            console.log('down')
+         },
+      },
+
+      14: {
+         press: () => {
+            SpatialNavigation.navigateByDirection('left')
+            console.log('left')
+         },
+      },
+      15: {
+         press: () => {
+            SpatialNavigation.navigateByDirection('right')
+            console.log('right')
+         },
+      },
+   },
+})
+
+// TODO: best practices: tying 2 contexts together
 
 export const StateContext = createContext({})
 
 export const StateProvider = ({ children }) => {
    const [focusedItem, setFocusedItem] = useState()
+   const launch = useLaunch()
+
+   useGamepads(buildGamepadMapping({ launch, focusedItem }), [focusedItem])
 
    return (
       <StateContext.Provider

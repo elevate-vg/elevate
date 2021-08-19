@@ -79,7 +79,6 @@ export const Category = ({
    const onProgramFocused =
       (entry) =>
       ({ x }) => {
-         console.log(entry)
          // @ts-ignore
          scrollRef?.current?.scrollTo({ x })
          setFocusedItem(entry)
@@ -115,12 +114,10 @@ export const Category = ({
                   color="#000000"
                   focusKey={`PROGRAM-${realFocusKey}-${index}`}
                   onPress={() => {
-                     console.log(entry)
                      launch(entry)
                   }}
                   onEnterPress={() => {
                      launch(entry)
-                     console.log(entry)
                   }}
                   key={index}
                   onBecameFocused={onProgramFocused(entry)}
