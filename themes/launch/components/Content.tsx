@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 import { View } from 'react-native-web'
-import { withFocusable } from './react-spatial-navigation/src'
+import { withFocusable } from '../../../libs/react-spatial-navigation/src'
 import styles from '../styles'
 import { KEY_ENTER, B_KEY, RETURN_KEY } from '../constants'
 // import { Active } from './Active'

@@ -1,6 +1,6 @@
 import React from 'react'
 import { View, TouchableOpacity } from 'react-native-web'
-import { withFocusable } from './react-spatial-navigation/src'
+import { withFocusable } from '../../../libs/react-spatial-navigation/src'
 // import { RETURN_KEY } from '../constants'
 import styles from '../styles'
 

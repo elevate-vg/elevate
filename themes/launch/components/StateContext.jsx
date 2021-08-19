@@ -1,7 +1,7 @@
 import { createContext, useState } from 'react'
 import { useGamepadEvents, useGamepadState } from 'libs/useGamepads'
 import { useLaunch } from '../utils'
-import SpatialNavigation from '../components/react-spatial-navigation/src/spatialNavigation'
+import SpatialNavigation from '../../../libs/react-spatial-navigation/src/spatialNavigation'
 
 const buildGamepadMapping = ({ launch, focusedItem }) => ({
    buttons: {

@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect } from 'react'
 import throttle from 'lodash/throttle'
 import { View } from 'react-native-web'
-import { withFocusable, initNavigation } from './react-spatial-navigation/src'
+import { withFocusable, initNavigation } from '../../../libs/react-spatial-navigation/src'
 import styles from '../styles'
 // import MenuFocusable from './Menu'
 import Content from './Content'

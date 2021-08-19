@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useRef } from 'react'
 import { ScrollView } from 'react-native-web'
-import { withFocusable } from './react-spatial-navigation/src'
+import { withFocusable } from '../../../libs/react-spatial-navigation/src'
 import styles from '../styles'
 import { CategoryFocusable } from './Category'
 import shuffle from 'lodash/shuffle'
