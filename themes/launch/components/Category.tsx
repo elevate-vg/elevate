@@ -119,6 +119,7 @@ export const Category = ({
                   onEnterPress={() => {
                      launch(entry)
                   }}
+                  image={`http://localhost:31348/~/@simonwjackson/hello/api/_depricated_GetFirstCoverArt/${entry?.titles?.[0]?.name} super nintendo`}
                   key={index}
                   onBecameFocused={onProgramFocused(entry)}
                   // onArrowPress={onProgramArrowPress}

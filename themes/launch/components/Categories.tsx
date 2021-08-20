@@ -30,7 +30,10 @@ export const Categories = ({ onProgramPress, realFocusKey }: CategoriesProps): J
    }
 
    return (
-      <ScrollView ref={scrollRef} style={styles.categoriesWrapper}>
+      <ScrollView
+         ref={scrollRef}
+         style={styles.categoriesWrapper}
+         contentContainerStyle={styles.categoriesWrapperContainer}>
          {[categories[0]].map(({ title }, index) => (
             <CategoryFocusable
                title={title}

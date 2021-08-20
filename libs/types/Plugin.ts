@@ -270,7 +270,7 @@ export type Catalog = {
 
 export type Api = {
    name: string
-   fn: (arg0: Router) => Router
+   fn: (ctx: Context, arg0: Router) => Router
 }
 
 export type Dependency = (ctx: Context) => InitDownloadObject

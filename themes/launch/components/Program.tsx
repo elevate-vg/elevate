@@ -17,7 +17,7 @@ const initializer = (string = ''): string => {
       ?.splice(0, 2)
       .join('')
 }
-export const Program = ({ color, onPress, focused, title }: ProgramProps): JSX.Element => {
+export const Program = ({ color, onPress, focused, title, image }: ProgramProps): JSX.Element => {
    const style = {
       backgroundColor: color,
       textAlign: 'center',
@@ -31,10 +31,23 @@ export const Program = ({ color, onPress, focused, title }: ProgramProps): JSX.E
       letterSpacing: '0rem',
    }
 
+   // console.log(image)
+
    return (
       <TouchableOpacity onPress={onPress} style={styles.programWrapper}>
-         <View style={[style, styles.program, focused ? styles.focusedBorder : null]}>
-            <Text style={[text]}>{initializer(title)}</Text>
+         <View
+            style={[
+               style,
+               styles.program,
+               focused ? styles.focusedBorder : null,
+               {
+                  backgroundImage: `url("${image}")`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'contain',
+                  backgroundRepeat: 'no-repeat',
+               },
+            ]}>
+            {/* <Text style={[text]}>{initializer(title)}</Text> */}
          </View>
          <Text style={styles.programTitle}>{title}</Text>
       </TouchableOpacity>

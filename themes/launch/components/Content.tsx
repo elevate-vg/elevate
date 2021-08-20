@@ -6,6 +6,7 @@ import styles from '../styles'
 import { KEY_ENTER, B_KEY, RETURN_KEY } from '../constants'
 // import { Active } from './Active'
 import { CategoriesFocusable } from './Categories'
+import Active from './Active'
 
 const useOnPressKey = (keyCode, fn) => {
    const wrappedFn = (event) => {
@@ -52,11 +53,13 @@ export const Content = ({ setFocus }): JSX.Element => {
    return (
       <View style={styles.content}>
          {/* <Active program={currentProgram} /> */}
-         <CategoriesFocusable
-            focusKey={'CATEGORIES'}
-            onProgramPress={onProgramPress}
-            blockNavigationOut={blockNavigationOut}
-         />
+         <span data-info="hack to center align categories">
+            <CategoriesFocusable
+               focusKey={'CATEGORIES'}
+               onProgramPress={onProgramPress}
+               blockNavigationOut={blockNavigationOut}
+            />
+         </span>
       </View>
    )
 }

@@ -7,10 +7,11 @@ export const styles = StyleSheet.create({
    wrapper: {
       flex: 1,
       backgroundColor: '#333333',
-      flexDirection: 'row',
+      flexDirection: 'column',
    },
    content: {
       flex: 1,
+      justifyContent: 'center',
    },
    menu: {
       maxWidth: 60,
@@ -59,6 +60,7 @@ export const styles = StyleSheet.create({
    categoriesWrapper: {
       flex: 1,
    },
+
    focusedBorder: {
       borderWidth: 6,
       borderColor: 'red',

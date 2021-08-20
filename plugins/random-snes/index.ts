@@ -1,3 +1,4 @@
+import { readFile, existsSync } from 'fs'
 import { AxiosStatic } from 'axios'
 import { /* Platform,*/ Platform, Plugin } from '../../libs/types'
 import { Response } from 'express'
@@ -5,6 +6,9 @@ import { stringArg, extendType } from 'nexus'
 import { Context } from 'apps/core/src/context'
 import { Entry, Language } from 'libs/types/Plugin'
 import { identity, memoizeWith } from 'libs/utils'
+
+import GoogleImages from 'libs/google-search'
+import { cacheFile, tempNameAtCache } from 'libs/utils/io'
 
 // const exampleResult = [
 //    {
@@ -251,11 +255,50 @@ export const catalogs: Plugin.Catalog[] = [
 ]
 
 export const apis: Plugin.Api[] = [
+   // HACK: This API is only here to quickly get images working
    {
       name: 'tracks',
-      fn: (server) => {
-         server.get('/:trackId', (_, res: Response) => {
-            res.json({ username: 'Flavio' })
+      fn: (ctx, server) => {
+         server.get('/_depricated_GetFirstCoverArt/:query', async (req, res) => {
+            const localPath = tempNameAtCache(ctx.paths.cache, req.url)
+
+            if (existsSync(localPath))
+               return readFile(localPath, function (err, data) {
+                  if (err) {
+                     res.send("Oops! Couldn't find that file.")
+                  } else {
+                     res.contentType('image/png')
+                     // res.set('Cache-Control', 'no-store')
+                     res.send(data)
+                  }
+                  res.end()
+               })
+
+            const client = GoogleImages(
+               'ca4d102ef74f30553',
+               'AIzaSyCR-BEEZa8AWoIYiP9DtmeyZ-FRsgdxc48',
+            )
+
+            const imgUrl = await client(req.params.query).then((json) =>
+               json.items
+                  .map((item) => item?.pagemap?.cse_image?.[0]?.src)
+                  .find((str) =>
+                     (str || '').startsWith('https://www.mobygames.com/images/covers/'),
+                  ),
+            )
+
+            const localImagePath = await cacheFile(ctx, imgUrl, req.url)
+
+            return readFile(localImagePath, function (err, data) {
+               if (err) {
+                  res.send("Oops! Couldn't find that file.")
+               } else {
+                  res.contentType('image/png')
+                  // res.set('Cache-Control', 'no-store')
+                  res.send(data)
+               }
+               res.end()
+            })
          })
 
          return server

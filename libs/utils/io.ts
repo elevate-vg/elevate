@@ -23,10 +23,16 @@ export const tempNameAtCache = curry((dir: string, uri: string) =>
    )(dir),
 )
 
-export const cacheFile = curry(async (ctx: Context, uri: string) => {
+export const cacheFile = async (ctx: Context, uri: string, filename = ''): Promise<string> => {
    // TODO: add FTP support
    if (uri.startsWith('http://') || uri.startsWith('https://')) {
-      const localPath = tempNameAtCache(ctx.paths.cache, uri)
+      let localPath: string
+
+      if (filename === '') {
+         localPath = tempNameAtCache(ctx.paths.cache, uri)
+      } else {
+         localPath = tempNameAtCache(ctx.paths.cache, filename)
+      }
 
       if (!existsSync(localPath)) {
          await download(ctx, uri, localPath)
@@ -36,7 +42,7 @@ export const cacheFile = curry(async (ctx: Context, uri: string) => {
    }
 
    return uri
-})
+}
 
 // prettier-ignore
 export const download = curry(
