@@ -79,7 +79,6 @@ Gamepad event array:
   }
 ]
 
-
 Launchers should not be databsed. They are simply plugins that can describe their features (via an export) which graphql can consume.
 
 dont enforce currying at the plugin level. Instead, curry functions as you load them in
