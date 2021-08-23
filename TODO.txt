@@ -66,19 +66,6 @@ Nexus Mods support
 Prisma migrate via native API (non-existent)
 progress (emitter?) for downloads
 
-Gamepad event array:
-[
-  { 
-    type: Button0, 
-    change: up | down | hold
-  },
-  {
-    type: AxisYPos,
-    value: 0.23487234,
-    delta: 0.004564,
-  }
-]
-
 Launchers should not be databsed. They are simply plugins that can describe their features (via an export) which graphql can consume.
 
 dont enforce currying at the plugin level. Instead, curry functions as you load them in
