@@ -15,13 +15,6 @@ init (blocking)
     migrate?
     restore?
 
-2 Weeks - brainstorm
-===
-
-Cypress
-Steam
-RetroArch
-
 TODO
 =====
 
