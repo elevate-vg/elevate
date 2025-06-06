@@ -62,21 +62,86 @@
     <div id="root"></div>
 
     <script type="text/babel">
-      const { useState } = React;
+      const { useState, useEffect } = React;
 
       function Card() {
-        const handleClick = () => {
-          alert("Hello from WebView!");
+        const [messages, setMessages] = useState([]);
+        const [counter, setCounter] = useState(0);
+
+        useEffect(() => {
+          // Listen for messages from React Native
+          const handleMessage = (event) => {
+            const newMessage = {
+              id: Date.now(),
+              text: event.data,
+              from: "React Native",
+            };
+            setMessages((prev) => [...prev, newMessage]);
+          };
+
+          // React Native WebView sends messages via document
+          document.addEventListener("message", handleMessage);
+          window.addEventListener("message", handleMessage);
+
+          return () => {
+            document.removeEventListener("message", handleMessage);
+            window.removeEventListener("message", handleMessage);
+          };
+        }, []);
+
+        const sendMessage = () => {
+          const message = {
+            type: "BUTTON_CLICK",
+            data: `Hello from WebView! Click #${counter + 1}`,
+            timestamp: new Date().toISOString(),
+          };
+
+          // Send to React Native
+          if (window.ReactNativeWebView) {
+            window.ReactNativeWebView.postMessage(JSON.stringify(message));
+          }
+
+          // Add to local messages
+          setMessages((prev) => [
+            ...prev,
+            {
+              id: Date.now(),
+              text: message.data,
+              from: "WebView",
+            },
+          ]);
+
+          setCounter(counter + 1);
         };
 
         return (
           <div className="card">
-            <h1>Hello World!</h1>
-            <p>
-              This content is loaded from the app's assets folder using Expo
-              Asset API.
-            </p>
-            <button onClick={handleClick}>Test Interactions</button>
+            <h1>React Native WebView Demo</h1>
+            <p>Click to send messages between React Native and WebView</p>
+            <button onClick={sendMessage}>Send to React Native</button>
+
+            <div style={{ marginTop: "20px", textAlign: "left" }}>
+              <h3>Messages:</h3>
+              <div
+                style={{
+                  background: "rgba(0,0,0,0.2)",
+                  padding: "10px",
+                  borderRadius: "10px",
+                  maxHeight: "200px",
+                  overflowY: "auto",
+                }}
+              >
+                {messages.length === 0 ? (
+                  <p style={{ margin: 0, opacity: 0.7 }}>No messages yet...</p>
+                ) : (
+                  messages.map((msg) => (
+                    <div key={msg.id} style={{ marginBottom: "5px" }}>
+                      <strong>{msg.from}:</strong> {msg.text}
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
           </div>
         );
       }
@@ -89,4 +154,3 @@
     </script>
   </body>
 </html>
-
