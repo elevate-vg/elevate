@@ -13,6 +13,7 @@
     "expo-asset": "^11.1.5",
     "expo-file-system": "^18.1.10",
     "expo-keep-awake": "^14.1.4",
+    "expo-navigation-bar": "^4.2.5",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
     "react-native": "0.79.3",

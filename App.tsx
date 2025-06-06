@@ -1,5 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
+import * as NavigationBar from 'expo-navigation-bar';
 import { useKeepAwake } from 'expo-keep-awake';
 import Constants from 'expo-constants';
 import { WebView } from 'react-native-webview';
@@ -14,6 +15,11 @@ export default function App() {
   if (Constants.executionEnvironment === 'storeClient') {
     useKeepAwake();
   }
+
+  useEffect(() => {
+    // Hide navigation bar on Android
+    NavigationBar.setVisibilityAsync('hidden');
+  }, []);
 
   useEffect(() => {
     async function loadHtml() {
@@ -40,6 +46,7 @@ export default function App() {
 
   return (
     <View style={styles.container}>
+      <StatusBar hidden={true} />
       {htmlUri && (
         <WebView
           style={styles.webview}
@@ -57,10 +64,9 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#000',
   },
   webview: {
     flex: 1,
-    marginTop: 20,
   },
 });

@@ -20,7 +20,20 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "navigationBarColor": "#000000",
+      "navigationBarVisible": false
+    },
+    "androidNavigationBar": {
+      "visible": false,
+      "barStyle": "dark-content",
+      "backgroundColor": "#000000"
+    },
+    "androidStatusBar": {
+      "hidden": true,
+      "translucent": true,
+      "backgroundColor": "#00000000",
+      "barStyle": "dark-content"
     },
     "web": {
       "favicon": "./assets/favicon.png"
