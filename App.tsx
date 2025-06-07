@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Animated, Platform, Alert } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
 import { useKeepAwake } from 'expo-keep-awake';
 import Constants from 'expo-constants';
 import { WebView } from 'react-native-webview';
 import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
+import * as IntentLauncher from 'expo-intent-launcher';
 import { useState, useEffect, useRef } from 'react';
 
 export default function App() {
@@ -52,12 +53,12 @@ export default function App() {
     try {
       const data = JSON.parse(event.nativeEvent.data);
       console.log('Received from WebView:', data);
-      
+
       // Check if this message requires acknowledgment
       if (data.type === 'REQUIRES_ACK' && data.id) {
         // Show the alert first
         alert(`React Native received: ${data.data}`);
-        
+
         // Send acknowledgment back to WebView
         const ackMessage = JSON.stringify({
           type: 'ACK',
@@ -65,7 +66,7 @@ export default function App() {
           status: 'received',
           timestamp: new Date().toISOString()
         });
-        
+
         // Send ACK after a short delay to simulate processing
         setTimeout(() => {
           webViewRef.current?.postMessage(ackMessage);
@@ -97,7 +98,7 @@ export default function App() {
       "💰 Portfolio: +$342.50 (+2.1%)",
       "🌐 API Latency: 89ms (Good)"
     ];
-    
+
     streamData.forEach((data, index) => {
       setTimeout(() => {
         const streamMessage = JSON.stringify({
@@ -110,7 +111,7 @@ export default function App() {
         console.log(`Sent stream message ${index + 1}:`, data);
       }, index * 1200); // 1.2 second intervals
     });
-    
+
     // Send completion message
     setTimeout(() => {
       const completionMessage = JSON.stringify({
@@ -121,6 +122,33 @@ export default function App() {
       });
       webViewRef.current?.postMessage(completionMessage);
     }, streamData.length * 1200);
+  };
+
+  const openRetroArch = async () => {
+    if (Platform.OS === 'android') {
+      try {
+        // Open RetroArch with specific configuration
+        // Android Intent flags: CLEAR_TASK (0x8000) | CLEAR_TOP (0x4000000) | NO_HISTORY (0x40000000)
+        const flags = 0x8000 | 0x4000000 | 0x40000000;
+
+        await IntentLauncher.startActivityAsync('android.intent.action.MAIN', {
+          packageName: 'com.retroarch.aarch64',
+          className: 'com.retroarch.browser.retroactivity.RetroActivityFuture',
+          extra: {
+            ROM: '/storage/emulated/0/Download/minish.zip', // Example ROM path
+            LIBRETRO: '/data/data/com.retroarch.aarch64/cores/mgba_libretro_android.so',
+            CONFIGFILE: '/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg',
+            QUITFOCUS: ''
+          },
+          flags: flags
+        });
+      } catch (error) {
+        console.error('RetroArch launch error:', error);
+        Alert.alert('Error', 'Unable to open RetroArch. Please ensure RetroArch is installed and the ROM path is correct.');
+      }
+    } else {
+      Alert.alert('Info', 'RetroArch launcher is only available on Android');
+    }
   };
 
   return (
@@ -134,6 +162,9 @@ export default function App() {
           </TouchableOpacity>
           <TouchableOpacity style={[styles.button, styles.streamButton]} onPress={initiateDataStream}>
             <Text style={styles.buttonText}>📡 Start Data Stream</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.button, styles.retroarchButton]} onPress={openRetroArch}>
+            <Text style={styles.buttonText}>🎮 Open RetroArch</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -211,6 +242,9 @@ const styles = StyleSheet.create({
   },
   streamButton: {
     backgroundColor: '#4ecdc4',
+  },
+  retroarchButton: {
+    backgroundColor: '#ff6b35',
   },
   buttonText: {
     color: '#667eea',
