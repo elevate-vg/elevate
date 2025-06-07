@@ -99,6 +99,7 @@
   <body>
     <div id="root"></div>
 
+    <!-- <script type="text/javascript"> -->
     <script type="text/babel">
       const { useState, useEffect } = React;
       const { QueryClient, QueryClientProvider, useQuery, useMutation } =
@@ -113,8 +114,70 @@
         },
       });
 
+      // Custom hook for React Native message stream (similar to EventSource pattern)
+      const useReactNativeMessageStream = (queryKey) => {
+        useEffect(() => {
+          const handleMessage = (event) => {
+            try {
+              let data;
+              // Handle both string and object data
+              if (typeof event.data === "string") {
+                try {
+                  data = JSON.parse(event.data);
+                } catch {
+                  // Treat as plain string message
+                  data = { text: event.data, type: "SIMPLE_MESSAGE" };
+                }
+              } else {
+                data = event.data;
+              }
+
+              // Get current messages from cache
+              const currentMessages = queryClient.getQueryData(queryKey) || [];
+
+              // Create new message
+              const newMessage = {
+                id: Date.now(),
+                text: data.text || event.data,
+                from: data.source || "React Native",
+                type: data.type || "SIMPLE_MESSAGE",
+                timestamp: data.timestamp || new Date().toISOString(),
+              };
+
+              // Update query cache with new message stream
+              queryClient.setQueryData(queryKey, [
+                ...currentMessages,
+                newMessage,
+              ]);
+            } catch (error) {
+              console.error("Error processing message stream:", error);
+            }
+          };
+
+          // Set up message stream listeners (similar to EventSource pattern)
+          document.addEventListener("message", handleMessage);
+          window.addEventListener("message", handleMessage);
+
+          return () => {
+            document.removeEventListener("message", handleMessage);
+            window.removeEventListener("message", handleMessage);
+          };
+        }, [queryKey]);
+
+        // Return query for the message stream
+        return useQuery({
+          queryKey,
+          queryFn: () => [], // Initialize with empty array
+          initialData: [],
+        });
+      };
+
       function Card() {
-        const [messages, setMessages] = useState([]);
+        // Use the custom message stream hook
+        const messageStreamQuery = useReactNativeMessageStream([
+          "messageStream",
+        ]);
+        const messages = messageStreamQuery.data || [];
 
         // Advanced: Mutation with acknowledgment pattern
         const sendWithAckMutation = useMutation({
@@ -171,14 +234,21 @@
           },
           onSuccess: (ackData) => {
             console.log("Received ACK:", ackData);
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: Date.now(),
-                text: `ACK received! Status: ${ackData.status}`,
-                from: "System",
-              },
-            ]);
+            // Update message stream via query cache
+            const currentMessages =
+              queryClient.getQueryData(["messageStream"]) || [];
+            const ackMessage = {
+              id: Date.now(),
+              text: `ACK received! Status: ${ackData.status}`,
+              from: "System",
+              type: "ACK_RESPONSE",
+              timestamp: new Date().toISOString(),
+            };
+            queryClient.setQueryData(
+              ["messageStream"],
+              [...currentMessages, ackMessage],
+            );
+
             // Clear success after 3 seconds
             setTimeout(() => {
               sendWithAckMutation.reset();
@@ -192,35 +262,61 @@
           },
         });
 
-        useEffect(() => {
-          // Listen for messages from React Native
-          const handleMessage = (event) => {
-            const newMessage = {
-              id: Date.now(),
-              text: event.data,
-              from: "React Native",
-            };
-            setMessages((prev) => [...prev, newMessage]);
-          };
+        // Messages are now handled by the useReactNativeMessageStream hook
 
-          // React Native WebView sends messages via document
-          document.addEventListener("message", handleMessage);
-          window.addEventListener("message", handleMessage);
+        // Data stream is now initiated from React Native
 
-          return () => {
-            document.removeEventListener("message", handleMessage);
-            window.removeEventListener("message", handleMessage);
-          };
-        }, []);
+        const clearMessageStream = () => {
+          queryClient.setQueryData(["messageStream"], []);
+        };
 
         return (
           <div className="card">
             <div className="mutation-info">
               <h4 style={{ margin: "0 0 10px 0" }}>
-                TanStack Query Integration Examples:
+                Real-time Message Stream (React Query Pattern):
               </h4>
 
-              <div style={{ marginBottom: "15px" }}>
+              <div
+                style={{
+                  marginBottom: "15px",
+                  fontSize: "0.9em",
+                  color: "rgba(255,255,255,0.8)",
+                }}
+              >
+                <strong>Stream Status:</strong>{" "}
+                {messageStreamQuery.isLoading ? "Loading..." : "Connected"} |
+                <strong> Messages:</strong> {messages.length} |
+                <strong> Last Updated:</strong>{" "}
+                {messageStreamQuery.dataUpdatedAt
+                  ? new Date(
+                      messageStreamQuery.dataUpdatedAt,
+                    ).toLocaleTimeString()
+                  : "Never"}
+              </div>
+
+              <div
+                style={{
+                  marginBottom: "15px",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  gap: "10px",
+                }}
+              >
+                <button
+                  onClick={clearMessageStream}
+                  style={{
+                    fontSize: "0.9em",
+                    padding: "8px 16px",
+                    background: "#ff6b6b",
+                    color: "white",
+                    border: "none",
+                    borderRadius: "5px",
+                  }}
+                >
+                  🗑️ Clear Stream
+                </button>
+
                 <button
                   onClick={() =>
                     sendWithAckMutation.mutate(
@@ -231,12 +327,17 @@
                   style={{
                     fontSize: "0.9em",
                     padding: "8px 16px",
-                    marginTop: "5px",
+                    background: sendWithAckMutation.isLoading
+                      ? "#ccc"
+                      : "white",
+                    color: sendWithAckMutation.isLoading ? "#666" : "#667eea",
+                    border: "none",
+                    borderRadius: "5px",
                   }}
                 >
                   {sendWithAckMutation.isLoading
                     ? "Waiting for ACK..."
-                    : "Send with ACK"}
+                    : "🤝 Send with ACK"}
                 </button>
                 {sendWithAckMutation.isError && (
                   <p
@@ -264,24 +365,90 @@
             </div>
 
             <div style={{ marginTop: "20px", textAlign: "left" }}>
-              <h3>Messages:</h3>
+              <h3>Real-time Message Stream ({messages.length} messages):</h3>
               <div
                 style={{
                   background: "rgba(0,0,0,0.2)",
                   padding: "10px",
                   borderRadius: "10px",
-                  maxHeight: "200px",
+                  maxHeight: "250px",
                   overflowY: "auto",
                 }}
               >
                 {messages.length === 0 ? (
-                  <p style={{ margin: 0, opacity: 0.7 }}>No messages yet...</p>
+                  <p style={{ margin: 0, opacity: 0.7 }}>
+                    No messages in stream... Click "📡 Start Data Stream" in the React Native app above to see the React Query pattern in action!
+                  </p>
                 ) : (
-                  messages.map((msg) => (
-                    <div key={msg.id} style={{ marginBottom: "5px" }}>
-                      <strong>{msg.from}:</strong> {msg.text}
-                    </div>
-                  ))
+                  messages.map((msg) => {
+                    const getMessageStyle = (type) => {
+                      switch (type) {
+                        case "STREAM_DATA":
+                          return {
+                            borderLeft: "3px solid #4ecdc4",
+                            paddingLeft: "8px",
+                            background: "rgba(78, 205, 196, 0.1)",
+                          };
+                        case "STREAM_COMPLETE":
+                          return {
+                            borderLeft: "3px solid #51cf66",
+                            paddingLeft: "8px",
+                            background: "rgba(81, 207, 102, 0.2)",
+                          };
+                        case "ACK_RESPONSE":
+                          return {
+                            borderLeft: "3px solid #51cf66",
+                            paddingLeft: "8px",
+                            background: "rgba(81, 207, 102, 0.1)",
+                          };
+                        case "SIMPLE_MESSAGE":
+                          return {
+                            borderLeft: "3px solid #ffd43b",
+                            paddingLeft: "8px",
+                            background: "rgba(255, 212, 59, 0.1)",
+                          };
+                        default:
+                          return {
+                            borderLeft: "3px solid #868e96",
+                            paddingLeft: "8px",
+                            background: "rgba(134, 142, 150, 0.1)",
+                          };
+                      }
+                    };
+
+                    return (
+                      <div
+                        key={msg.id}
+                        style={{
+                          marginBottom: "8px",
+                          fontSize: "0.9em",
+                          ...getMessageStyle(msg.type),
+                        }}
+                      >
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                          }}
+                        >
+                          <div>
+                            <strong style={{ color: "#fff" }}>
+                              {msg.from}:
+                            </strong>{" "}
+                            <span style={{ marginLeft: "5px" }}>
+                              {msg.text}
+                            </span>
+                          </div>
+                          <small style={{ opacity: 0.6, fontSize: "0.8em" }}>
+                            {msg.timestamp
+                              ? new Date(msg.timestamp).toLocaleTimeString()
+                              : ""}
+                          </small>
+                        </div>
+                      </div>
+                    );
+                  })
                 )}
               </div>
             </div>

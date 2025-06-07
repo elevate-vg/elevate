@@ -86,14 +86,56 @@ export default function App() {
     setMessageCounter(messageCounter + 1);
   };
 
+  const initiateDataStream = () => {
+    const streamData = [
+      "🌡️ Temperature: 24.3°C (Sensor A1)",
+      "📊 Memory Usage: 78% (8.2GB/10.5GB)",
+      "🔋 Battery Level: 87% (Charging)",
+      "📱 Network: 5G Signal Strong (-65dBm)",
+      "💾 Storage: 45.2GB available",
+      "🏃‍♂️ Steps Today: 8,247 steps",
+      "💰 Portfolio: +$342.50 (+2.1%)",
+      "🌐 API Latency: 89ms (Good)"
+    ];
+    
+    streamData.forEach((data, index) => {
+      setTimeout(() => {
+        const streamMessage = JSON.stringify({
+          type: 'STREAM_DATA',
+          text: data,
+          timestamp: new Date().toISOString(),
+          source: 'React Native Stream'
+        });
+        webViewRef.current?.postMessage(streamMessage);
+        console.log(`Sent stream message ${index + 1}:`, data);
+      }, index * 1200); // 1.2 second intervals
+    });
+    
+    // Send completion message
+    setTimeout(() => {
+      const completionMessage = JSON.stringify({
+        type: 'STREAM_COMPLETE',
+        text: '✅ Data stream completed',
+        timestamp: new Date().toISOString(),
+        source: 'React Native Stream'
+      });
+      webViewRef.current?.postMessage(completionMessage);
+    }, streamData.length * 1200);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar hidden={true} />
       <View style={styles.header}>
         <Text style={styles.headerText}>React Native App</Text>
-        <TouchableOpacity style={styles.button} onPress={sendMessageToWebView}>
-          <Text style={styles.buttonText}>Send to WebView</Text>
-        </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <TouchableOpacity style={styles.button} onPress={sendMessageToWebView}>
+            <Text style={styles.buttonText}>💬 Send Message</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.button, styles.streamButton]} onPress={initiateDataStream}>
+            <Text style={styles.buttonText}>📡 Start Data Stream</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       {htmlUri && (
         <View style={styles.webviewContainer}>
@@ -151,17 +193,29 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 20,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 15,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   button: {
     backgroundColor: 'white',
-    paddingHorizontal: 20,
+    paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 10,
+    minWidth: 140,
+    alignItems: 'center',
+  },
+  streamButton: {
+    backgroundColor: '#4ecdc4',
   },
   buttonText: {
     color: '#667eea',
     fontWeight: 'bold',
+    fontSize: 13,
   },
   webviewContainer: {
     flex: 1,
