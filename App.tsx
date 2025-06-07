@@ -288,6 +288,9 @@ export default function App() {
               startInLoadingState={false}
               showsVerticalScrollIndicator={false}
               showsHorizontalScrollIndicator={false}
+              bounces={false}
+              scrollEnabled={false}
+              overScrollMode="never"
               injectedJavaScriptBeforeContentLoaded={`
                 document.documentElement.style.backgroundColor = '#1a1a2e';
                 document.body.style.backgroundColor = 'transparent';
