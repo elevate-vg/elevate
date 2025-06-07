@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Animated } from 'react-native';
 import * as NavigationBar from 'expo-navigation-bar';
 import { useKeepAwake } from 'expo-keep-awake';
 import Constants from 'expo-constants';
@@ -11,7 +11,9 @@ import { useState, useEffect, useRef } from 'react';
 export default function App() {
   const [htmlUri, setHtmlUri] = useState<string | null>(null);
   const [messageCounter, setMessageCounter] = useState(0);
+  const [webViewLoaded, setWebViewLoaded] = useState(false);
   const webViewRef = useRef<WebView>(null);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Only use keep awake when running in Expo Go
   if (Constants.executionEnvironment === 'storeClient') {
@@ -72,16 +74,41 @@ export default function App() {
         </TouchableOpacity>
       </View>
       {htmlUri && (
-        <WebView
-          ref={webViewRef}
-          style={styles.webview}
-          source={{ uri: htmlUri }}
-          originWhitelist={['file://*', '*']}
-          allowFileAccess={true}
-          allowFileAccessFromFileURLs={true}
-          allowUniversalAccessFromFileURLs={true}
-          onMessage={handleMessage}
-        />
+        <View style={styles.webviewContainer}>
+          <Animated.View style={[styles.webview, { opacity: fadeAnim }]}>
+            <WebView
+              ref={webViewRef}
+              style={styles.webview}
+              source={{ uri: htmlUri }}
+              originWhitelist={['file://*', '*']}
+              allowFileAccess={true}
+              allowFileAccessFromFileURLs={true}
+              allowUniversalAccessFromFileURLs={true}
+              onMessage={handleMessage}
+              onLoadEnd={() => {
+                setWebViewLoaded(true);
+                Animated.timing(fadeAnim, {
+                  toValue: 1,
+                  duration: 300,
+                  useNativeDriver: true,
+                }).start();
+              }}
+              startInLoadingState={false}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}
+              injectedJavaScriptBeforeContentLoaded={`
+                document.documentElement.style.backgroundColor = '#667eea';
+                document.body.style.backgroundColor = 'transparent';
+                true;
+              `}
+            />
+          </Animated.View>
+          {!webViewLoaded && (
+            <View style={styles.loadingOverlay}>
+              <Text style={styles.loadingText}>Loading...</Text>
+            </View>
+          )}
+        </View>
       )}
     </View>
   );
@@ -114,7 +141,27 @@ const styles = StyleSheet.create({
     color: '#667eea',
     fontWeight: 'bold',
   },
+  webviewContainer: {
+    flex: 1,
+    backgroundColor: '#667eea',
+  },
   webview: {
     flex: 1,
+    backgroundColor: 'transparent',
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: '#667eea',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  loadingText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
 });
