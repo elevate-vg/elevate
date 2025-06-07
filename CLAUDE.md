@@ -44,6 +44,7 @@ nix develop
 
 - **Asset Loading**: HTML files are loaded using Expo's Asset API, copied to a WebView-accessible location
 - **Message Passing**: Bidirectional communication between React Native and WebView using `postMessage`/`onMessage`
+- **Android Intents**: RetroArch launcher button that sends Android intents with game ROM parameters
 - **Android Optimizations**: Hidden navigation/status bars, landscape orientation, edge-to-edge display
 
 ### Development Environment
@@ -58,3 +59,4 @@ nix develop
 - File URIs require specific WebView props: `allowFileAccess`, `allowFileAccessFromFileURLs`, `allowUniversalAccessFromFileURLs`
 - The app is configured for landscape orientation by default
 - When modifying WebView content, ensure proper message serialization (JSON.stringify/parse)
+- RetroArch functionality uses React Native's Linking API with intent URIs and only works on Android

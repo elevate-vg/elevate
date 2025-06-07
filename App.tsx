@@ -8,6 +8,7 @@ import { Asset } from 'expo-asset';
 import * as FileSystem from 'expo-file-system';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { useState, useEffect, useRef } from 'react';
+import { AppState } from 'react-native';
 
 export default function App() {
   const [htmlUri, setHtmlUri] = useState<string | null>(null);
@@ -23,6 +24,19 @@ export default function App() {
   useEffect(() => {
     // Hide navigation bar on Android
     NavigationBar.setVisibilityAsync('hidden');
+  }, []);
+
+  useEffect(() => {
+    const handleAppStateChange = (nextAppState: string) => {
+      if (nextAppState === 'active') {
+        // App came back to foreground (e.g., after RetroArch exit)
+        NavigationBar.setVisibilityAsync('hidden');
+        sendStatusToWebView('APP_STATUS', 'Welcome back to launcher!');
+      }
+    };
+
+    const subscription = AppState.addEventListener('change', handleAppStateChange);
+    return () => subscription?.remove();
   }, []);
 
   useEffect(() => {
@@ -118,8 +132,9 @@ export default function App() {
       const coreFile = coreMap[config.core] || 'mgba_libretro_android.so';
       const corePath = `/data/data/com.retroarch.aarch64/cores/${coreFile}`;
 
-      // Android Intent flags: CLEAR_TASK (0x8000) | CLEAR_TOP (0x4000000) | NO_HISTORY (0x40000000)
-      const flags = 0x8000 | 0x4000000 | 0x40000000;
+      // Android Intent flags: NEW_TASK (0x10000000) | CLEAR_TOP (0x4000000)
+      // This should allow proper return to launcher when RetroArch exits
+      const flags = 0x10000000 | 0x4000000;
 
       sendStatusToWebView('LAUNCH_STATUS', `Launching ${config.console.toUpperCase()} with ${config.core} core...`);
 
