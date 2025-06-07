@@ -82,11 +82,11 @@
       .mutation-info {
         margin-top: 20px;
         padding: 15px;
-        background: rgba(0,0,0,0.2);
+        background: rgba(0, 0, 0, 0.2);
         border-radius: 10px;
       }
       .code-example {
-        background: rgba(0,0,0,0.3);
+        background: rgba(0, 0, 0, 0.3);
         padding: 10px;
         border-radius: 5px;
         font-family: monospace;
@@ -101,7 +101,8 @@
 
     <script type="text/babel">
       const { useState, useEffect } = React;
-      const { QueryClient, QueryClientProvider, useQuery, useMutation } = window.ReactQuery;
+      const { QueryClient, QueryClientProvider, useQuery, useMutation } =
+        window.ReactQuery;
 
       const queryClient = new QueryClient({
         defaultOptions: {
@@ -114,71 +115,6 @@
 
       function Card() {
         const [messages, setMessages] = useState([]);
-        const [counter, setCounter] = useState(0);
-
-        // Example query to fetch data
-        const { data, isLoading, error, refetch } = useQuery({
-          queryKey: ["example"],
-          queryFn: async () => {
-            // Simulate API call
-            await new Promise((resolve) => setTimeout(resolve, 1000));
-            return {
-              message: "Data loaded with TanStack Query!",
-              timestamp: new Date().toISOString(),
-              randomValue: Math.floor(Math.random() * 100),
-            };
-          },
-        });
-
-        // Mutation for sending messages to React Native
-        const sendMessageMutation = useMutation({
-          mutationFn: async (messageData) => {
-            // Create the message with unique ID for tracking
-            const messageId = `msg_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-            const message = {
-              id: messageId,
-              type: "BUTTON_CLICK",
-              data: messageData,
-              timestamp: new Date().toISOString(),
-            };
-
-            // Send to React Native
-            if (window.ReactNativeWebView) {
-              window.ReactNativeWebView.postMessage(JSON.stringify(message));
-            } else {
-              throw new Error("ReactNativeWebView not available");
-            }
-
-            // Simulate async operation (in real app, you might wait for acknowledgment)
-            await new Promise((resolve) => setTimeout(resolve, 300));
-            
-            return message;
-          },
-          onSuccess: (message) => {
-            // Add to local messages on success
-            setMessages((prev) => [
-              ...prev,
-              {
-                id: Date.now(),
-                text: message.data,
-                from: "WebView",
-              },
-            ]);
-            setCounter((prev) => prev + 1);
-            
-            // Clear success message after 2 seconds
-            setTimeout(() => {
-              sendMessageMutation.reset();
-            }, 2000);
-          },
-          onError: (error) => {
-            console.error("Failed to send message:", error);
-            // Clear error after 3 seconds
-            setTimeout(() => {
-              sendMessageMutation.reset();
-            }, 3000);
-          },
-        });
 
         // Advanced: Mutation with acknowledgment pattern
         const sendWithAckMutation = useMutation({
@@ -186,7 +122,9 @@
             return new Promise((resolve, reject) => {
               const messageId = `ack_${Date.now()}`;
               const timeout = setTimeout(() => {
-                reject(new Error("Timeout: No acknowledgment from React Native"));
+                reject(
+                  new Error("Timeout: No acknowledgment from React Native"),
+                );
               }, 5000);
 
               // One-time listener for acknowledgment
@@ -194,12 +132,12 @@
                 try {
                   let data;
                   // Handle both string and object data
-                  if (typeof event.data === 'string') {
+                  if (typeof event.data === "string") {
                     data = JSON.parse(event.data);
                   } else {
                     data = event.data;
                   }
-                  
+
                   if (data.type === "ACK" && data.originalId === messageId) {
                     clearTimeout(timeout);
                     document.removeEventListener("message", handleAck);
@@ -208,7 +146,7 @@
                   }
                 } catch (e) {
                   // Not our message, ignore
-                  console.log('Ignoring non-JSON message:', event.data);
+                  console.log("Ignoring non-JSON message:", event.data);
                 }
               };
 
@@ -232,7 +170,7 @@
             });
           },
           onSuccess: (ackData) => {
-            console.log('Received ACK:', ackData);
+            console.log("Received ACK:", ackData);
             setMessages((prev) => [
               ...prev,
               {
@@ -247,7 +185,7 @@
             }, 3000);
           },
           onError: (error) => {
-            console.error('ACK failed:', error);
+            console.error("ACK failed:", error);
             setTimeout(() => {
               sendWithAckMutation.reset();
             }, 3000);
@@ -275,120 +213,53 @@
           };
         }, []);
 
-        const handleSendMessage = () => {
-          const messageText = `Hello from WebView! Click #${counter + 1}`;
-          sendMessageMutation.mutate(messageText);
-        };
-
         return (
           <div className="card">
-            <h1>React Native WebView Demo</h1>
-            <p>With TanStack Query Integration</p>
-            
-            <div style={{ marginBottom: "20px", padding: "15px", background: "rgba(0,0,0,0.2)", borderRadius: "10px" }}>
-              <h3 style={{ margin: "0 0 10px 0" }}>Query Status:</h3>
-              {isLoading && <p style={{ margin: "5px 0" }}>Loading...</p>}
-              {error && <p style={{ margin: "5px 0", color: "#ff6b6b" }}>Error: {error.message}</p>}
-              {data && (
-                <div>
-                  <p style={{ margin: "5px 0" }}>{data.message}</p>
-                  <p style={{ margin: "5px 0", fontSize: "0.9em", opacity: 0.8 }}>
-                    Random value: {data.randomValue}
-                  </p>
-                  <p style={{ margin: "5px 0", fontSize: "0.8em", opacity: 0.6 }}>
-                    Fetched at: {new Date(data.timestamp).toLocaleTimeString()}
-                  </p>
-                </div>
-              )}
-              <button 
-                onClick={() => refetch()} 
-                style={{ marginTop: "10px", fontSize: "0.9em", padding: "8px 16px" }}
-              >
-                Refetch Data
-              </button>
-            </div>
-
-            <button 
-              onClick={handleSendMessage}
-              disabled={sendMessageMutation.isLoading}
-              style={{
-                opacity: sendMessageMutation.isLoading ? 0.6 : 1,
-                cursor: sendMessageMutation.isLoading ? "not-allowed" : "pointer",
-                position: "relative",
-              }}
-            >
-              {sendMessageMutation.isLoading ? "Sending..." : "Send to React Native"}
-            </button>
-            
-            {sendMessageMutation.isError && (
-              <p style={{ color: "#ff6b6b", fontSize: "0.9em", marginTop: "10px" }}>
-                Error: {sendMessageMutation.error?.message || "Failed to send message"}
-              </p>
-            )}
-            
-            {sendMessageMutation.isSuccess && (
-              <p style={{ color: "#51cf66", fontSize: "0.9em", marginTop: "10px" }}>
-                Message sent successfully!
-              </p>
-            )}
-
             <div className="mutation-info">
-              <h4 style={{ margin: "0 0 10px 0" }}>TanStack Query Integration Examples:</h4>
-              
-              <div style={{ marginBottom: "15px" }}>
-                <p style={{ fontSize: "0.9em", marginBottom: "5px" }}>
-                  <strong>Basic Mutation:</strong> The button above uses <code>useMutation</code> to handle async message sending with loading states.
-                </p>
-                <div className="code-example">
-                  {`const mutation = useMutation({
-  mutationFn: async (data) => {
-    // Send message to React Native
-    window.ReactNativeWebView.postMessage(data);
-    return data;
-  },
-  onSuccess: (data) => {
-    // Handle success
-  }
-});`}
-                </div>
-              </div>
+              <h4 style={{ margin: "0 0 10px 0" }}>
+                TanStack Query Integration Examples:
+              </h4>
 
               <div style={{ marginBottom: "15px" }}>
-                <p style={{ fontSize: "0.9em", marginBottom: "5px" }}>
-                  <strong>With Acknowledgment:</strong> For critical operations requiring confirmation:
-                </p>
-                <button 
-                  onClick={() => sendWithAckMutation.mutate("Important message requiring acknowledgment")}
+                <button
+                  onClick={() =>
+                    sendWithAckMutation.mutate(
+                      "Important message requiring acknowledgment",
+                    )
+                  }
                   disabled={sendWithAckMutation.isLoading}
-                  style={{ fontSize: "0.9em", padding: "8px 16px", marginTop: "5px" }}
+                  style={{
+                    fontSize: "0.9em",
+                    padding: "8px 16px",
+                    marginTop: "5px",
+                  }}
                 >
-                  {sendWithAckMutation.isLoading ? "Waiting for ACK..." : "Send with ACK"}
+                  {sendWithAckMutation.isLoading
+                    ? "Waiting for ACK..."
+                    : "Send with ACK"}
                 </button>
                 {sendWithAckMutation.isError && (
-                  <p style={{ color: "#ff6b6b", fontSize: "0.8em", marginTop: "5px" }}>
+                  <p
+                    style={{
+                      color: "#ff6b6b",
+                      fontSize: "0.8em",
+                      marginTop: "5px",
+                    }}
+                  >
                     {sendWithAckMutation.error?.message}
                   </p>
                 )}
                 {sendWithAckMutation.isSuccess && (
-                  <p style={{ color: "#51cf66", fontSize: "0.8em", marginTop: "5px" }}>
+                  <p
+                    style={{
+                      color: "#51cf66",
+                      fontSize: "0.8em",
+                      marginTop: "5px",
+                    }}
+                  >
                     ✓ Acknowledgment received from React Native!
                   </p>
                 )}
-              </div>
-
-              <div>
-                <p style={{ fontSize: "0.9em", marginBottom: "5px" }}>
-                  <strong>Query + Mutation Pattern:</strong> Fetch data, then send results to React Native
-                </p>
-                <div className="code-example">
-                  {`// Fetch data with useQuery
-const { data } = useQuery({ queryKey: ['user'], queryFn: fetchUser });
-
-// Send to React Native with mutation
-const sendMutation = useMutation({
-  mutationFn: (userData) => sendToReactNative(userData)
-});`}
-                </div>
               </div>
             </div>
 
