@@ -52,7 +52,29 @@ export default function App() {
     try {
       const data = JSON.parse(event.nativeEvent.data);
       console.log('Received from WebView:', data);
-      alert(`React Native received: ${data.data}`);
+      
+      // Check if this message requires acknowledgment
+      if (data.type === 'REQUIRES_ACK' && data.id) {
+        // Show the alert first
+        alert(`React Native received: ${data.data}`);
+        
+        // Send acknowledgment back to WebView
+        const ackMessage = JSON.stringify({
+          type: 'ACK',
+          originalId: data.id,
+          status: 'received',
+          timestamp: new Date().toISOString()
+        });
+        
+        // Send ACK after a short delay to simulate processing
+        setTimeout(() => {
+          webViewRef.current?.postMessage(ackMessage);
+          console.log('Sent ACK for message:', data.id);
+        }, 500);
+      } else {
+        // Regular message without ACK requirement
+        alert(`React Native received: ${data.data}`);
+      }
     } catch (error) {
       console.error('Error parsing message:', error);
     }
