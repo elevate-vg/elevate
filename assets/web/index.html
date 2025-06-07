@@ -169,119 +169,6 @@
       .input-group input::placeholder {
         color: rgba(255, 255, 255, 0.5);
       }
-      .gamepad-demo {
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        padding: 20px;
-        border-radius: 10px;
-        margin-top: 20px;
-      }
-      .gamepad-status {
-        text-align: center;
-        margin-bottom: 20px;
-        padding: 10px;
-        background: rgba(0, 0, 0, 0.3);
-        border-radius: 5px;
-      }
-      .gamepad-connected {
-        color: #4ecdc4;
-      }
-      .gamepad-disconnected {
-        color: #ff6b6b;
-      }
-      .gamepad-layout {
-        display: grid;
-        grid-template-columns: 1fr 200px 1fr;
-        gap: 20px;
-        align-items: center;
-        margin: 20px 0;
-      }
-      .dpad-container, .buttons-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 5px;
-        width: 120px;
-        height: 120px;
-        margin: 0 auto;
-      }
-      .dpad-btn, .gamepad-btn {
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 8px;
-        color: white;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.1s ease;
-        font-size: 14px;
-      }
-      .dpad-btn.pressed, .gamepad-btn.pressed {
-        background: #4ecdc4;
-        border-color: #4ecdc4;
-        transform: scale(0.95);
-        box-shadow: 0 0 15px rgba(78, 205, 196, 0.5);
-      }
-      .dpad-up { grid-column: 2; grid-row: 1; }
-      .dpad-left { grid-column: 1; grid-row: 2; }
-      .dpad-right { grid-column: 3; grid-row: 2; }
-      .dpad-down { grid-column: 2; grid-row: 3; }
-      .btn-y { grid-column: 2; grid-row: 1; }
-      .btn-x { grid-column: 1; grid-row: 2; }
-      .btn-b { grid-column: 3; grid-row: 2; }
-      .btn-a { grid-column: 2; grid-row: 3; }
-      .analog-sticks {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex-direction: column;
-        gap: 20px;
-      }
-      .stick-container {
-        position: relative;
-        width: 80px;
-        height: 80px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .stick-indicator {
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        background: #4ecdc4;
-        border-radius: 50%;
-        transition: all 0.1s ease;
-        box-shadow: 0 0 10px rgba(78, 205, 196, 0.5);
-      }
-      .triggers {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 15px;
-      }
-      .trigger {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 5px;
-      }
-      .trigger-bar {
-        width: 60px;
-        height: 10px;
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-radius: 5px;
-        overflow: hidden;
-      }
-      .trigger-fill {
-        height: 100%;
-        background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
-        transition: width 0.1s ease;
-        width: 0%;
-      }
     </style>
   </head>
   <body>
@@ -292,136 +179,26 @@
     </div>
 
     <div class="launcher-grid">
-      <div class="game-card" data-nav-id="0" onclick="launchRetroArch('gba', 'mgba')">
+      <div class="game-card" onclick="launchRetroArchWithHardcodedSettings()">
         <div class="game-icon">🏰</div>
         <div class="game-title">Game Boy Advance</div>
-        <div class="game-description">Launch GBA games with mGBA core</div>
+        <div class="game-description">Launch The Legend of Zelda: The Minish Cap</div>
         <button class="launch-btn">Launch GBA Game</button>
       </div>
 
-      <div class="game-card" data-nav-id="1" onclick="writeFile()">
-        <div class="game-icon">📝</div>
-        <div class="game-title">Write YAML</div>
-        <div class="game-description">
-          Write a YAML file to document directory
-        </div>
-        <button class="launch-btn">Write YAML</button>
-      </div>
-
-      <div class="game-card" data-nav-id="2" onclick="readFile()">
-        <div class="game-icon">📊</div>
-        <div class="game-title">Read YAML</div>
-        <div class="game-description">
-          Read and parse YAML file from document directory
-        </div>
-        <button class="launch-btn">Read YAML</button>
-      </div>
-
-      <div class="game-card" data-nav-id="3" onclick="toggleGamepadDemo()">
-        <div class="game-icon">🎮</div>
-        <div class="game-title">Gamepad Demo</div>
-        <div class="game-description">
-          Test gamepad controls and view input visualization
-        </div>
-        <button class="launch-btn">Toggle Gamepad Demo</button>
-      </div>
     </div>
 
-    <div class="settings-card">
-      <h3>ROM Settings</h3>
-      <div class="input-group">
-        <label for="romPath">ROM Path:</label>
-        <input
-          type="text"
-          id="romPath"
-          placeholder="/storage/emulated/0/Download/game.zip"
-          value="/storage/emulated/0/Download/minish.zip"
-        />
-      </div>
-      <div class="input-group">
-        <label for="configPath">Config Path:</label>
-        <input
-          type="text"
-          id="configPath"
-          placeholder="/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg"
-          value="/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg"
-        />
-      </div>
-    </div>
 
     <div class="quick-actions">
-      <button
-        class="quick-btn"
-        onclick="sendMessage('Open RetroArch Settings')"
-      >
-        ⚙️ Settings
+      <button class="quick-btn" onclick="writeFile()">
+        📝 Write YAML
       </button>
-      <button class="quick-btn" onclick="sendMessage('Scan ROMs')">
-        📁 Scan ROMs
+      <button class="quick-btn" onclick="readFile()">
+        📊 Read YAML
       </button>
-      <button class="quick-btn" onclick="sendMessage('Show Saves')">
-        💾 Save States
-      </button>
-      <button class="quick-btn" onclick="sendMessage('Controls')">
-        🎮 Controls
-      </button>
-      <button class="quick-btn" onclick="sendMessage('About')">ℹ️ About</button>
     </div>
 
     <div class="status" id="status">Ready to launch RetroArch games...</div>
-
-    <div class="gamepad-demo" id="gamepadDemo" style="display: none;">
-      <h3>🎮 Gamepad Controls Demo</h3>
-      <div class="gamepad-status" id="gamepadStatus">
-        <span class="gamepad-disconnected">No gamepad detected. Connect a gamepad and press any button.</span>
-      </div>
-      
-      <div class="gamepad-layout">
-        <!-- D-Pad -->
-        <div class="dpad-container">
-          <div class="dpad-btn dpad-up" id="dpad-up">↑</div>
-          <div class="dpad-btn dpad-left" id="dpad-left">←</div>
-          <div class="dpad-btn dpad-right" id="dpad-right">→</div>
-          <div class="dpad-btn dpad-down" id="dpad-down">↓</div>
-        </div>
-
-        <!-- Analog Sticks -->
-        <div class="analog-sticks">
-          <div class="stick-container">
-            <div class="stick-indicator" id="leftStick"></div>
-            <small>L</small>
-          </div>
-          <div class="stick-container">
-            <div class="stick-indicator" id="rightStick"></div>
-            <small>R</small>
-          </div>
-        </div>
-
-        <!-- Action Buttons -->
-        <div class="buttons-container">
-          <div class="gamepad-btn btn-y" id="btn-y">Y</div>
-          <div class="gamepad-btn btn-x" id="btn-x">X</div>
-          <div class="gamepad-btn btn-b" id="btn-b">B</div>
-          <div class="gamepad-btn btn-a" id="btn-a">A</div>
-        </div>
-      </div>
-
-      <!-- Triggers -->
-      <div class="triggers">
-        <div class="trigger">
-          <small>LT</small>
-          <div class="trigger-bar">
-            <div class="trigger-fill" id="leftTrigger"></div>
-          </div>
-        </div>
-        <div class="trigger">
-          <small>RT</small>
-          <div class="trigger-bar">
-            <div class="trigger-fill" id="rightTrigger"></div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <script>
       function updateStatus(message) {
@@ -440,6 +217,28 @@
           type: "LAUNCH_RETROARCH",
           console: console,
           core: core,
+          romPath: romPath,
+          configPath: configPath,
+          timestamp: new Date().toISOString(),
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(launchConfig));
+        } else {
+          updateStatus("Error: ReactNativeWebView not available");
+        }
+      }
+
+      function launchRetroArchWithHardcodedSettings() {
+        const romPath = "/storage/emulated/0/Download/minish.zip";
+        const configPath = "/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg";
+
+        updateStatus("Launching The Legend of Zelda: The Minish Cap...");
+
+        const launchConfig = {
+          type: "LAUNCH_RETROARCH",
+          console: "gba",
+          core: "mgba",
           romPath: romPath,
           configPath: configPath,
           timestamp: new Date().toISOString(),
@@ -551,18 +350,10 @@
       document.addEventListener("message", handleMessage);
       window.addEventListener("message", handleMessage);
 
-      // Gamepad Demo Variables
-      let gamepadDemo = {
-        active: false,
-        connectedGamepads: {},
-        animationFrame: null,
-        deadzone: 0.1
-      };
-
       // Navigation Variables
       let navigation = {
         currentIndex: 0,
-        maxIndex: 3, // 4 cards (0-3)
+        maxIndex: 2, // 3 cards (0-2)
         lastInputTime: 0,
         inputDelay: 200, // ms between navigation inputs
         previousButtonStates: {
@@ -571,144 +362,33 @@
           dpadLeft: false,
           dpadRight: false,
           buttonA: false
-        }
+        },
+        animationFrame: null
       };
 
-      // Gamepad Demo Functions
-      function toggleGamepadDemo() {
-        const demoElement = document.getElementById('gamepadDemo');
-        gamepadDemo.active = !gamepadDemo.active;
-        
-        if (gamepadDemo.active) {
-          demoElement.style.display = 'block';
-          startGamepadPolling();
-          updateStatus('Gamepad demo started! Connect a gamepad and press buttons.');
-        } else {
-          demoElement.style.display = 'none';
-          stopGamepadPolling();
-          updateStatus('Gamepad demo stopped.');
-        }
-      }
-
+      // Gamepad Polling Functions
       function startGamepadPolling() {
         function pollGamepads() {
           const gamepads = navigator.getGamepads();
-          let connectedCount = 0;
           
           for (let i = 0; i < gamepads.length; i++) {
             const gamepad = gamepads[i];
             if (gamepad) {
-              connectedCount++;
-              
-              // Handle navigation for all gamepads (not just when demo is active)
               handleGamepadNavigation(gamepad);
-              
-              // Only update demo display when demo is active
-              if (gamepadDemo.active) {
-                updateGamepadDisplay(gamepad, i);
-              }
             }
           }
           
-          if (gamepadDemo.active) {
-            updateGamepadStatus(connectedCount);
-          }
-          
-          gamepadDemo.animationFrame = requestAnimationFrame(pollGamepads);
+          navigation.animationFrame = requestAnimationFrame(pollGamepads);
         }
         
         pollGamepads();
       }
 
       function stopGamepadPolling() {
-        if (gamepadDemo.animationFrame) {
-          cancelAnimationFrame(gamepadDemo.animationFrame);
-          gamepadDemo.animationFrame = null;
+        if (navigation.animationFrame) {
+          cancelAnimationFrame(navigation.animationFrame);
+          navigation.animationFrame = null;
         }
-        resetGamepadDisplay();
-      }
-
-      function updateGamepadStatus(connectedCount) {
-        const statusElement = document.getElementById('gamepadStatus');
-        if (connectedCount > 0) {
-          statusElement.innerHTML = `<span class="gamepad-connected">🎮 ${connectedCount} gamepad(s) connected</span>`;
-        } else {
-          statusElement.innerHTML = `<span class="gamepad-disconnected">No gamepad detected. Connect a gamepad and press any button.</span>`;
-        }
-      }
-
-      function updateGamepadDisplay(gamepad, index) {
-        // Update D-Pad
-        updateButton('dpad-up', gamepad.buttons[12]?.pressed);
-        updateButton('dpad-down', gamepad.buttons[13]?.pressed);
-        updateButton('dpad-left', gamepad.buttons[14]?.pressed);
-        updateButton('dpad-right', gamepad.buttons[15]?.pressed);
-        
-        // Update Action Buttons (Xbox layout)
-        updateButton('btn-a', gamepad.buttons[0]?.pressed);  // A
-        updateButton('btn-b', gamepad.buttons[1]?.pressed);  // B
-        updateButton('btn-x', gamepad.buttons[2]?.pressed);  // X
-        updateButton('btn-y', gamepad.buttons[3]?.pressed);  // Y
-        
-        // Update Triggers
-        updateTrigger('leftTrigger', gamepad.buttons[6]?.value || 0);
-        updateTrigger('rightTrigger', gamepad.buttons[7]?.value || 0);
-        
-        // Update Analog Sticks
-        updateAnalogStick('leftStick', gamepad.axes[0] || 0, gamepad.axes[1] || 0);
-        updateAnalogStick('rightStick', gamepad.axes[2] || 0, gamepad.axes[3] || 0);
-      }
-
-      function updateButton(elementId, pressed) {
-        const element = document.getElementById(elementId);
-        if (element) {
-          if (pressed) {
-            element.classList.add('pressed');
-          } else {
-            element.classList.remove('pressed');
-          }
-        }
-      }
-
-      function updateTrigger(elementId, value) {
-        const element = document.getElementById(elementId);
-        if (element) {
-          const percentage = Math.max(0, Math.min(100, value * 100));
-          element.style.width = `${percentage}%`;
-        }
-      }
-
-      function updateAnalogStick(elementId, x, y) {
-        const element = document.getElementById(elementId);
-        if (element) {
-          // Apply deadzone
-          const magnitude = Math.sqrt(x * x + y * y);
-          if (magnitude < gamepadDemo.deadzone) {
-            x = 0;
-            y = 0;
-          }
-          
-          // Convert to pixel positions (40px is half of 80px container)
-          const maxOffset = 25; // Maximum pixels from center
-          const pixelX = x * maxOffset;
-          const pixelY = y * maxOffset;
-          
-          element.style.transform = `translate(${pixelX}px, ${pixelY}px)`;
-        }
-      }
-
-      function resetGamepadDisplay() {
-        // Reset all buttons
-        const buttons = document.querySelectorAll('.dpad-btn, .gamepad-btn');
-        buttons.forEach(btn => btn.classList.remove('pressed'));
-        
-        // Reset triggers
-        document.getElementById('leftTrigger').style.width = '0%';
-        document.getElementById('rightTrigger').style.width = '0%';
-        
-        // Reset analog sticks
-        document.getElementById('leftStick').style.transform = 'translate(0px, 0px)';
-        document.getElementById('rightStick').style.transform = 'translate(0px, 0px)';
       }
 
       // Navigation Functions
@@ -772,29 +452,38 @@
       }
 
       function navigateUp() {
-        if (navigation.currentIndex >= 2) { // Top row
+        if (navigation.currentIndex === 2) { // Bottom card goes to top-left
+          navigation.currentIndex = 0;
+          updateFocusedCard();
+        } else if (navigation.currentIndex >= 2) { // Top row
           navigation.currentIndex -= 2;
           updateFocusedCard();
         }
       }
 
       function navigateDown() {
-        if (navigation.currentIndex < 2) { // Bottom row
-          navigation.currentIndex += 2;
+        if (navigation.currentIndex < 2) { // Top row goes down
+          navigation.currentIndex = 2; // Go to bottom single card
           updateFocusedCard();
         }
       }
 
       function navigateLeft() {
-        if (navigation.currentIndex % 2 === 1) { // Right column
-          navigation.currentIndex -= 1;
+        if (navigation.currentIndex === 1) { // Right card goes to left
+          navigation.currentIndex = 0;
+          updateFocusedCard();
+        } else if (navigation.currentIndex === 2) { // Bottom card cycles to right
+          navigation.currentIndex = 1;
           updateFocusedCard();
         }
       }
 
       function navigateRight() {
-        if (navigation.currentIndex % 2 === 0) { // Left column
-          navigation.currentIndex += 1;
+        if (navigation.currentIndex === 0) { // Left card goes to right
+          navigation.currentIndex = 1;
+          updateFocusedCard();
+        } else if (navigation.currentIndex === 2) { // Bottom card cycles to left
+          navigation.currentIndex = 0;
           updateFocusedCard();
         }
       }
@@ -830,7 +519,7 @@
       function initializeNavigation() {
         updateFocusedCard();
         // Start gamepad polling immediately for navigation
-        if (!gamepadDemo.animationFrame) {
+        if (!navigation.animationFrame) {
           startGamepadPolling();
         }
       }
