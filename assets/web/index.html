@@ -2,37 +2,17 @@
 <html>
   <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <script
-      crossorigin
-      src="https://unpkg.com/react@18.3.1/umd/react.development.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://unpkg.com/react-query/dist/react-query.production.min.js"
-    ></script>
-    <script
-      crossorigin
-      src="https://unpkg.com/@babel/standalone/babel.min.js"
-    ></script>
     <style>
       html {
-        background: #667eea;
+        background: #1a1a2e;
       }
       body {
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
           sans-serif;
         padding: 20px;
         margin: 0;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
         color: white;
-        display: flex;
-        justify-content: center;
-        align-items: center;
         min-height: 100vh;
         opacity: 0;
         animation: fadeIn 0.3s ease-in forwards;
@@ -43,428 +23,312 @@
           opacity: 1;
         }
       }
-      .card {
-        background: rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(10px);
-        padding: 30px;
-        border-radius: 20px;
-        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+      .header {
         text-align: center;
-        max-width: 400px;
-        width: 90%;
+        margin-bottom: 30px;
+      }
+      .logo {
+        font-size: 3em;
+        margin-bottom: 10px;
       }
       h1 {
-        margin: 0 0 20px 0;
-        font-size: 2em;
+        margin: 0;
+        font-size: 2.5em;
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
       }
-      p {
+      .subtitle {
         font-size: 1.2em;
-        margin: 20px 0;
+        opacity: 0.8;
+        margin: 10px 0 0 0;
       }
-      button {
-        background: white;
-        color: #667eea;
+      .launcher-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+      .game-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      .game-card:hover {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      .game-icon {
+        font-size: 4em;
+        margin-bottom: 15px;
+        display: block;
+      }
+      .game-title {
+        font-size: 1.5em;
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
+      .game-description {
+        opacity: 0.8;
+        margin-bottom: 20px;
+        line-height: 1.4;
+      }
+      .launch-btn {
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+        color: white;
         border: none;
-        padding: 12px 24px;
-        border-radius: 10px;
+        padding: 12px 30px;
+        border-radius: 25px;
         font-size: 1em;
         font-weight: bold;
         cursor: pointer;
-        transition: transform 0.2s;
+        transition: all 0.3s ease;
+        width: 100%;
       }
-      button:active {
-        transform: scale(0.95);
+      .launch-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
       }
-      button:disabled {
+      .launch-btn:active {
+        transform: scale(0.98);
+      }
+      .launch-btn:disabled {
         opacity: 0.6;
         cursor: not-allowed;
+        transform: none;
       }
-      .mutation-info {
+      .status {
+        text-align: center;
         margin-top: 20px;
         padding: 15px;
-        background: rgba(0, 0, 0, 0.2);
-        border-radius: 10px;
-      }
-      .code-example {
         background: rgba(0, 0, 0, 0.3);
-        padding: 10px;
+        border-radius: 10px;
+        font-family: 'Courier New', monospace;
+      }
+      .quick-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-top: 30px;
+        flex-wrap: wrap;
+      }
+      .quick-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .quick-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .settings-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+      .input-group {
+        margin-bottom: 15px;
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        opacity: 0.9;
+      }
+      .input-group input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 5px;
-        font-family: monospace;
-        font-size: 0.85em;
-        margin: 10px 0;
-        overflow-x: auto;
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+        font-size: 0.9em;
+      }
+      .input-group input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
       }
     </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div class="header">
+      <div class="logo">🎮</div>
+      <h1>RetroArch Launcher</h1>
+      <p class="subtitle">Launch RetroArch games directly from your WebView</p>
+    </div>
 
-    <!-- <script type="text/javascript"> -->
-    <script type="text/babel">
-      const { useState, useEffect } = React;
-      const { QueryClient, QueryClientProvider, useQuery, useMutation } =
-        window.ReactQuery;
+    <div class="launcher-grid">
+      <div class="game-card" onclick="launchRetroArch('gba', 'mgba')">
+        <div class="game-icon">🏰</div>
+        <div class="game-title">Game Boy Advance</div>
+        <div class="game-description">Launch GBA games with mGBA core</div>
+        <button class="launch-btn">Launch GBA Game</button>
+      </div>
 
-      const queryClient = new QueryClient({
-        defaultOptions: {
-          queries: {
-            refetchOnWindowFocus: false,
-            retry: 1,
-          },
-        },
-      });
+      <div class="game-card" onclick="launchRetroArch('snes', 'snes9x')">
+        <div class="game-icon">🎯</div>
+        <div class="game-title">Super Nintendo</div>
+        <div class="game-description">Play SNES games with Snes9x core</div>
+        <button class="launch-btn">Launch SNES Game</button>
+      </div>
 
-      // Custom hook for React Native message stream (similar to EventSource pattern)
-      const useReactNativeMessageStream = (queryKey) => {
-        useEffect(() => {
-          const handleMessage = (event) => {
-            try {
-              let data;
-              // Handle both string and object data
-              if (typeof event.data === "string") {
-                try {
-                  data = JSON.parse(event.data);
-                } catch {
-                  // Treat as plain string message
-                  data = { text: event.data, type: "SIMPLE_MESSAGE" };
-                }
-              } else {
-                data = event.data;
-              }
+      <div class="game-card" onclick="launchRetroArch('genesis', 'genesis_plus_gx')">
+        <div class="game-icon">💎</div>
+        <div class="game-title">Sega Genesis</div>
+        <div class="game-description">Genesis/Mega Drive with Genesis Plus GX</div>
+        <button class="launch-btn">Launch Genesis Game</button>
+      </div>
 
-              // Get current messages from cache
-              const currentMessages = queryClient.getQueryData(queryKey) || [];
+      <div class="game-card" onclick="launchRetroArch('nes', 'nestopia')">
+        <div class="game-icon">🔥</div>
+        <div class="game-title">Nintendo NES</div>
+        <div class="game-description">Classic NES games with Nestopia core</div>
+        <button class="launch-btn">Launch NES Game</button>
+      </div>
 
-              // Create new message
-              const newMessage = {
-                id: Date.now(),
-                text: data.text || event.data,
-                from: data.source || "React Native",
-                type: data.type || "SIMPLE_MESSAGE",
-                timestamp: data.timestamp || new Date().toISOString(),
-              };
+      <div class="game-card" onclick="launchRetroArch('psx', 'pcsx_rearmed')">
+        <div class="game-icon">💿</div>
+        <div class="game-title">PlayStation 1</div>
+        <div class="game-description">PSX games with PCSX ReARMed core</div>
+        <button class="launch-btn">Launch PSX Game</button>
+      </div>
 
-              // Update query cache with new message stream
-              queryClient.setQueryData(queryKey, [
-                ...currentMessages,
-                newMessage,
-              ]);
-            } catch (error) {
-              console.error("Error processing message stream:", error);
-            }
-          };
+      <div class="game-card" onclick="openRetroArchMain()">
+        <div class="game-icon">⚙️</div>
+        <div class="game-title">RetroArch Main</div>
+        <div class="game-description">Open RetroArch main interface</div>
+        <button class="launch-btn">Open RetroArch</button>
+      </div>
+    </div>
 
-          // Set up message stream listeners (similar to EventSource pattern)
-          document.addEventListener("message", handleMessage);
-          window.addEventListener("message", handleMessage);
+    <div class="settings-card">
+      <h3>ROM Settings</h3>
+      <div class="input-group">
+        <label for="romPath">ROM Path:</label>
+        <input type="text" id="romPath" placeholder="/storage/emulated/0/Download/game.zip" 
+               value="/storage/emulated/0/Download/minish.zip">
+      </div>
+      <div class="input-group">
+        <label for="configPath">Config Path:</label>
+        <input type="text" id="configPath" placeholder="/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg" 
+               value="/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg">
+      </div>
+    </div>
 
-          return () => {
-            document.removeEventListener("message", handleMessage);
-            window.removeEventListener("message", handleMessage);
-          };
-        }, [queryKey]);
+    <div class="quick-actions">
+      <button class="quick-btn" onclick="sendMessage('Open RetroArch Settings')">⚙️ Settings</button>
+      <button class="quick-btn" onclick="sendMessage('Scan ROMs')">📁 Scan ROMs</button>
+      <button class="quick-btn" onclick="sendMessage('Show Saves')">💾 Save States</button>
+      <button class="quick-btn" onclick="sendMessage('Controls')">🎮 Controls</button>
+      <button class="quick-btn" onclick="sendMessage('About')">ℹ️ About</button>
+    </div>
 
-        // Return query for the message stream
-        return useQuery({
-          queryKey,
-          queryFn: () => [], // Initialize with empty array
-          initialData: [],
-        });
-      };
+    <div class="status" id="status">
+      Ready to launch RetroArch games...
+    </div>
 
-      function Card() {
-        // Use the custom message stream hook
-        const messageStreamQuery = useReactNativeMessageStream([
-          "messageStream",
-        ]);
-        const messages = messageStreamQuery.data || [];
+    <script>
+      function updateStatus(message) {
+        document.getElementById('status').textContent = message;
+      }
 
-        // Advanced: Mutation with acknowledgment pattern
-        const sendWithAckMutation = useMutation({
-          mutationFn: async (messageData) => {
-            return new Promise((resolve, reject) => {
-              const messageId = `ack_${Date.now()}`;
-              const timeout = setTimeout(() => {
-                reject(
-                  new Error("Timeout: No acknowledgment from React Native"),
-                );
-              }, 5000);
+      function launchRetroArch(console, core) {
+        const romPath = document.getElementById('romPath').value;
+        const configPath = document.getElementById('configPath').value;
 
-              // One-time listener for acknowledgment
-              const handleAck = (event) => {
-                try {
-                  let data;
-                  // Handle both string and object data
-                  if (typeof event.data === "string") {
-                    data = JSON.parse(event.data);
-                  } else {
-                    data = event.data;
-                  }
+        updateStatus(`Launching ${console.toUpperCase()} game with ${core} core...`);
 
-                  if (data.type === "ACK" && data.originalId === messageId) {
-                    clearTimeout(timeout);
-                    document.removeEventListener("message", handleAck);
-                    window.removeEventListener("message", handleAck);
-                    resolve(data);
-                  }
-                } catch (e) {
-                  // Not our message, ignore
-                  console.log("Ignoring non-JSON message:", event.data);
-                }
-              };
-
-              document.addEventListener("message", handleAck);
-              window.addEventListener("message", handleAck);
-
-              // Send message
-              const message = {
-                id: messageId,
-                type: "REQUIRES_ACK",
-                data: messageData,
-                timestamp: new Date().toISOString(),
-              };
-
-              if (window.ReactNativeWebView) {
-                window.ReactNativeWebView.postMessage(JSON.stringify(message));
-              } else {
-                clearTimeout(timeout);
-                reject(new Error("ReactNativeWebView not available"));
-              }
-            });
-          },
-          onSuccess: (ackData) => {
-            console.log("Received ACK:", ackData);
-            // Update message stream via query cache
-            const currentMessages =
-              queryClient.getQueryData(["messageStream"]) || [];
-            const ackMessage = {
-              id: Date.now(),
-              text: `ACK received! Status: ${ackData.status}`,
-              from: "System",
-              type: "ACK_RESPONSE",
-              timestamp: new Date().toISOString(),
-            };
-            queryClient.setQueryData(
-              ["messageStream"],
-              [...currentMessages, ackMessage],
-            );
-
-            // Clear success after 3 seconds
-            setTimeout(() => {
-              sendWithAckMutation.reset();
-            }, 3000);
-          },
-          onError: (error) => {
-            console.error("ACK failed:", error);
-            setTimeout(() => {
-              sendWithAckMutation.reset();
-            }, 3000);
-          },
-        });
-
-        // Messages are now handled by the useReactNativeMessageStream hook
-
-        // Data stream is now initiated from React Native
-
-        const clearMessageStream = () => {
-          queryClient.setQueryData(["messageStream"], []);
+        const launchConfig = {
+          type: 'LAUNCH_RETROARCH',
+          console: console,
+          core: core,
+          romPath: romPath,
+          configPath: configPath,
+          timestamp: new Date().toISOString()
         };
 
-        return (
-          <div className="card">
-            <div className="mutation-info">
-              <h4 style={{ margin: "0 0 10px 0" }}>
-                Real-time Message Stream (React Query Pattern):
-              </h4>
-
-              <div
-                style={{
-                  marginBottom: "15px",
-                  fontSize: "0.9em",
-                  color: "rgba(255,255,255,0.8)",
-                }}
-              >
-                <strong>Stream Status:</strong>{" "}
-                {messageStreamQuery.isLoading ? "Loading..." : "Connected"} |
-                <strong> Messages:</strong> {messages.length} |
-                <strong> Last Updated:</strong>{" "}
-                {messageStreamQuery.dataUpdatedAt
-                  ? new Date(
-                      messageStreamQuery.dataUpdatedAt,
-                    ).toLocaleTimeString()
-                  : "Never"}
-              </div>
-
-              <div
-                style={{
-                  marginBottom: "15px",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: "10px",
-                }}
-              >
-                <button
-                  onClick={clearMessageStream}
-                  style={{
-                    fontSize: "0.9em",
-                    padding: "8px 16px",
-                    background: "#ff6b6b",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "5px",
-                  }}
-                >
-                  🗑️ Clear Stream
-                </button>
-
-                <button
-                  onClick={() =>
-                    sendWithAckMutation.mutate(
-                      "Important message requiring acknowledgment",
-                    )
-                  }
-                  disabled={sendWithAckMutation.isLoading}
-                  style={{
-                    fontSize: "0.9em",
-                    padding: "8px 16px",
-                    background: sendWithAckMutation.isLoading
-                      ? "#ccc"
-                      : "white",
-                    color: sendWithAckMutation.isLoading ? "#666" : "#667eea",
-                    border: "none",
-                    borderRadius: "5px",
-                  }}
-                >
-                  {sendWithAckMutation.isLoading
-                    ? "Waiting for ACK..."
-                    : "🤝 Send with ACK"}
-                </button>
-                {sendWithAckMutation.isError && (
-                  <p
-                    style={{
-                      color: "#ff6b6b",
-                      fontSize: "0.8em",
-                      marginTop: "5px",
-                    }}
-                  >
-                    {sendWithAckMutation.error?.message}
-                  </p>
-                )}
-                {sendWithAckMutation.isSuccess && (
-                  <p
-                    style={{
-                      color: "#51cf66",
-                      fontSize: "0.8em",
-                      marginTop: "5px",
-                    }}
-                  >
-                    ✓ Acknowledgment received from React Native!
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div style={{ marginTop: "20px", textAlign: "left" }}>
-              <h3>Real-time Message Stream ({messages.length} messages):</h3>
-              <div
-                style={{
-                  background: "rgba(0,0,0,0.2)",
-                  padding: "10px",
-                  borderRadius: "10px",
-                  maxHeight: "250px",
-                  overflowY: "auto",
-                }}
-              >
-                {messages.length === 0 ? (
-                  <p style={{ margin: 0, opacity: 0.7 }}>
-                    No messages in stream... Click "📡 Start Data Stream" in the React Native app above to see the React Query pattern in action!
-                  </p>
-                ) : (
-                  messages.map((msg) => {
-                    const getMessageStyle = (type) => {
-                      switch (type) {
-                        case "STREAM_DATA":
-                          return {
-                            borderLeft: "3px solid #4ecdc4",
-                            paddingLeft: "8px",
-                            background: "rgba(78, 205, 196, 0.1)",
-                          };
-                        case "STREAM_COMPLETE":
-                          return {
-                            borderLeft: "3px solid #51cf66",
-                            paddingLeft: "8px",
-                            background: "rgba(81, 207, 102, 0.2)",
-                          };
-                        case "ACK_RESPONSE":
-                          return {
-                            borderLeft: "3px solid #51cf66",
-                            paddingLeft: "8px",
-                            background: "rgba(81, 207, 102, 0.1)",
-                          };
-                        case "SIMPLE_MESSAGE":
-                          return {
-                            borderLeft: "3px solid #ffd43b",
-                            paddingLeft: "8px",
-                            background: "rgba(255, 212, 59, 0.1)",
-                          };
-                        default:
-                          return {
-                            borderLeft: "3px solid #868e96",
-                            paddingLeft: "8px",
-                            background: "rgba(134, 142, 150, 0.1)",
-                          };
-                      }
-                    };
-
-                    return (
-                      <div
-                        key={msg.id}
-                        style={{
-                          marginBottom: "8px",
-                          fontSize: "0.9em",
-                          ...getMessageStyle(msg.type),
-                        }}
-                      >
-                        <div
-                          style={{
-                            display: "flex",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                          }}
-                        >
-                          <div>
-                            <strong style={{ color: "#fff" }}>
-                              {msg.from}:
-                            </strong>{" "}
-                            <span style={{ marginLeft: "5px" }}>
-                              {msg.text}
-                            </span>
-                          </div>
-                          <small style={{ opacity: 0.6, fontSize: "0.8em" }}>
-                            {msg.timestamp
-                              ? new Date(msg.timestamp).toLocaleTimeString()
-                              : ""}
-                          </small>
-                        </div>
-                      </div>
-                    );
-                  })
-                )}
-              </div>
-            </div>
-          </div>
-        );
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(launchConfig));
+        } else {
+          updateStatus('Error: ReactNativeWebView not available');
+        }
       }
 
-      function App() {
-        return (
-          <QueryClientProvider client={queryClient}>
-            <Card />
-          </QueryClientProvider>
-        );
+      function openRetroArchMain() {
+        updateStatus('Opening RetroArch main interface...');
+
+        const message = {
+          type: 'OPEN_RETROARCH_MAIN',
+          timestamp: new Date().toISOString()
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        } else {
+          updateStatus('Error: ReactNativeWebView not available');
+        }
       }
 
-      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+      function sendMessage(action) {
+        updateStatus(`Action: ${action}`);
+
+        const message = {
+          type: 'RETROARCH_ACTION',
+          action: action,
+          timestamp: new Date().toISOString()
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        } else {
+          updateStatus('Error: ReactNativeWebView not available');
+        }
+      }
+
+      // Listen for messages from React Native
+      function handleMessage(event) {
+        try {
+          let data;
+          if (typeof event.data === 'string') {
+            try {
+              data = JSON.parse(event.data);
+            } catch {
+              data = { text: event.data, type: 'SIMPLE_MESSAGE' };
+            }
+          } else {
+            data = event.data;
+          }
+
+          if (data.type === 'LAUNCH_STATUS') {
+            updateStatus(data.message);
+          } else if (data.type === 'ERROR') {
+            updateStatus(`Error: ${data.message}`);
+          } else {
+            updateStatus(`Received: ${data.text || event.data}`);
+          }
+        } catch (error) {
+          console.error('Error processing message:', error);
+        }
+      }
+
+      // Set up message listeners
+      document.addEventListener('message', handleMessage);
+      window.addEventListener('message', handleMessage);
+
+      // Initialize
+      updateStatus('RetroArch Launcher ready! Configure your ROM path and select a game to launch.');
     </script>
   </body>
 </html>
