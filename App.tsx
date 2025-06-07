@@ -74,6 +74,10 @@ export default function App() {
         openRetroArchMain();
       } else if (data.type === 'RETROARCH_ACTION') {
         handleRetroArchAction(data.action);
+      } else if (data.type === 'WRITE_FILE') {
+        writeTextFile(data.content || 'Hello from WebView!');
+      } else if (data.type === 'READ_FILE') {
+        readTextFile();
       } else if (data.type === 'REQUIRES_ACK' && data.id) {
         // Show the alert first
         alert(`React Native received: ${data.data}`);
@@ -198,6 +202,37 @@ export default function App() {
         break;
       default:
         sendStatusToWebView('LAUNCH_STATUS', `Unknown action: ${action}`);
+    }
+  };
+
+  const writeTextFile = async (content: string) => {
+    try {
+      const filePath = `${FileSystem.documentDirectory}sample.txt`;
+      await FileSystem.writeAsStringAsync(filePath, content);
+      sendStatusToWebView('FILE_WRITE_SUCCESS', `File written successfully to: ${filePath}`);
+      console.log('File written to:', filePath);
+    } catch (error) {
+      console.error('File write error:', error);
+      sendStatusToWebView('ERROR', `Failed to write file: ${error.message}`);
+    }
+  };
+
+  const readTextFile = async () => {
+    try {
+      const filePath = `${FileSystem.documentDirectory}sample.txt`;
+      const fileInfo = await FileSystem.getInfoAsync(filePath);
+      
+      if (!fileInfo.exists) {
+        sendStatusToWebView('FILE_READ_ERROR', 'File does not exist. Write a file first.');
+        return;
+      }
+
+      const content = await FileSystem.readAsStringAsync(filePath);
+      sendStatusToWebView('FILE_READ_SUCCESS', content);
+      console.log('File content:', content);
+    } catch (error) {
+      console.error('File read error:', error);
+      sendStatusToWebView('ERROR', `Failed to read file: ${error.message}`);
     }
   };
 

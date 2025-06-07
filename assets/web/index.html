@@ -211,6 +211,20 @@
         <div class="game-description">Open RetroArch main interface</div>
         <button class="launch-btn">Open RetroArch</button>
       </div>
+
+      <div class="game-card" onclick="writeFile()">
+        <div class="game-icon">📝</div>
+        <div class="game-title">Write File</div>
+        <div class="game-description">Write a text file to document directory</div>
+        <button class="launch-btn">Write File</button>
+      </div>
+
+      <div class="game-card" onclick="readFile()">
+        <div class="game-icon">📖</div>
+        <div class="game-title">Read File</div>
+        <div class="game-description">Read the text file from document directory</div>
+        <button class="launch-btn">Read File</button>
+      </div>
     </div>
 
     <div class="settings-card">
@@ -281,6 +295,38 @@
         }
       }
 
+      function writeFile() {
+        const content = `Hello from WebView! Current time: ${new Date().toISOString()}`;
+        updateStatus('Requesting file write...');
+
+        const message = {
+          type: 'WRITE_FILE',
+          content: content,
+          timestamp: new Date().toISOString()
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        } else {
+          updateStatus('Error: ReactNativeWebView not available');
+        }
+      }
+
+      function readFile() {
+        updateStatus('Requesting file read...');
+
+        const message = {
+          type: 'READ_FILE',
+          timestamp: new Date().toISOString()
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        } else {
+          updateStatus('Error: ReactNativeWebView not available');
+        }
+      }
+
       function sendMessage(action) {
         updateStatus(`Action: ${action}`);
 
@@ -315,6 +361,12 @@
             updateStatus(data.message);
           } else if (data.type === 'ERROR') {
             updateStatus(`Error: ${data.message}`);
+          } else if (data.type === 'FILE_WRITE_SUCCESS') {
+            updateStatus(`✅ ${data.message}`);
+          } else if (data.type === 'FILE_READ_SUCCESS') {
+            updateStatus(`📖 File content: ${data.message}`);
+          } else if (data.type === 'FILE_READ_ERROR') {
+            updateStatus(`❌ ${data.message}`);
           } else {
             updateStatus(`Received: ${data.text || event.data}`);
           }
