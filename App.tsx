@@ -9,6 +9,7 @@ import * as FileSystem from 'expo-file-system';
 import * as IntentLauncher from 'expo-intent-launcher';
 import { useState, useEffect, useRef } from 'react';
 import { AppState } from 'react-native';
+import * as YAML from 'js-yaml';
 
 export default function App() {
   const [htmlUri, setHtmlUri] = useState<string | null>(null);
@@ -207,32 +208,52 @@ export default function App() {
 
   const writeTextFile = async (content: string) => {
     try {
-      const filePath = `${FileSystem.documentDirectory}sample.txt`;
-      await FileSystem.writeAsStringAsync(filePath, content);
-      sendStatusToWebView('FILE_WRITE_SUCCESS', `File written successfully to: ${filePath}`);
-      console.log('File written to:', filePath);
+      const filePath = `${FileSystem.documentDirectory}sample.yaml`;
+      
+      // Create YAML data structure
+      const yamlData = {
+        message: content,
+        timestamp: new Date().toISOString(),
+        platform: Platform.OS,
+        app: {
+          name: 'elevate-expo',
+          version: '1.0.0'
+        },
+        metadata: {
+          writeCount: Math.floor(Math.random() * 100) + 1,
+          source: 'webview-request'
+        }
+      };
+
+      const yamlString = YAML.dump(yamlData);
+      await FileSystem.writeAsStringAsync(filePath, yamlString);
+      sendStatusToWebView('FILE_WRITE_SUCCESS', `YAML file written successfully to: ${filePath}`);
+      console.log('YAML file written to:', filePath);
     } catch (error) {
-      console.error('File write error:', error);
-      sendStatusToWebView('ERROR', `Failed to write file: ${error.message}`);
+      console.error('YAML write error:', error);
+      sendStatusToWebView('ERROR', `Failed to write YAML file: ${error.message}`);
     }
   };
 
   const readTextFile = async () => {
     try {
-      const filePath = `${FileSystem.documentDirectory}sample.txt`;
+      const filePath = `${FileSystem.documentDirectory}sample.yaml`;
       const fileInfo = await FileSystem.getInfoAsync(filePath);
       
       if (!fileInfo.exists) {
-        sendStatusToWebView('FILE_READ_ERROR', 'File does not exist. Write a file first.');
+        sendStatusToWebView('FILE_READ_ERROR', 'YAML file does not exist. Write a file first.');
         return;
       }
 
-      const content = await FileSystem.readAsStringAsync(filePath);
-      sendStatusToWebView('FILE_READ_SUCCESS', content);
-      console.log('File content:', content);
+      const yamlContent = await FileSystem.readAsStringAsync(filePath);
+      const parsedYaml = YAML.load(yamlContent) as any;
+      
+      // Only return the platform value
+      sendStatusToWebView('FILE_READ_SUCCESS', parsedYaml.platform || 'unknown');
+      console.log('YAML content:', parsedYaml);
     } catch (error) {
-      console.error('File read error:', error);
-      sendStatusToWebView('ERROR', `Failed to read file: ${error.message}`);
+      console.error('YAML read error:', error);
+      sendStatusToWebView('ERROR', `Failed to read YAML file: ${error.message}`);
     }
   };
 

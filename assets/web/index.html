@@ -11,7 +11,12 @@
           sans-serif;
         padding: 20px;
         margin: 0;
-        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
         color: white;
         min-height: 100vh;
         opacity: 0;
@@ -110,7 +115,7 @@
         padding: 15px;
         background: rgba(0, 0, 0, 0.3);
         border-radius: 10px;
-        font-family: 'Courier New', monospace;
+        font-family: "Courier New", monospace;
       }
       .quick-actions {
         display: flex;
@@ -177,53 +182,22 @@
         <button class="launch-btn">Launch GBA Game</button>
       </div>
 
-      <div class="game-card" onclick="launchRetroArch('snes', 'snes9x')">
-        <div class="game-icon">🎯</div>
-        <div class="game-title">Super Nintendo</div>
-        <div class="game-description">Play SNES games with Snes9x core</div>
-        <button class="launch-btn">Launch SNES Game</button>
-      </div>
-
-      <div class="game-card" onclick="launchRetroArch('genesis', 'genesis_plus_gx')">
-        <div class="game-icon">💎</div>
-        <div class="game-title">Sega Genesis</div>
-        <div class="game-description">Genesis/Mega Drive with Genesis Plus GX</div>
-        <button class="launch-btn">Launch Genesis Game</button>
-      </div>
-
-      <div class="game-card" onclick="launchRetroArch('nes', 'nestopia')">
-        <div class="game-icon">🔥</div>
-        <div class="game-title">Nintendo NES</div>
-        <div class="game-description">Classic NES games with Nestopia core</div>
-        <button class="launch-btn">Launch NES Game</button>
-      </div>
-
-      <div class="game-card" onclick="launchRetroArch('psx', 'pcsx_rearmed')">
-        <div class="game-icon">💿</div>
-        <div class="game-title">PlayStation 1</div>
-        <div class="game-description">PSX games with PCSX ReARMed core</div>
-        <button class="launch-btn">Launch PSX Game</button>
-      </div>
-
-      <div class="game-card" onclick="openRetroArchMain()">
-        <div class="game-icon">⚙️</div>
-        <div class="game-title">RetroArch Main</div>
-        <div class="game-description">Open RetroArch main interface</div>
-        <button class="launch-btn">Open RetroArch</button>
-      </div>
-
       <div class="game-card" onclick="writeFile()">
         <div class="game-icon">📝</div>
-        <div class="game-title">Write File</div>
-        <div class="game-description">Write a text file to document directory</div>
-        <button class="launch-btn">Write File</button>
+        <div class="game-title">Write YAML</div>
+        <div class="game-description">
+          Write a YAML file to document directory
+        </div>
+        <button class="launch-btn">Write YAML</button>
       </div>
 
       <div class="game-card" onclick="readFile()">
-        <div class="game-icon">📖</div>
-        <div class="game-title">Read File</div>
-        <div class="game-description">Read the text file from document directory</div>
-        <button class="launch-btn">Read File</button>
+        <div class="game-icon">📊</div>
+        <div class="game-title">Read YAML</div>
+        <div class="game-description">
+          Read and parse YAML file from document directory
+        </div>
+        <button class="launch-btn">Read YAML</button>
       </div>
     </div>
 
@@ -231,99 +205,118 @@
       <h3>ROM Settings</h3>
       <div class="input-group">
         <label for="romPath">ROM Path:</label>
-        <input type="text" id="romPath" placeholder="/storage/emulated/0/Download/game.zip" 
-               value="/storage/emulated/0/Download/minish.zip">
+        <input
+          type="text"
+          id="romPath"
+          placeholder="/storage/emulated/0/Download/game.zip"
+          value="/storage/emulated/0/Download/minish.zip"
+        />
       </div>
       <div class="input-group">
         <label for="configPath">Config Path:</label>
-        <input type="text" id="configPath" placeholder="/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg" 
-               value="/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg">
+        <input
+          type="text"
+          id="configPath"
+          placeholder="/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg"
+          value="/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg"
+        />
       </div>
     </div>
 
     <div class="quick-actions">
-      <button class="quick-btn" onclick="sendMessage('Open RetroArch Settings')">⚙️ Settings</button>
-      <button class="quick-btn" onclick="sendMessage('Scan ROMs')">📁 Scan ROMs</button>
-      <button class="quick-btn" onclick="sendMessage('Show Saves')">💾 Save States</button>
-      <button class="quick-btn" onclick="sendMessage('Controls')">🎮 Controls</button>
+      <button
+        class="quick-btn"
+        onclick="sendMessage('Open RetroArch Settings')"
+      >
+        ⚙️ Settings
+      </button>
+      <button class="quick-btn" onclick="sendMessage('Scan ROMs')">
+        📁 Scan ROMs
+      </button>
+      <button class="quick-btn" onclick="sendMessage('Show Saves')">
+        💾 Save States
+      </button>
+      <button class="quick-btn" onclick="sendMessage('Controls')">
+        🎮 Controls
+      </button>
       <button class="quick-btn" onclick="sendMessage('About')">ℹ️ About</button>
     </div>
 
-    <div class="status" id="status">
-      Ready to launch RetroArch games...
-    </div>
+    <div class="status" id="status">Ready to launch RetroArch games...</div>
 
     <script>
       function updateStatus(message) {
-        document.getElementById('status').textContent = message;
+        document.getElementById("status").textContent = message;
       }
 
       function launchRetroArch(console, core) {
-        const romPath = document.getElementById('romPath').value;
-        const configPath = document.getElementById('configPath').value;
+        const romPath = document.getElementById("romPath").value;
+        const configPath = document.getElementById("configPath").value;
 
-        updateStatus(`Launching ${console.toUpperCase()} game with ${core} core...`);
+        updateStatus(
+          `Launching ${console.toUpperCase()} game with ${core} core...`,
+        );
 
         const launchConfig = {
-          type: 'LAUNCH_RETROARCH',
+          type: "LAUNCH_RETROARCH",
           console: console,
           core: core,
           romPath: romPath,
           configPath: configPath,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
 
         if (window.ReactNativeWebView) {
           window.ReactNativeWebView.postMessage(JSON.stringify(launchConfig));
         } else {
-          updateStatus('Error: ReactNativeWebView not available');
+          updateStatus("Error: ReactNativeWebView not available");
         }
       }
 
       function openRetroArchMain() {
-        updateStatus('Opening RetroArch main interface...');
+        updateStatus("Opening RetroArch main interface...");
 
         const message = {
-          type: 'OPEN_RETROARCH_MAIN',
-          timestamp: new Date().toISOString()
+          type: "OPEN_RETROARCH_MAIN",
+          timestamp: new Date().toISOString(),
         };
 
         if (window.ReactNativeWebView) {
           window.ReactNativeWebView.postMessage(JSON.stringify(message));
         } else {
-          updateStatus('Error: ReactNativeWebView not available');
+          updateStatus("Error: ReactNativeWebView not available");
         }
       }
 
       function writeFile() {
         const content = `Hello from WebView! Current time: ${new Date().toISOString()}`;
-        updateStatus('Requesting file write...');
+        updateStatus("Requesting YAML file write...");
 
         const message = {
-          type: 'WRITE_FILE',
+          type: "WRITE_FILE",
           content: content,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
 
         if (window.ReactNativeWebView) {
           window.ReactNativeWebView.postMessage(JSON.stringify(message));
         } else {
-          updateStatus('Error: ReactNativeWebView not available');
+          updateStatus("Error: ReactNativeWebView not available");
         }
       }
 
       function readFile() {
-        updateStatus('Requesting file read...');
+        updateStatus("Requesting YAML file read...");
 
         const message = {
-          type: 'READ_FILE',
-          timestamp: new Date().toISOString()
+          type: "READ_FILE",
+          timestamp: new Date().toISOString(),
         };
 
         if (window.ReactNativeWebView) {
           window.ReactNativeWebView.postMessage(JSON.stringify(message));
         } else {
-          updateStatus('Error: ReactNativeWebView not available');
+          updateStatus("Error: ReactNativeWebView not available");
         }
       }
 
@@ -331,15 +324,15 @@
         updateStatus(`Action: ${action}`);
 
         const message = {
-          type: 'RETROARCH_ACTION',
+          type: "RETROARCH_ACTION",
           action: action,
-          timestamp: new Date().toISOString()
+          timestamp: new Date().toISOString(),
         };
 
         if (window.ReactNativeWebView) {
           window.ReactNativeWebView.postMessage(JSON.stringify(message));
         } else {
-          updateStatus('Error: ReactNativeWebView not available');
+          updateStatus("Error: ReactNativeWebView not available");
         }
       }
 
@@ -347,40 +340,43 @@
       function handleMessage(event) {
         try {
           let data;
-          if (typeof event.data === 'string') {
+          if (typeof event.data === "string") {
             try {
               data = JSON.parse(event.data);
             } catch {
-              data = { text: event.data, type: 'SIMPLE_MESSAGE' };
+              data = { text: event.data, type: "SIMPLE_MESSAGE" };
             }
           } else {
             data = event.data;
           }
 
-          if (data.type === 'LAUNCH_STATUS') {
+          if (data.type === "LAUNCH_STATUS") {
             updateStatus(data.message);
-          } else if (data.type === 'ERROR') {
+          } else if (data.type === "ERROR") {
             updateStatus(`Error: ${data.message}`);
-          } else if (data.type === 'FILE_WRITE_SUCCESS') {
+          } else if (data.type === "FILE_WRITE_SUCCESS") {
             updateStatus(`✅ ${data.message}`);
-          } else if (data.type === 'FILE_READ_SUCCESS') {
+          } else if (data.type === "FILE_READ_SUCCESS") {
             updateStatus(`📖 File content: ${data.message}`);
-          } else if (data.type === 'FILE_READ_ERROR') {
+          } else if (data.type === "FILE_READ_ERROR") {
             updateStatus(`❌ ${data.message}`);
           } else {
             updateStatus(`Received: ${data.text || event.data}`);
           }
         } catch (error) {
-          console.error('Error processing message:', error);
+          console.error("Error processing message:", error);
         }
       }
 
       // Set up message listeners
-      document.addEventListener('message', handleMessage);
-      window.addEventListener('message', handleMessage);
+      document.addEventListener("message", handleMessage);
+      window.addEventListener("message", handleMessage);
 
       // Initialize
-      updateStatus('RetroArch Launcher ready! Configure your ROM path and select a game to launch.');
+      updateStatus(
+        "RetroArch Launcher ready! Configure your ROM path and select a game to launch.",
+      );
     </script>
   </body>
 </html>
+
