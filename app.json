@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "simonwjackson-app",
-    "slug": "simonwjackson-app",
+    "name": "elevate",
+    "slug": "elevate",
     "version": "1.0.0",
     "orientation": "landscape",
     "icon": "./assets/icon.png",
@@ -12,9 +12,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "ios": {
-      "supportsTablet": true
-    },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -22,7 +19,8 @@
       },
       "edgeToEdgeEnabled": true,
       "navigationBarColor": "#000000",
-      "navigationBarVisible": false
+      "navigationBarVisible": false,
+      "package": "com.simonwjackson.elevate"
     },
     "androidNavigationBar": {
       "visible": false,
@@ -37,6 +35,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "167f340d-5049-4079-a173-8a680aed40ed"
+      }
     }
   }
 }
