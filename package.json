@@ -5,9 +5,14 @@
 	"scripts": {
 		"start": "expo start",
 		"android": "expo run:android",
-		"web": "expo start --web"
+		"web": "expo start --web",
+		"build-webview": "vite build",
+		"dev-webview": "vite"
 	},
 	"dependencies": {
+		"@elasticbottle/trpc-post-message": "^0.0.4",
+		"@trpc/client": "^11.3.1",
+		"@trpc/server": "^11.3.1",
 		"@types/js-yaml": "^4.0.9",
 		"expo": "~53.0.10",
 		"expo-asset": "^11.1.5",
@@ -20,12 +25,16 @@
 		"js-yaml": "^4.1.0",
 		"react": "19.0.0",
 		"react-native": "0.79.3",
-		"react-native-webview": "^13.14.1"
+		"react-native-webview": "^13.14.1",
+		"superjson": "^2.2.2",
+		"zod": "^3.25.56"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.25.2",
 		"@types/react": "~19.0.10",
-		"typescript": "~5.8.3"
+		"typescript": "~5.8.3",
+		"vite": "^6.3.5",
+		"vite-plugin-singlefile": "^2.2.0"
 	},
 	"private": true
 }

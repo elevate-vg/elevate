@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <style>
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        padding: 20px;
+        margin: 0;
+        background: #1a1a2e;
+        color: white;
+      }
+      h1 {
+        color: #4ecdc4;
+      }
+      .button {
+        background: #4ecdc4;
+        color: #1a1a2e;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        margin: 10px 5px;
+      }
+      .button:hover {
+        background: #45b7d1;
+      }
+      .output {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 5px;
+        margin: 10px 0;
+        font-family: monospace;
+        white-space: pre-wrap;
+      }
+      .status {
+        color: #888;
+        margin: 10px 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Vite + Real tRPC Client</h1>
+    <div class="status" id="status">Initializing tRPC client...</div>
+    
+    <div>
+      <button class="button" onclick="testQuery()">Test Query (hello)</button>
+      <button class="button" onclick="testMutation()">Test Mutation (echo)</button>
+    </div>
+    
+    <div class="output" id="output">
+      Output will appear here...
+    </div>
+
+    <script type="module" src="/main.js"></script>
+  </body>
+</html>

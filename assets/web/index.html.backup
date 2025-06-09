@@ -1,0 +1,641 @@
+<!doctype html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+    <style>
+      html {
+        background: #1a1a2e;
+        height: 100vh;
+        overflow: hidden;
+      }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        padding: 0;
+        margin: 0;
+        background: linear-gradient(
+          135deg,
+          #1a1a2e 0%,
+          #16213e 50%,
+          #0f3460 100%
+        );
+        color: white;
+        height: 100vh;
+        overflow: hidden;
+        opacity: 0;
+        animation: fadeIn 0.3s ease-in forwards;
+        animation-delay: 0.1s;
+        display: flex;
+        flex-direction: column;
+      }
+      @keyframes fadeIn {
+        to {
+          opacity: 1;
+        }
+      }
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .logo {
+        font-size: 3em;
+        margin-bottom: 10px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 2.5em;
+        background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      .subtitle {
+        font-size: 1.2em;
+        opacity: 0.8;
+        margin: 10px 0 0 0;
+      }
+      .launcher-grid {
+        display: flex;
+        gap: 20px;
+        padding: 20px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+        outline: none;
+        flex: 1;
+        justify-content: flex-start;
+        align-items: center;
+        min-width: 100%;
+      }
+      .launcher-grid::-webkit-scrollbar {
+        display: none;
+      }
+      .game-card {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 10px;
+        border-radius: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        aspect-ratio: 1;
+        width: 200px;
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+      .game-card:hover,
+      .game-card.focused {
+        transform: translateY(-5px);
+        background: rgba(255, 255, 255, 0.15);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      .game-card.focused {
+        border: 2px solid #4ecdc4;
+        box-shadow:
+          0 0 20px rgba(78, 205, 196, 0.4),
+          0 10px 30px rgba(0, 0, 0, 0.3);
+      }
+      .box-art {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 10px;
+        transition: all 0.3s ease;
+      }
+      .game-card:hover .box-art {
+        transform: scale(1.05);
+      }
+      .game-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+        color: white;
+        padding: 15px 10px 10px;
+        transform: translateY(100%);
+        transition: all 0.3s ease;
+        border-radius: 0 0 10px 10px;
+      }
+      .game-card:hover .game-overlay {
+        transform: translateY(0);
+      }
+      .game-title {
+        font-size: 0.9em;
+        font-weight: bold;
+        margin: 0;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+      }
+      .launch-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+      }
+      .launch-btn:active {
+        transform: scale(0.98);
+      }
+      .launch-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .status {
+        text-align: center;
+        padding: 10px 15px;
+        background: rgba(0, 0, 0, 0.3);
+        border-radius: 10px;
+        font-family: "Courier New", monospace;
+        font-size: 0.85em;
+        margin: 0;
+      }
+      .bottom-controls {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.8);
+        backdrop-filter: blur(10px);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 15px 20px;
+      }
+      .quick-actions {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+      .quick-btn {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.9em;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .quick-btn:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+      .settings-card {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 20px;
+      }
+      .input-group {
+        margin-bottom: 15px;
+      }
+      .input-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        opacity: 0.9;
+      }
+      .input-group input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 5px;
+        background: rgba(0, 0, 0, 0.3);
+        color: white;
+        font-size: 0.9em;
+      }
+      .input-group input::placeholder {
+        color: rgba(255, 255, 255, 0.5);
+      }
+      /* Prevent unwanted focus outlines */
+      body,
+      .header,
+      .launcher-grid {
+        outline: none !important;
+      }
+      body:focus,
+      .header:focus,
+      .launcher-grid:focus {
+        outline: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="launcher-grid">
+      <div
+        class="game-card"
+        data-nav-id="0"
+        onclick="launchRetroArchWithHardcodedSettings('/storage/emulated/0/Download/roms/minish.zip', 'mgba')"
+      >
+        <img
+          class="box-art"
+          src="https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg"
+          alt="The Legend of Zelda: The Minish Cap"
+        />
+        <div class="game-overlay">
+          <div class="game-title">The Minish Cap</div>
+        </div>
+      </div>
+      <div
+        class="game-card"
+        data-nav-id="1"
+        onclick="launchRetroArchWithHardcodedSettings('/storage/emulated/0/Download/roms/tetris.nes', 'nestopia')"
+      >
+        <img
+          class="box-art"
+          src="https://cdn2.steamgriddb.com/thumb/036036d598e3d81b103ce8b3c6786dfb.jpg"
+          alt="Tetris: Hard Drop"
+        />
+        <div class="game-overlay">
+          <div class="game-title">Tetris: Hard Drop</div>
+        </div>
+      </div>
+      <div
+        class="game-card"
+        data-nav-id="2"
+        onclick="launchRetroArchWithHardcodedSettings('/storage/emulated/0/Download/roms/dk.gb', 'mgba')"
+      >
+        <img
+          class="box-art"
+          src="https://cdn2.steamgriddb.com/thumb/8c690fdb96c00586c26b5ce86d21b55f.jpg"
+          alt="Donkey Kong"
+        />
+        <div class="game-overlay">
+          <div class="game-title">Donkey Kong</div>
+        </div>
+      </div>
+
+      <div
+        class="game-card"
+        data-nav-id="3"
+        onclick="launchRetroArchWithHardcodedSettings('/storage/emulated/0/Download/roms/minish.zip', 'mgba')"
+      >
+        <img
+          class="box-art"
+          src="https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg"
+          alt="The Legend of Zelda: The Minish Cap"
+        />
+        <div class="game-overlay">
+          <div class="game-title">The Minish Cap</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-controls">
+      <div class="quick-actions">
+        <button class="quick-btn" onclick="writeFile()">📝 Write YAML</button>
+        <button class="quick-btn" onclick="readFile()">📊 Read YAML</button>
+      </div>
+      <div class="status" id="status">Ready to launch RetroArch games...</div>
+    </div>
+
+    <script>
+      function updateStatus(message) {
+        document.getElementById("status").textContent = message;
+      }
+
+      function launchRetroArch(console, core) {
+        const romPath = document.getElementById("romPath").value;
+        const configPath = document.getElementById("configPath").value;
+
+        updateStatus(
+          `Launching ${console.toUpperCase()} game with ${core} core...`,
+        );
+
+        const launchConfig = {
+          type: "LAUNCH_RETROARCH",
+          console: console,
+          core: core,
+          romPath: romPath,
+          configPath: configPath,
+          timestamp: new Date().toISOString(),
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(launchConfig));
+        } else {
+          updateStatus("Error: ReactNativeWebView not available");
+        }
+      }
+
+      function launchRetroArchWithHardcodedSettings(romPath, core) {
+        const configPath =
+          "/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg";
+
+        updateStatus("Launching The Legend of Zelda: The Minish Cap...");
+
+        const launchConfig = {
+          type: "LAUNCH_RETROARCH",
+          console: "gba",
+          core,
+          romPath: romPath,
+          configPath: configPath,
+          timestamp: new Date().toISOString(),
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(launchConfig));
+        } else {
+          updateStatus("Error: ReactNativeWebView not available");
+        }
+      }
+
+      function openRetroArchMain() {
+        updateStatus("Opening RetroArch main interface...");
+
+        const message = {
+          type: "OPEN_RETROARCH_MAIN",
+          timestamp: new Date().toISOString(),
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        } else {
+          updateStatus("Error: ReactNativeWebView not available");
+        }
+      }
+
+      function writeFile() {
+        const content = `Hello from WebView! Current time: ${new Date().toISOString()}`;
+        updateStatus("Requesting YAML file write...");
+
+        const message = {
+          type: "WRITE_FILE",
+          content: content,
+          timestamp: new Date().toISOString(),
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        } else {
+          updateStatus("Error: ReactNativeWebView not available");
+        }
+      }
+
+      function readFile() {
+        updateStatus("Requesting YAML file read...");
+
+        const message = {
+          type: "READ_FILE",
+          timestamp: new Date().toISOString(),
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        } else {
+          updateStatus("Error: ReactNativeWebView not available");
+        }
+      }
+
+      function sendMessage(action) {
+        updateStatus(`Action: ${action}`);
+
+        const message = {
+          type: "RETROARCH_ACTION",
+          action: action,
+          timestamp: new Date().toISOString(),
+        };
+
+        if (window.ReactNativeWebView) {
+          window.ReactNativeWebView.postMessage(JSON.stringify(message));
+        } else {
+          updateStatus("Error: ReactNativeWebView not available");
+        }
+      }
+
+      // Listen for messages from React Native
+      function handleMessage(event) {
+        try {
+          let data;
+          if (typeof event.data === "string") {
+            try {
+              data = JSON.parse(event.data);
+            } catch {
+              data = { text: event.data, type: "SIMPLE_MESSAGE" };
+            }
+          } else {
+            data = event.data;
+          }
+
+          if (data.type === "LAUNCH_STATUS") {
+            updateStatus(data.message);
+          } else if (data.type === "ERROR") {
+            updateStatus(`Error: ${data.message}`);
+          } else if (data.type === "FILE_WRITE_SUCCESS") {
+            updateStatus(`✅ ${data.message}`);
+          } else if (data.type === "FILE_READ_SUCCESS") {
+            updateStatus(`📖 File content: ${data.message}`);
+          } else if (data.type === "FILE_READ_ERROR") {
+            updateStatus(`❌ ${data.message}`);
+          } else {
+            updateStatus(`Received: ${data.text || event.data}`);
+          }
+        } catch (error) {
+          console.error("Error processing message:", error);
+        }
+      }
+
+      // Set up message listeners
+      document.addEventListener("message", handleMessage);
+      window.addEventListener("message", handleMessage);
+
+      // Navigation Variables
+      let navigation = {
+        currentIndex: 0,
+        maxIndex: 3, // 0-3 for the 4 game cards
+        lastInputTime: 0,
+        inputDelay: 50, // ms between navigation inputs (reduced for faster response)
+        previousButtonStates: {
+          dpadUp: false,
+          dpadDown: false,
+          dpadLeft: false,
+          dpadRight: false,
+          buttonA: false,
+        },
+        animationFrame: null,
+      };
+
+      // Gamepad Polling Functions
+      function startGamepadPolling() {
+        function pollGamepads() {
+          const gamepads = navigator.getGamepads();
+
+          for (let i = 0; i < gamepads.length; i++) {
+            const gamepad = gamepads[i];
+            if (gamepad) {
+              handleGamepadNavigation(gamepad);
+            }
+          }
+
+          navigation.animationFrame = requestAnimationFrame(pollGamepads);
+        }
+
+        pollGamepads();
+      }
+
+      function stopGamepadPolling() {
+        if (navigation.animationFrame) {
+          cancelAnimationFrame(navigation.animationFrame);
+          navigation.animationFrame = null;
+        }
+      }
+
+      // Navigation Functions
+      function handleGamepadNavigation(gamepad) {
+        const currentTime = Date.now();
+
+        // Check for D-pad input
+        const dpadUp = gamepad.buttons[12]?.pressed || false;
+        const dpadDown = gamepad.buttons[13]?.pressed || false;
+        const dpadLeft = gamepad.buttons[14]?.pressed || false;
+        const dpadRight = gamepad.buttons[15]?.pressed || false;
+
+        // Check for analog stick input (with deadzone)
+        const leftStickX = gamepad.axes[0] || 0;
+        const leftStickY = gamepad.axes[1] || 0;
+        const analogUp = leftStickY < -0.5;
+        const analogDown = leftStickY > 0.5;
+        const analogLeft = leftStickX < -0.5;
+        const analogRight = leftStickX > 0.5;
+
+        // Combine D-pad and analog inputs
+        const moveUp = dpadUp || analogUp;
+        const moveDown = dpadDown || analogDown;
+        const moveLeft = dpadLeft || analogLeft;
+        const moveRight = dpadRight || analogRight;
+
+        // Check for A button
+        const buttonA = gamepad.buttons[0]?.pressed || false;
+
+        // Handle navigation with input delay
+        if (currentTime - navigation.lastInputTime > navigation.inputDelay) {
+          // Detect rising edge (button just pressed)
+          if (moveUp && !navigation.previousButtonStates.dpadUp) {
+            navigateUp();
+            navigation.lastInputTime = currentTime;
+          } else if (moveDown && !navigation.previousButtonStates.dpadDown) {
+            navigateDown();
+            navigation.lastInputTime = currentTime;
+          } else if (moveLeft && !navigation.previousButtonStates.dpadLeft) {
+            navigateLeft();
+            navigation.lastInputTime = currentTime;
+          } else if (moveRight && !navigation.previousButtonStates.dpadRight) {
+            navigateRight();
+            navigation.lastInputTime = currentTime;
+          }
+        }
+
+        // Handle A button (activate)
+        if (buttonA && !navigation.previousButtonStates.buttonA) {
+          activateCurrentCard();
+        }
+
+        // Store previous states for edge detection
+        navigation.previousButtonStates = {
+          dpadUp: moveUp,
+          dpadDown: moveDown,
+          dpadLeft: moveLeft,
+          dpadRight: moveRight,
+          buttonA: buttonA,
+        };
+      }
+
+      function navigateUp() {
+        // No vertical navigation in horizontal layout
+      }
+
+      function navigateDown() {
+        // No vertical navigation in horizontal layout
+      }
+
+      function navigateLeft() {
+        if (navigation.currentIndex > 0) {
+          navigation.currentIndex--;
+          updateFocusedCard();
+        }
+      }
+
+      function navigateRight() {
+        if (navigation.currentIndex < navigation.maxIndex) {
+          navigation.currentIndex++;
+          updateFocusedCard();
+        }
+      }
+
+      function updateFocusedCard() {
+        // Remove focus from all cards
+        const allCards = document.querySelectorAll(".game-card");
+        allCards.forEach((card) => card.classList.remove("focused"));
+
+        // Add focus to current card
+        const currentCard = document.querySelector(
+          `[data-nav-id="${navigation.currentIndex}"]`,
+        );
+        if (currentCard) {
+          currentCard.classList.add("focused");
+          // Scroll the card into view horizontally
+          currentCard.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+          });
+        }
+      }
+
+      function activateCurrentCard() {
+        const currentCard = document.querySelector(
+          `[data-nav-id="${navigation.currentIndex}"]`,
+        );
+        if (currentCard) {
+          // Trigger the click event
+          currentCard.click();
+
+          // Visual feedback
+          currentCard.style.transform = "translateY(-5px) scale(0.98)";
+          setTimeout(() => {
+            currentCard.style.transform = "";
+          }, 150);
+        }
+      }
+
+      // Initialize navigation focus
+      function initializeNavigation() {
+        // Ensure first card is focused immediately
+        navigation.currentIndex = 0;
+        updateFocusedCard();
+        // Start gamepad polling immediately for navigation
+        if (!navigation.animationFrame) {
+          startGamepadPolling();
+        }
+      }
+
+      // Gamepad event listeners
+      window.addEventListener("gamepadconnected", (event) => {
+        console.log("Gamepad connected:", event.gamepad.id);
+        updateStatus(
+          `Gamepad connected: ${event.gamepad.id} - Use D-pad/analog + A to navigate`,
+        );
+      });
+
+      window.addEventListener("gamepaddisconnected", (event) => {
+        console.log("Gamepad disconnected:", event.gamepad.id);
+        updateStatus(`Gamepad disconnected: ${event.gamepad.id}`);
+      });
+
+      // Initialize
+      updateStatus(
+        "RetroArch Launcher ready! Configure your ROM path and select a game to launch.",
+      );
+
+      // Initialize navigation on page load
+      initializeNavigation();
+    </script>
+  </body>
+</html>
