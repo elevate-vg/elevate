@@ -3,18 +3,20 @@
 	"version": "1.0.0",
 	"main": "index.ts",
 	"scripts": {
-		"start": "expo start",
-		"android": "expo run:android",
-		"web": "expo start --web",
-		"build-webview": "vite build",
-		"dev-webview": "vite"
+		"dev": "mprocs --names expo,vite \"npm run android::serve\" \"npm run ui::watch\"",
+		"android::serve": "expo start",
+		"android::build::preview": "eas build --platform android --profile preview --local",
+		"android::build::development": "eas build --platform android --profile development --local",
+		"ui::watch": "vite -w build",
+		"ui::build": "vite build",
+		"ui::serve": "vite"
 	},
 	"dependencies": {
 		"@elasticbottle/trpc-post-message": "^0.0.4",
 		"@trpc/client": "^11.3.1",
 		"@trpc/server": "^11.3.1",
 		"@types/js-yaml": "^4.0.9",
-		"expo": "~53.0.10",
+		"expo": "53.0.11",
 		"expo-asset": "^11.1.5",
 		"expo-dev-client": "~5.2.0",
 		"expo-file-system": "^18.1.10",
@@ -25,7 +27,7 @@
 		"js-yaml": "^4.1.0",
 		"react": "19.0.0",
 		"react-native": "0.79.3",
-		"react-native-webview": "^13.14.1",
+		"react-native-webview": "13.13.5",
 		"superjson": "^2.2.2",
 		"zod": "^3.25.56"
 	},

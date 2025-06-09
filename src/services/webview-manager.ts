@@ -3,7 +3,7 @@ import * as FileSystem from 'expo-file-system';
 
 export async function loadWebViewAsset(): Promise<string> {
   try {
-    const asset = Asset.fromModule(require('../../dist/ui/index.html'));
+    const asset = Asset.fromModule(require('../../assets/web/index.html'));
     await asset.downloadAsync();
 
     const fileUri = `${FileSystem.documentDirectory}index.html`;

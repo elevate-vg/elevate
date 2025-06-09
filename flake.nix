@@ -53,7 +53,12 @@
           pinnedJDK
           sdk
           pkg-config
+
+          # Expo
           eas-cli
+
+          # Misc
+          mprocs
         ];
 
         JAVA_HOME = pinnedJDK;
