@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useState, useEffect, useRef } from 'react';
-import { minimalRouter } from './src/server/minimalRouter';
+import { minimalRouter as router } from './src/server/appRouter';
 import { setupTrpcServer } from './src/services/trpc-server';
 import { createMessageHandler } from './src/services/message-bridge';
 import { loadWebViewAsset, getWebViewConfig } from './src/services/webview-manager';
@@ -22,7 +22,7 @@ export default function App() {
 
     const server = setupTrpcServer({
       webViewRef,
-      router: minimalRouter,
+      router,
       onServerReady: () => setIsReady(true),
       onError: (error) => console.error('tRPC server error:', error)
     });

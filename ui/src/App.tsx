@@ -6,7 +6,7 @@ import { OutputPanel } from './components/OutputPanel';
 import './App.css';
 
 export function App() {
-	const { status, output, isLoading, testQuery, testMutation } = useTrpc();
+	const { status, output, isLoading, testQuery, testMutation, launchZelda, writeYaml, readYaml } = useTrpc();
 
 	return (
 		<div>
@@ -15,6 +15,9 @@ export function App() {
 			<TestButtons
 				onTestQuery={testQuery}
 				onTestMutation={testMutation}
+				onLaunchZelda={launchZelda}
+				onWriteYaml={writeYaml}
+				onReadYaml={readYaml}
 				isLoading={isLoading}
 			/>
 			<OutputPanel output={output} />

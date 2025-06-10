@@ -105,6 +105,87 @@ export function useTrpc() {
 		}
 	}, [state.client, handleError, updateStatus, updateOutput]);
 
+	const launchZelda = useCallback(async () => {
+		if (!state.client) {
+			handleError(ERROR_MESSAGES.CLIENT_NOT_INITIALIZED, 'Game Launch');
+			return;
+		}
+
+		try {
+			setState(prev => ({ ...prev, isLoading: true }));
+			updateStatus('🎮 Launching The Legend of Zelda: The Minish Cap...');
+
+			const result = await state.client.games.launch.mutate({
+				romPath: '/storage/emulated/0/Download/roms/minish.zip',
+				core: 'mgba',
+				console: 'gba'
+			});
+
+			updateStatus('🎮 Game launched successfully!');
+			updateOutput({
+				type: 'game_launch',
+				result: result,
+			});
+		} catch (error) {
+			handleError(error, 'Game Launch');
+		} finally {
+			setState(prev => ({ ...prev, isLoading: false }));
+		}
+	}, [state.client, handleError, updateStatus, updateOutput]);
+
+	const writeYaml = useCallback(async () => {
+		if (!state.client) {
+			handleError(ERROR_MESSAGES.CLIENT_NOT_INITIALIZED, 'YAML Write');
+			return;
+		}
+
+		try {
+			setState(prev => ({ ...prev, isLoading: true }));
+			updateStatus('📝 Writing YAML file...');
+
+			const result = await state.client.files.writeYaml.mutate({
+				content: `Sample content from UI at ${new Date().toLocaleTimeString()}`,
+				filename: 'ui-test.yaml'
+			});
+
+			updateStatus('📝 YAML file written successfully!');
+			updateOutput({
+				type: 'yaml_write',
+				result: result,
+			});
+		} catch (error) {
+			handleError(error, 'YAML Write');
+		} finally {
+			setState(prev => ({ ...prev, isLoading: false }));
+		}
+	}, [state.client, handleError, updateStatus, updateOutput]);
+
+	const readYaml = useCallback(async () => {
+		if (!state.client) {
+			handleError(ERROR_MESSAGES.CLIENT_NOT_INITIALIZED, 'YAML Read');
+			return;
+		}
+
+		try {
+			setState(prev => ({ ...prev, isLoading: true }));
+			updateStatus('📖 Reading YAML file...');
+
+			const result = await state.client.files.readYaml.query({
+				filename: 'ui-test.yaml'
+			});
+
+			updateStatus('📖 YAML file read successfully!');
+			updateOutput({
+				type: 'yaml_read',
+				result: result,
+			});
+		} catch (error) {
+			handleError(error, 'YAML Read');
+		} finally {
+			setState(prev => ({ ...prev, isLoading: false }));
+		}
+	}, [state.client, handleError, updateStatus, updateOutput]);
+
 	useEffect(() => {
 		initializeClient();
 		
@@ -127,5 +208,8 @@ export function useTrpc() {
 		client: state.client,
 		testQuery,
 		testMutation,
+		launchZelda,
+		writeYaml,
+		readYaml,
 	};
 }
