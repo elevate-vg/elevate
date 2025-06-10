@@ -4,7 +4,44 @@ import { useTrpc } from './hooks/useTrpc';
 import { StatusDisplay } from './components/StatusDisplay';
 import { TestButtons } from './components/TestButtons';
 import { OutputPanel } from './components/OutputPanel';
+import { GameGrid } from './components/GameGrid';
 import './App.css';
+
+// Sample game data
+const sampleGames = [
+	{
+		id: '0',
+		title: 'The Minish Cap',
+		boxArt: 'https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg',
+		romPath: '/storage/emulated/0/Download/roms/minish.zip',
+		core: 'mgba',
+		console: 'gba'
+	},
+	{
+		id: '1',
+		title: 'Tetris: Hard Drop',
+		boxArt: 'https://cdn2.steamgriddb.com/thumb/036036d598e3d81b103ce8b3c6786dfb.jpg',
+		romPath: '/storage/emulated/0/Download/roms/tetris.nes',
+		core: 'nestopia',
+		console: 'nes'
+	},
+	{
+		id: '2',
+		title: 'Donkey Kong',
+		boxArt: 'https://cdn2.steamgriddb.com/thumb/8c690fdb96c00586c26b5ce86d21b55f.jpg',
+		romPath: '/storage/emulated/0/Download/roms/dk.gb',
+		core: 'mgba',
+		console: 'gb'
+	},
+	{
+		id: '3',
+		title: 'The Minish Cap 2',
+		boxArt: 'https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg',
+		romPath: '/storage/emulated/0/Download/roms/minish.zip',
+		core: 'mgba',
+		console: 'gba'
+	}
+];
 
 export function App() {
 	const { status, output, isLoading, testQuery, testMutation, launchZelda, writeYaml, readYaml } = useTrpc();
@@ -27,12 +64,9 @@ export function App() {
 			'enter': [13]      // Enter key
 		});
 
-		// Log to verify initialization
-		// console.log('Spatial navigation initialized');
-
-		// Set initial focus after a brief delay to ensure components are mounted
+		// Set initial focus to first game after a brief delay
 		setTimeout(() => {
-			setFocus('test-query');
+			setFocus('game-0');
 		}, 100);
 
 		return () => {
@@ -40,19 +74,31 @@ export function App() {
 		};
 	}, []);
 
+	const handleGameLaunch = (game: any) => {
+		// This would typically use the tRPC client to launch the game
+		console.log('Launching game:', game);
+		// For now, just use the existing launchZelda function as an example
+		launchZelda();
+	};
+
 	return (
-		<div>
-			<h1>The ok Vite + Real tRPC Client</h1>
-			<StatusDisplay status={status} />
-			<TestButtons
-				onTestQuery={testQuery}
-				onTestMutation={testMutation}
-				onLaunchZelda={launchZelda}
-				onWriteYaml={writeYaml}
-				onReadYaml={readYaml}
-				isLoading={isLoading}
-			/>
-			<OutputPanel output={output} />
+		<div className="main-content">
+			<GameGrid games={sampleGames} onGameLaunch={handleGameLaunch} />
+			
+			<div className="bottom-controls">
+				<div className="quick-actions">
+					<TestButtons
+						onTestQuery={testQuery}
+						onTestMutation={testMutation}
+						onLaunchZelda={launchZelda}
+						onWriteYaml={writeYaml}
+						onReadYaml={readYaml}
+						isLoading={isLoading}
+					/>
+				</div>
+				<StatusDisplay status={status} />
+				<OutputPanel output={output} />
+			</div>
 		</div>
 	);
 }
