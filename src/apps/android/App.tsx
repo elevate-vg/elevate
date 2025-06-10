@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Platform, NativeModules } from "react-native";
+import { StyleSheet, View, Platform, NativeModules, Text } from "react-native";
 import { WebView } from "react-native-webview";
 import { useState, useEffect, useRef } from "react";
 import * as NavigationBar from "expo-navigation-bar";
@@ -12,16 +12,23 @@ import Constants from "expo-constants";
 import { minimalRouter as router } from "../../shared/server/appRouter";
 import { setupTrpcServer } from "./services/trpc-server";
 import { createMessageHandler } from "./services/message-bridge";
-import { loadWebViewAsset, getWebViewConfig } from "./services/webview-manager";
+import { getWebViewHtml, getWebViewConfig } from "./services/webview-manager";
 
 export default function App() {
 	const webViewRef = useRef<WebView>(null);
-	const [htmlUri, setHtmlUri] = useState<string | null>(null);
+	const [htmlContent, setHtmlContent] = useState<string | null>(null);
 	const [isReady, setIsReady] = useState(false);
 	const [trpcHandler, setTrpcHandler] = useState<any>(null);
 
 	useEffect(() => {
-		loadWebViewAsset().then(setHtmlUri);
+		try {
+			console.log("Attempting to load WebView HTML...");
+			const content = getWebViewHtml();
+			console.log("HTML content loaded, setting state...");
+			setHtmlContent(content);
+		} catch (error) {
+			console.error("Failed to load WebView HTML:", error);
+		}
 
 		// Configure immersive mode on Android
 		if (Platform.OS === "android") {
@@ -63,7 +70,7 @@ export default function App() {
 	}, []);
 
 	useEffect(() => {
-		if (!htmlUri) return;
+		if (!htmlContent) return;
 
 		const server = setupTrpcServer({
 			webViewRef,
@@ -73,22 +80,38 @@ export default function App() {
 		});
 
 		setTrpcHandler(() => server.messageHandler);
-	}, [htmlUri]);
+	}, [htmlContent]);
 
 	const messageHandler = trpcHandler
 		? createMessageHandler(trpcHandler)
 		: undefined;
 
+	console.log("Render conditions:", { 
+		hasHtmlContent: !!htmlContent, 
+		isReady, 
+		hasTrpcHandler: !!trpcHandler,
+		htmlLength: htmlContent?.length 
+	});
+
 	return (
 		<View style={styles.container}>
 			<StatusBar hidden={true} />
-			{htmlUri && isReady && trpcHandler && (
+			{htmlContent && isReady && trpcHandler ? (
 				<WebView
 					ref={webViewRef}
-					source={{ uri: htmlUri }}
+					source={{ html: htmlContent }}
 					{...getWebViewConfig()}
 					onMessage={messageHandler}
+					onLoad={() => console.log("WebView loaded")}
+					onLoadEnd={() => console.log("WebView load ended")}
+					onError={(error) => console.error("WebView error:", error)}
 				/>
+			) : (
+				<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'red' }}>
+					<Text style={{ color: 'white' }}>
+						Loading... HTML: {!!htmlContent ? 'YES' : 'NO'}, Ready: {isReady ? 'YES' : 'NO'}, tRPC: {!!trpcHandler ? 'YES' : 'NO'}
+					</Text>
+				</View>
 			)}
 		</View>
 	);

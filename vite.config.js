@@ -6,7 +6,7 @@ import path from "path";
 export default defineConfig({
 	root: "src/shared/ui",
 	build: {
-		outDir: "../../apps/android/assets/web",
+		outDir: "../../apps/android/generated",
 		emptyOutDir: true,
 		rollupOptions: {
 			input: path.resolve(__dirname, "src/shared/ui/index.html"),

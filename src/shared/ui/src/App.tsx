@@ -39,7 +39,7 @@ const sampleGames = [
 		romPath: "/storage/emulated/0/snowscape/gaming/roms/dk.gb",
 		core: "mgba",
 		console: "gb",
-	}
+	},
 ];
 
 export function App() {

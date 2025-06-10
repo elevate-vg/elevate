@@ -37,3 +37,7 @@ yarn-error.*
 *.tsbuildinfo
 .direnv
 *.apk
+
+# Generated files
+src/apps/android/generated/
+src/shared/ui/dist/
