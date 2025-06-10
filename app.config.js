@@ -21,6 +21,17 @@ export default {
 		icon: "./src/apps/android/assets/icon.png",
 		userInterfaceStyle: "light",
 		newArchEnabled: true,
+		plugins: [
+			[
+				"react-native-edge-to-edge",
+				{
+					android: {
+						parentTheme: "Default",
+						enforceNavigationBarContrast: false,
+					},
+				},
+			],
+		],
 		splash: {
 			image: "./src/apps/android/assets/splash-icon.png",
 			resizeMode: "contain",
@@ -37,7 +48,7 @@ export default {
 		androidNavigationBar: {
 			visible: false,
 			barStyle: "dark-content",
-			backgroundColor: "#000000",
+			backgroundColor: "#00000000",
 		},
 		androidStatusBar: {
 			hidden: true,
@@ -45,6 +56,9 @@ export default {
 			backgroundColor: "#00000000",
 			barStyle: "dark-content",
 		},
+		navigationBarColor: "#00000000",
+		navigationBarStyle: "dark-content",
+		systemNavigationBarStyle: "immersive",
 		web: {
 			favicon: "./src/apps/android/assets/favicon.png",
 		},

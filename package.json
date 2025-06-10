@@ -28,6 +28,7 @@
 		"js-yaml": "^4.1.0",
 		"react": "19.0.0",
 		"react-native": "0.79.3",
+		"react-native-edge-to-edge": "^1.6.1",
 		"react-native-webview": "13.13.5",
 		"superjson": "^2.2.2",
 		"zod": "^3.25.56"

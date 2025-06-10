@@ -21,11 +21,18 @@ export async function loadWebViewAsset(): Promise<string> {
 
 export function getWebViewConfig() {
 	return {
-		style: { flex: 1, backgroundColor: "transparent" },
+		style: {
+			flex: 1,
+			backgroundColor: "transparent",
+			marginBottom: 0,
+			paddingBottom: 0,
+		},
 		originWhitelist: ["file://*", "*"],
 		allowFileAccess: true,
 		allowFileAccessFromFileURLs: true,
 		allowUniversalAccessFromFileURLs: true,
+		hideKeyboardAccessoryView: true,
+		keyboardDisplayRequiresUserAction: false,
 		onError: (error: any) => {
 			console.error("WebView error:", error);
 		},
