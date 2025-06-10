@@ -44,6 +44,12 @@ export default {
 			},
 			edgeToEdgeEnabled: true,
 			package: getPackageName(),
+			intentFilters: [
+				{
+					action: "android.intent.action.MAIN",
+					category: ["android.intent.category.LAUNCHER", "android.intent.category.HOME", "android.intent.category.DEFAULT"],
+				},
+			],
 		},
 		androidNavigationBar: {
 			visible: false,
