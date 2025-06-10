@@ -9,7 +9,7 @@ export const gameConfigSchema = z.object({
 		"nestopia",
 		"pcsx_rearmed",
 	]),
-	console: z.enum(["gba", "snes", "genesis", "nes", "psx"]),
+	console: z.enum(["gb", "gba", "snes", "genesis", "nes", "psx"]),
 	configPath: z
 		.string()
 		.optional()

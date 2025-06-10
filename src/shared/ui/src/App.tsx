@@ -18,7 +18,7 @@ const sampleGames = [
 		title: "The Minish Cap",
 		boxArt:
 			"https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg",
-		romPath: "/storage/emulated/0/Download/roms/minish.zip",
+		romPath: "/storage/emulated/0/snowscape/gaming/roms/minish.zip",
 		core: "mgba",
 		console: "gba",
 	},
@@ -27,7 +27,7 @@ const sampleGames = [
 		title: "Tetris: Hard Drop",
 		boxArt:
 			"https://cdn2.steamgriddb.com/thumb/036036d598e3d81b103ce8b3c6786dfb.jpg",
-		romPath: "/storage/emulated/0/Download/roms/tetris.nes",
+		romPath: "/storage/emulated/0/snowscape/gaming/roms/tetris.nes",
 		core: "nestopia",
 		console: "nes",
 	},
@@ -36,64 +36,10 @@ const sampleGames = [
 		title: "Donkey Kong",
 		boxArt:
 			"https://cdn2.steamgriddb.com/thumb/8c690fdb96c00586c26b5ce86d21b55f.jpg",
-		romPath: "/storage/emulated/0/Download/roms/dk.gb",
+		romPath: "/storage/emulated/0/snowscape/gaming/roms/dk.gb",
 		core: "mgba",
 		console: "gb",
-	},
-	{
-		id: "3",
-		title: "The Minish Cap 2",
-		boxArt:
-			"https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg",
-		romPath: "/storage/emulated/0/Download/roms/minish.zip",
-		core: "mgba",
-		console: "gba",
-	},
-	{
-		id: "4",
-		title: "The Minish Cap 2",
-		boxArt:
-			"https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg",
-		romPath: "/storage/emulated/0/Download/roms/minish.zip",
-		core: "mgba",
-		console: "gba",
-	},
-	{
-		id: "5",
-		title: "The Minish Cap 2",
-		boxArt:
-			"https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg",
-		romPath: "/storage/emulated/0/Download/roms/minish.zip",
-		core: "mgba",
-		console: "gba",
-	},
-	{
-		id: "6",
-		title: "The Minish Cap 2",
-		boxArt:
-			"https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg",
-		romPath: "/storage/emulated/0/Download/roms/minish.zip",
-		core: "mgba",
-		console: "gba",
-	},
-	{
-		id: "7",
-		title: "The Minish Cap 2",
-		boxArt:
-			"https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg",
-		romPath: "/storage/emulated/0/Download/roms/minish.zip",
-		core: "mgba",
-		console: "gba",
-	},
-	{
-		id: "8",
-		title: "The Minish Cap 2",
-		boxArt:
-			"https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg",
-		romPath: "/storage/emulated/0/Download/roms/minish.zip",
-		core: "mgba",
-		console: "gba",
-	},
+	}
 ];
 
 export function App() {
@@ -103,6 +49,7 @@ export function App() {
 		isLoading,
 		testQuery,
 		testMutation,
+		launchGame,
 		launchZelda,
 		writeYaml,
 		readYaml,
@@ -145,7 +92,7 @@ export function App() {
 		// Wait for fade animation to complete, then launch game
 		setTimeout(() => {
 			console.log("Launching game:", game);
-			launchZelda();
+			launchGame(game);
 
 			// Reset launching state after a brief delay to allow RetroArch to take over
 			setTimeout(() => {

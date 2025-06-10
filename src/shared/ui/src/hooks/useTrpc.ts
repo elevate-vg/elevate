@@ -113,7 +113,7 @@ export function useTrpc() {
 		}
 	}, [state.client, handleError, updateStatus, updateOutput]);
 
-	const launchZelda = useCallback(async () => {
+	const launchGame = useCallback(async (game: { title: string; romPath: string; core: string; console: string }) => {
 		if (!state.client) {
 			handleError(ERROR_MESSAGES.CLIENT_NOT_INITIALIZED, "Game Launch");
 			return;
@@ -121,12 +121,12 @@ export function useTrpc() {
 
 		try {
 			setState((prev) => ({ ...prev, isLoading: true }));
-			updateStatus("🎮 Launching The Legend of Zelda: The Minish Cap...");
+			updateStatus(`🎮 Launching ${game.title}...`);
 
 			const result = await state.client.games.launch.mutate({
-				romPath: "/storage/emulated/0/Download/roms/minish.zip",
-				core: "mgba",
-				console: "gba",
+				romPath: game.romPath,
+				core: game.core,
+				console: game.console,
 			});
 
 			updateStatus("🎮 Game launched successfully!");
@@ -140,6 +140,16 @@ export function useTrpc() {
 			setState((prev) => ({ ...prev, isLoading: false }));
 		}
 	}, [state.client, handleError, updateStatus, updateOutput]);
+
+	// Keep the old function for backward compatibility
+	const launchZelda = useCallback(async () => {
+		await launchGame({
+			title: "The Legend of Zelda: The Minish Cap",
+			romPath: "/storage/emulated/0/Download/roms/minish.zip",
+			core: "mgba",
+			console: "gba",
+		});
+	}, [launchGame]);
 
 	const writeYaml = useCallback(async () => {
 		if (!state.client) {
@@ -216,6 +226,7 @@ export function useTrpc() {
 		client: state.client,
 		testQuery,
 		testMutation,
+		launchGame,
 		launchZelda,
 		writeYaml,
 		readYaml,
