@@ -24,7 +24,7 @@ export const minimalRouter = router({
         reversed: input.message.split('').reverse().join(''),
         length: input.message.length,
         receivedAt: new Date(), // Return actual Date object for superjson testing
-        metadata: new Map([['source', 'webview'], ['processed', true]]) // Test Map serialization
+        metadata: new Map([['source', 'webview'], ['processed', 'true']]) // Test Map serialization
       };
     }),
 

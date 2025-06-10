@@ -18,17 +18,17 @@ export default {
     slug: "elevate",
     version: "1.0.0",
     orientation: "landscape",
-    icon: "./assets/icon.png",
+    icon: "./src/apps/android/assets/icon.png",
     userInterfaceStyle: "light",
     newArchEnabled: true,
     splash: {
-      image: "./assets/splash-icon.png",
+      image: "./src/apps/android/assets/splash-icon.png",
       resizeMode: "contain",
       backgroundColor: "#ffffff"
     },
     android: {
       adaptiveIcon: {
-        foregroundImage: "./assets/adaptive-icon.png",
+        foregroundImage: "./src/apps/android/assets/adaptive-icon.png",
         backgroundColor: "#ffffff"
       },
       edgeToEdgeEnabled: true,
@@ -46,7 +46,7 @@ export default {
       barStyle: "dark-content"
     },
     web: {
-      favicon: "./assets/favicon.png"
+      favicon: "./src/apps/android/assets/favicon.png"
     },
     extra: {
       eas: {

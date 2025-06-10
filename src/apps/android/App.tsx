@@ -2,10 +2,10 @@ import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, View } from 'react-native';
 import { WebView } from 'react-native-webview';
 import { useState, useEffect, useRef } from 'react';
-import { minimalRouter as router } from './src/server/appRouter';
-import { setupTrpcServer } from './src/services/trpc-server';
-import { createMessageHandler } from './src/services/message-bridge';
-import { loadWebViewAsset, getWebViewConfig } from './src/services/webview-manager';
+import { minimalRouter as router } from '../../shared/server/appRouter';
+import { setupTrpcServer } from './services/trpc-server';
+import { createMessageHandler } from './services/message-bridge';
+import { loadWebViewAsset, getWebViewConfig } from './services/webview-manager';
 
 export default function App() {
   const webViewRef = useRef<WebView>(null);

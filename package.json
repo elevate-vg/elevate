@@ -1,15 +1,15 @@
 {
 	"name": "elevate",
 	"version": "1.0.0",
-	"main": "index.ts",
+	"main": "src/apps/android/index.ts",
 	"scripts": {
 		"dev": "mprocs --names expo,vite \"npm run android::serve\" \"npm run ui::watch\"",
 		"android::serve": "expo start",
 		"android::build::preview": "eas build --platform android --profile preview --local",
 		"android::build::development": "eas build --platform android --profile development --local",
-		"ui::watch": "vite -w build",
+		"ui::watch": "vite build --watch",
 		"ui::build": "vite build",
-		"ui::serve": "vite"
+		"ui::serve": "vite dev"
 	},
 	"dependencies": {
 		"@elasticbottle/trpc-post-message": "^0.0.4",

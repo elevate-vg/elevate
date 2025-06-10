@@ -4,12 +4,12 @@ import { viteSingleFile } from "vite-plugin-singlefile";
 import path from "path";
 
 export default defineConfig({
-	root: "ui",
+	root: "src/shared/ui",
 	build: {
-		outDir: "../assets/web",
+		outDir: "../../apps/android/assets/web",
 		emptyOutDir: true,
 		rollupOptions: {
-			input: path.resolve(__dirname, "ui/index.html"),
+			input: path.resolve(__dirname, "src/shared/ui/index.html"),
 		},
 	},
 	plugins: [react(), viteSingleFile()],

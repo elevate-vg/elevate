@@ -1,10 +1,14 @@
 import { createPostMessageHandler } from '@elasticbottle/trpc-post-message/adapter';
 import { WebView } from 'react-native-webview';
 import superjson from 'superjson';
+// @ts-ignore - Module resolution issue during refactor
+import type { minimalRouter } from '../../shared/server/appRouter';
+
+type MinimalRouter = typeof minimalRouter;
 
 interface TrpcServerOptions {
-  webViewRef: React.RefObject<WebView>;
-  router: AppRouter;
+  webViewRef: React.RefObject<WebView | null>;
+  router: MinimalRouter;
   onServerReady?: () => void;
   onError?: (error: Error) => void;
 }
@@ -26,7 +30,6 @@ export function setupTrpcServer({
   try {
     createPostMessageHandler({
       router,
-      transformer: superjson,
       postMessage: ({ message }) => {
         if (webViewRef.current) {
           const cleanMessage = JSON.parse(JSON.stringify(message));
@@ -39,11 +42,11 @@ export function setupTrpcServer({
         onServerReady?.();
         return listener;
       },
-      createContext: ({ req }) => ({
+      createContext: ({ req }: { req: any }) => ({
         event: req,
         timestamp: new Date().toISOString()
       }),
-      onError: ({ error, path }) => {
+      onError: ({ error, path }: { error: any; path: any }) => {
         console.error(`tRPC error on ${path}:`, error);
         onError?.(error);
       }
@@ -64,7 +67,7 @@ export function setupTrpcServer({
           origin: 'webview',
           source: null,
           ports: []
-        } as MessageEvent;
+        } as any;
 
         messageHandlerRef(messageEvent);
       } catch (error) {
