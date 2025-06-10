@@ -108,6 +108,7 @@ export function App() {
 		readYaml,
 	} = useTrpc();
 	const [isDebugCollapsed, setIsDebugCollapsed] = useState(true);
+	const [isLaunching, setIsLaunching] = useState(false);
 
 	useEffect(() => {
 		// Initialize spatial navigation
@@ -138,10 +139,19 @@ export function App() {
 	}, []);
 
 	const handleGameLaunch = (game: any) => {
-		// This would typically use the tRPC client to launch the game
-		console.log("Launching game:", game);
-		// For now, just use the existing launchZelda function as an example
-		launchZelda();
+		// Start fade to black animation
+		setIsLaunching(true);
+
+		// Wait for fade animation to complete, then launch game
+		setTimeout(() => {
+			console.log("Launching game:", game);
+			launchZelda();
+
+			// Reset launching state after a brief delay to allow RetroArch to take over
+			setTimeout(() => {
+				setIsLaunching(false);
+			}, 1000);
+		}, 250); // 500ms matches the CSS animation duration
 	};
 
 	const isDevelopment = import.meta.env.DEV;
@@ -149,6 +159,9 @@ export function App() {
 	return (
 		<div className="main-content">
 			<GameGrid games={sampleGames} onGameLaunch={handleGameLaunch} />
+
+			{/* Fade to black overlay */}
+			{isLaunching && <div className="fade-overlay" />}
 
 			{isDevelopment && (
 				<button

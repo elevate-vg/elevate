@@ -5,6 +5,7 @@
 	"scripts": {
 		"dev": "mprocs --names expo,vite \"npm run android::serve\" \"npm run ui::watch\"",
 		"android::serve": "expo start",
+		"android::build": "android::build::preview; android::build::development",
 		"android::build::preview": "eas build --platform android --profile preview --local",
 		"android::build::development": "eas build --platform android --profile development --local",
 		"ui::watch": "vite build --watch",
