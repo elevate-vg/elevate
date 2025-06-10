@@ -31,6 +31,7 @@ export default {
 					},
 				},
 			],
+			"./plugins/withAndroidHomeLauncher",
 		],
 		splash: {
 			image: "./src/apps/android/assets/splash-icon.png",
@@ -44,11 +45,13 @@ export default {
 			},
 			edgeToEdgeEnabled: true,
 			package: getPackageName(),
-			intentFilters: [
-				{
-					action: "android.intent.action.MAIN",
-					category: ["android.intent.category.LAUNCHER", "android.intent.category.HOME", "android.intent.category.DEFAULT"],
-				},
+			permissions: [
+				"android.permission.SET_WALLPAPER",
+				"android.permission.SET_WALLPAPER_HINTS",
+				"android.permission.RECEIVE_BOOT_COMPLETED",
+				"android.permission.WRITE_SETTINGS",
+				"android.permission.BIND_APPWIDGET",
+				"android.permission.EXPAND_STATUS_BAR"
 			],
 		},
 		androidNavigationBar: {

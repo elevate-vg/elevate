@@ -8,6 +8,7 @@ import {
 	deactivateKeepAwake,
 } from "expo-keep-awake";
 import { EdgeToEdge } from "react-native-edge-to-edge";
+import Constants from "expo-constants";
 import { minimalRouter as router } from "../../shared/server/appRouter";
 import { setupTrpcServer } from "./services/trpc-server";
 import { createMessageHandler } from "./services/message-bridge";
@@ -49,11 +50,15 @@ export default function App() {
 			}
 		}
 
-		// Keep screen awake during gameplay
-		activateKeepAwakeAsync();
+		// Keep screen awake during gameplay (development only)
+		if (__DEV__) {
+			activateKeepAwakeAsync();
+		}
 
 		return () => {
-			deactivateKeepAwake();
+			if (__DEV__) {
+				deactivateKeepAwake();
+			}
 		};
 	}, []);
 

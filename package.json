@@ -5,9 +5,9 @@
 	"scripts": {
 		"dev": "mprocs --names expo,vite \"npm run android::serve\" \"npm run ui::watch\"",
 		"android::serve": "expo start",
-		"android::build": "android::build::preview; android::build::development",
-		"android::build::preview": "eas build --platform android --profile preview --local",
-		"android::build::development": "eas build --platform android --profile development --local",
+		"android::build": "npm run android::build::preview && npm run android::build::development",
+		"android::build::preview": "eas build --platform android --profile preview --local --output ./builds/elevate-preview-$(date +%Y%m%d-%H%M%S).apk",
+		"android::build::development": "eas build --platform android --profile development --local --output ./builds/elevate-development-$(date +%Y%m%d-%H%M%S).apk",
 		"ui::watch": "vite build --watch",
 		"ui::build": "vite build",
 		"ui::serve": "vite dev"
