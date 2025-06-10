@@ -1,88 +1,86 @@
-import { router, publicProcedure } from '../trpc';
-import { gameConfigSchema } from '../schemas';
-import * as IntentLauncher from 'expo-intent-launcher';
-import { Platform } from 'react-native';
-import { TRPCError } from '@trpc/server';
+import { router, publicProcedure } from "../trpc";
+import { gameConfigSchema } from "../schemas";
+import * as IntentLauncher from "expo-intent-launcher";
+import { Platform } from "react-native";
+import { TRPCError } from "@trpc/server";
 
 const coreMap: Record<string, string> = {
-  'mgba': 'mgba_libretro_android.so',
-  'snes9x': 'snes9x_libretro_android.so',
-  'genesis_plus_gx': 'genesis_plus_gx_libretro_android.so',
-  'nestopia': 'nestopia_libretro_android.so',
-  'pcsx_rearmed': 'pcsx_rearmed_libretro_android.so'
+	mgba: "mgba_libretro_android.so",
+	snes9x: "snes9x_libretro_android.so",
+	genesis_plus_gx: "genesis_plus_gx_libretro_android.so",
+	nestopia: "nestopia_libretro_android.so",
+	pcsx_rearmed: "pcsx_rearmed_libretro_android.so",
 };
 
 export const gamesRouter = router({
-  launch: publicProcedure
-    .input(gameConfigSchema)
-    .mutation(async ({ input }) => {
-      if (Platform.OS !== 'android') {
-        throw new TRPCError({
-          code: 'PRECONDITION_FAILED',
-          message: 'RetroArch launcher is only available on Android',
-        });
-      }
+	launch: publicProcedure
+		.input(gameConfigSchema)
+		.mutation(async ({ input }) => {
+			if (Platform.OS !== "android") {
+				throw new TRPCError({
+					code: "PRECONDITION_FAILED",
+					message: "RetroArch launcher is only available on Android",
+				});
+			}
 
-      try {
-        const coreFile = coreMap[input.core];
-        const corePath = `/data/data/com.retroarch.aarch64/cores/${coreFile}`;
+			try {
+				const coreFile = coreMap[input.core];
+				const corePath = `/data/data/com.retroarch.aarch64/cores/${coreFile}`;
 
-        await IntentLauncher.startActivityAsync('android.intent.action.MAIN', {
-          packageName: 'com.retroarch.aarch64',
-          className: 'com.retroarch.browser.retroactivity.RetroActivityFuture',
-          extra: {
-            ROM: input.romPath,
-            LIBRETRO: corePath,
-            CONFIGFILE: input.configPath,
-            QUITFOCUS: ''
-          },
-          flags: 0x10000000 | 0x4000000 // NEW_TASK | CLEAR_TOP
-        });
+				await IntentLauncher.startActivityAsync("android.intent.action.MAIN", {
+					packageName: "com.retroarch.aarch64",
+					className: "com.retroarch.browser.retroactivity.RetroActivityFuture",
+					extra: {
+						ROM: input.romPath,
+						LIBRETRO: corePath,
+						CONFIGFILE: input.configPath,
+						QUITFOCUS: "",
+					},
+					flags: 0x10000000 | 0x4000000, // NEW_TASK | CLEAR_TOP
+				});
 
-        return {
-          success: true,
-          game: {
-            name: input.romPath.split('/').pop() || 'Unknown',
-            console: input.console,
-            core: input.core
-          },
-          launchTime: new Date().toISOString()
-        };
-      } catch (error) {
-        throw new TRPCError({
-          code: 'INTERNAL_SERVER_ERROR',
-          message: `Failed to launch RetroArch: ${error instanceof Error ? error.message : 'Unknown error'}`,
-          cause: error,
-        });
-      }
-    }),
+				return {
+					success: true,
+					game: {
+						name: input.romPath.split("/").pop() || "Unknown",
+						console: input.console,
+						core: input.core,
+					},
+					launchTime: new Date().toISOString(),
+				};
+			} catch (error) {
+				throw new TRPCError({
+					code: "INTERNAL_SERVER_ERROR",
+					message: `Failed to launch RetroArch: ${error instanceof Error ? error.message : "Unknown error"}`,
+					cause: error,
+				});
+			}
+		}),
 
-  openMain: publicProcedure
-    .mutation(async () => {
-      if (Platform.OS !== 'android') {
-        throw new TRPCError({
-          code: 'PRECONDITION_FAILED',
-          message: 'RetroArch is only available on Android',
-        });
-      }
+	openMain: publicProcedure.mutation(async () => {
+		if (Platform.OS !== "android") {
+			throw new TRPCError({
+				code: "PRECONDITION_FAILED",
+				message: "RetroArch is only available on Android",
+			});
+		}
 
-      await IntentLauncher.startActivityAsync('android.intent.action.MAIN', {
-        packageName: 'com.retroarch.aarch64'
-      });
+		await IntentLauncher.startActivityAsync("android.intent.action.MAIN", {
+			packageName: "com.retroarch.aarch64",
+		});
 
-      return {
-        success: true,
-        action: 'main_opened',
-        timestamp: new Date().toISOString()
-      };
-    }),
+		return {
+			success: true,
+			action: "main_opened",
+			timestamp: new Date().toISOString(),
+		};
+	}),
 
-  listAvailableCores: publicProcedure
-    .query(() => {
-      return Object.entries(coreMap).map(([key, value]) => ({
-        id: key,
-        filename: value,
-        displayName: key.toUpperCase()
-      }));
-    })
+	listAvailableCores: publicProcedure.query(() => {
+		return Object.entries(coreMap).map(([key, value]) => ({
+			id: key,
+			filename: value,
+			displayName: key.toUpperCase(),
+		}));
+	}),
 });

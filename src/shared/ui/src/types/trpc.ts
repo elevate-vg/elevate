@@ -31,7 +31,7 @@ export interface AppState {
 }
 
 export interface TestResult {
-	type: 'query' | 'mutation' | 'error';
+	type: "query" | "mutation" | "error";
 	result?: any;
 	context?: string;
 	message?: string;

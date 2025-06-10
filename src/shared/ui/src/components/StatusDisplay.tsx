@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 
 interface StatusDisplayProps {
 	status: string;
@@ -6,8 +6,6 @@ interface StatusDisplayProps {
 
 export function StatusDisplay({ status }: StatusDisplayProps) {
 	return (
-		<div className="status">
-			{status || 'Initializing tRPC client...'}
-		</div>
+		<div className="status">{status || "Initializing tRPC client..."}</div>
 	);
 }

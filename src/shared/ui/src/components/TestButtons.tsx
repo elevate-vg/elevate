@@ -1,5 +1,8 @@
-import React from 'react';
-import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
+import React from "react";
+import {
+	useFocusable,
+	setFocus,
+} from "@noriginmedia/norigin-spatial-navigation";
 
 interface TestButtonsProps {
 	onTestQuery: () => void;
@@ -17,7 +20,12 @@ interface FocusableButtonProps {
 	focusKey?: string;
 }
 
-function FocusableButton({ onClick, disabled, children, focusKey }: FocusableButtonProps) {
+function FocusableButton({
+	onClick,
+	disabled,
+	children,
+	focusKey,
+}: FocusableButtonProps) {
 	const { ref, focused } = useFocusable({
 		focusKey,
 		onEnterPress: () => {
@@ -25,7 +33,7 @@ function FocusableButton({ onClick, disabled, children, focusKey }: FocusableBut
 			if (!disabled) {
 				onClick();
 			}
-		}
+		},
 	});
 
 	// console.log('FocusableButton render:', focusKey, 'focused:', focused);
@@ -33,8 +41,9 @@ function FocusableButton({ onClick, disabled, children, focusKey }: FocusableBut
 	return (
 		<button
 			ref={ref}
-			className={`button ${focused ? 'button-focused' : ''}`}
+			className={`button ${focused ? "button-focused" : ""}`}
 			onClick={onClick}
+			onMouseEnter={() => focusKey && setFocus(focusKey)}
 			disabled={disabled}
 			tabIndex={-1}
 		>
@@ -43,9 +52,16 @@ function FocusableButton({ onClick, disabled, children, focusKey }: FocusableBut
 	);
 }
 
-export function TestButtons({ onTestQuery, onTestMutation, onLaunchZelda, onWriteYaml, onReadYaml, isLoading }: TestButtonsProps) {
+export function TestButtons({
+	onTestQuery,
+	onTestMutation,
+	onLaunchZelda,
+	onWriteYaml,
+	onReadYaml,
+	isLoading,
+}: TestButtonsProps) {
 	return (
-		<div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+		<div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
 			<FocusableButton
 				focusKey="test-query"
 				onClick={onTestQuery}

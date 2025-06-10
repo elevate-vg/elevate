@@ -1,5 +1,5 @@
-const { getDefaultConfig } = require('expo/metro-config');
-const path = require('path');
+const { getDefaultConfig } = require("expo/metro-config");
+const path = require("path");
 
 const projectRoot = __dirname;
 const config = getDefaultConfig(projectRoot);
@@ -8,6 +8,6 @@ const config = getDefaultConfig(projectRoot);
 config.watchFolders = [projectRoot];
 
 // Add support for .mjs files
-config.resolver.sourceExts.push('mjs');
+config.resolver.sourceExts.push("mjs");
 
 module.exports = config;

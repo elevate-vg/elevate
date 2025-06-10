@@ -4,16 +4,17 @@ html {
   overflow: hidden;
 }
 
+#root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   padding: 0;
   margin: 0;
-  background: linear-gradient(
-    135deg,
-    #1a1a2e 0%,
-    #16213e 50%,
-    #0f3460 100%
-  );
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
   color: white;
   height: 100vh;
   overflow: hidden;
@@ -94,7 +95,7 @@ h1 {
   padding: 20px;
   overflow-x: auto;
   overflow-y: hidden;
-  scroll-behavior: smooth;
+  scroll-behavior: instant;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -103,6 +104,17 @@ h1 {
   justify-content: flex-start;
   align-items: center;
   min-width: 100%;
+}
+
+/* Retroid Pocket 5 Mini specific styles */
+@media screen and (max-width: 640px) and (orientation: landscape) {
+  .launcher-grid {
+    gap: 0;
+  }
+
+  .game-card {
+    margin-right: 20px;
+  }
 }
 
 .launcher-grid::-webkit-scrollbar {
@@ -190,6 +202,47 @@ h1 {
   backdrop-filter: blur(10px);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
   padding: 15px 20px;
+}
+
+.debug-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 8px 12px;
+  border-radius: 50%;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.debug-toggle:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.debug-section {
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .quick-actions {

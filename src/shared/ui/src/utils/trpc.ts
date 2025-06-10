@@ -80,9 +80,7 @@ function sendMessageToNative(message: any, observer: any): boolean {
  */
 function parseIncomingMessage(event: MessageEvent, opId: string) {
 	const data =
-		typeof event.data === "string"
-			? JSON.parse(event.data)
-			: event.data;
+		typeof event.data === "string" ? JSON.parse(event.data) : event.data;
 
 	let trpcMessage = null;
 	if (data.type === MESSAGE_TYPES.TRPC_RESPONSE && data.trpc) {
@@ -106,15 +104,10 @@ function processResponse(trpcMessage: any, observer: any) {
 				trpcMessage.error,
 			);
 			observer.error(
-				new Error(
-					deserializedError.message ||
-						ERROR_MESSAGES.TRPC_ERROR,
-				),
+				new Error(deserializedError.message || ERROR_MESSAGES.TRPC_ERROR),
 			);
 		} catch (deserializeError) {
-			observer.error(
-				new Error(ERROR_MESSAGES.INVALID_RESPONSE),
-			);
+			observer.error(new Error(ERROR_MESSAGES.INVALID_RESPONSE));
 		}
 	} else if (trpcMessage.result) {
 		try {
@@ -129,9 +122,7 @@ function processResponse(trpcMessage: any, observer: any) {
 			});
 			observer.complete();
 		} catch (deserializeError) {
-			observer.error(
-				new Error(ERROR_MESSAGES.INVALID_RESPONSE),
-			);
+			observer.error(new Error(ERROR_MESSAGES.INVALID_RESPONSE));
 		}
 	}
 }
@@ -148,9 +139,7 @@ function createMessageHandler(op: any, observer: any) {
 				processResponse(trpcMessage, observer);
 			}
 		} catch (error) {
-			observer.error(
-				new Error(ERROR_MESSAGES.MESSAGE_PROCESSING_ERROR),
-			);
+			observer.error(new Error(ERROR_MESSAGES.MESSAGE_PROCESSING_ERROR));
 		}
 	};
 
