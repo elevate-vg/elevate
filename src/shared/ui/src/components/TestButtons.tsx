@@ -1,4 +1,5 @@
 import React from 'react';
+import { useFocusable } from '@noriginmedia/norigin-spatial-navigation';
 
 interface TestButtonsProps {
 	onTestQuery: () => void;
@@ -9,44 +10,77 @@ interface TestButtonsProps {
 	isLoading: boolean;
 }
 
+interface FocusableButtonProps {
+	onClick: () => void;
+	disabled: boolean;
+	children: React.ReactNode;
+	focusKey?: string;
+}
+
+function FocusableButton({ onClick, disabled, children, focusKey }: FocusableButtonProps) {
+	const { ref, focused } = useFocusable({
+		focusKey,
+		onEnterPress: () => {
+			// console.log('Enter pressed on:', focusKey);
+			if (!disabled) {
+				onClick();
+			}
+		}
+	});
+
+	// console.log('FocusableButton render:', focusKey, 'focused:', focused);
+
+	return (
+		<button
+			ref={ref}
+			className={`button ${focused ? 'button-focused' : ''}`}
+			onClick={onClick}
+			disabled={disabled}
+			tabIndex={-1}
+		>
+			{children}
+		</button>
+	);
+}
+
 export function TestButtons({ onTestQuery, onTestMutation, onLaunchZelda, onWriteYaml, onReadYaml, isLoading }: TestButtonsProps) {
 	return (
-		<div>
-			<button 
-				className="button" 
+		<div style={{ display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
+			<FocusableButton
+				focusKey="test-query"
 				onClick={onTestQuery}
 				disabled={isLoading}
 			>
 				Test Query (hello)
-			</button>
-			<button 
-				className="button" 
+			</FocusableButton>
+			<FocusableButton
+				focusKey="test-mutation"
 				onClick={onTestMutation}
 				disabled={isLoading}
 			>
 				Test Mutation (echo)
-			</button>
-			<button 
-				className="button" 
+			</FocusableButton>
+			<FocusableButton
+				focusKey="launch-zelda"
 				onClick={onLaunchZelda}
 				disabled={isLoading}
 			>
 				🎮 Launch Zelda: Minish Cap
-			</button>
-			<button 
-				className="button" 
+			</FocusableButton>
+			<FocusableButton
+				focusKey="write-yaml"
 				onClick={onWriteYaml}
 				disabled={isLoading}
 			>
 				📝 Write YAML File
-			</button>
-			<button 
-				className="button" 
+			</FocusableButton>
+			<FocusableButton
+				focusKey="read-yaml"
 				onClick={onReadYaml}
 				disabled={isLoading}
 			>
 				📖 Read YAML File
-			</button>
+			</FocusableButton>
 		</div>
 	);
 }

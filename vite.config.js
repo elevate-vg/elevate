@@ -12,6 +12,10 @@ export default defineConfig({
 			input: path.resolve(__dirname, "src/shared/ui/index.html"),
 		},
 	},
+	server: {
+		host: true,
+		allowedHosts: ["aka"],
+	},
 	plugins: [react(), viteSingleFile()],
 	esbuild: {
 		jsx: "automatic",

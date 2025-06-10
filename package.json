@@ -13,6 +13,7 @@
 	},
 	"dependencies": {
 		"@elasticbottle/trpc-post-message": "^0.0.4",
+		"@noriginmedia/norigin-spatial-navigation": "^2.3.0",
 		"@trpc/client": "^11.3.1",
 		"@trpc/server": "^11.3.1",
 		"@types/js-yaml": "^4.0.9",

@@ -41,7 +41,6 @@ export default function App() {
           source={{ uri: htmlUri }}
           {...getWebViewConfig()}
           onMessage={messageHandler}
-          onLoadEnd={() => console.log('WebView loaded')}
         />
       )}
     </View>

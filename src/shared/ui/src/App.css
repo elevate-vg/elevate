@@ -32,6 +32,20 @@ h1 {
   opacity: 0.6;
 }
 
+.button-focused {
+  background: #ff6b6b !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px rgba(255, 107, 107, 0.6);
+  border: 2px solid #ff6b6b;
+}
+
+.button-focused:disabled {
+  background: #666 !important;
+  transform: none;
+  box-shadow: none;
+  border: 2px solid #666;
+}
+
 .output {
   background: rgba(255, 255, 255, 0.1);
   padding: 15px;
