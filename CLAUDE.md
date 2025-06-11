@@ -6,39 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is an Expo React Native application with WebView integration. The app demonstrates bidirectional communication between React Native and a WebView containing a React application.
 
-## Development Commands
-
-```bash
-# Start Expo development server
-npm start
-
-# Run on Android
-npm run android
-
-# Run on iOS
-npm run ios
-
-# Run in web browser
-npm run web
-
-# Enter Nix development shell (for Android development)
-nix develop
-```
-
 ## Architecture
-
-### Core Components
-
-1. **React Native App** (`App.tsx`): Main application that hosts a WebView
-   - Uses `expo-navigation-bar` to hide Android navigation
-   - Implements `expo-keep-awake` for Expo Go development
-   - Loads HTML from assets using `expo-asset` and `expo-file-system`
-   - Handles bidirectional messaging with WebView
-
-2. **WebView Content** (`assets/web/`):
-   - `index.html`: Loads React via CDN with Babel transpilation
-   - `index.js`: React app with TanStack Query integration
-   - Implements message passing with React Native host
 
 ### Key Features
 
@@ -53,10 +21,31 @@ nix develop
 - Configured for Android SDK 34 with NDK support
 - TypeScript with strict mode enabled
 
-## Important Considerations
+### Effect.js Usage Guidelines
 
-- WebView content uses CDN-loaded React (not bundled)
-- File URIs require specific WebView props: `allowFileAccess`, `allowFileAccessFromFileURLs`, `allowUniversalAccessFromFileURLs`
-- The app is configured for landscape orientation by default
-- When modifying WebView content, ensure proper message serialization (JSON.stringify/parse)
-- RetroArch functionality uses React Native's Linking API with intent URIs and only works on Android
+For optimal bundle size and tree-shaking, always use named imports from Effect:
+
+```typescript
+// ✅ Good - Tree-shaking friendly
+import { tryPromise, gen, fail } from 'effect/Effect';
+import { runPromise, runPromiseExit } from 'effect/Effect';
+import { isSuccess, isFailure } from 'effect/Exit';
+import { failureOption } from 'effect/Cause';
+
+// ❌ Bad - Imports entire module
+import * as Effect from 'effect/Effect';
+import { Effect } from 'effect';
+```
+
+### Testing Strategy
+
+- **Unit Tests**: Vitest with mocked Expo modules
+- **Integration Tests**: React Native components for device testing
+- **TDD Approach**: Write tests first, implement to make them pass
+
+## Memories
+
+- No barrel exports
+- Use named imports from Effect.js for tree-shaking
+- File operations use expo-file-system and expo-crypto
+- All tests pass with comprehensive error scenario coverage

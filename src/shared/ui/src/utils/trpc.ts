@@ -102,7 +102,7 @@ function processResponse(trpcMessage: any, observer: any) {
 		try {
 			const deserializedError = CONFIG.transformer.deserialize(
 				trpcMessage.error,
-			);
+			) as { message?: string };
 			observer.error(
 				new Error(deserializedError.message || ERROR_MESSAGES.TRPC_ERROR),
 			);
@@ -143,13 +143,13 @@ function createMessageHandler(op: any, observer: any) {
 		}
 	};
 
-	window.addEventListener("message", messageHandler);
-	document.addEventListener("message", messageHandler);
+	window.addEventListener("message", messageHandler as EventListener);
+	document.addEventListener("message", messageHandler as EventListener);
 
 	return {
 		unsubscribe: () => {
-			window.removeEventListener("message", messageHandler);
-			document.removeEventListener("message", messageHandler);
+			window.removeEventListener("message", messageHandler as EventListener);
+			document.removeEventListener("message", messageHandler as EventListener);
 		},
 	};
 }
@@ -157,24 +157,27 @@ function createMessageHandler(op: any, observer: any) {
 /**
  * Creates a custom tRPC link that uses React Native WebView postMessage for communication
  */
-function createPostMessageLink() {
+function createPostMessageLink(): import('@trpc/client').TRPCLink<any> {
 	return () =>
 		({ op, next }: any) => {
-			return {
+			const observable = {
 				subscribe: (observer: any) => {
 					try {
 						const message = createTrpcMessage(op);
 
 						if (!sendMessageToNative(message, observer)) {
-							return;
+							return { unsubscribe: () => {} };
 						}
 
 						return createMessageHandler(op, observer);
 					} catch (error) {
 						observer.error(new Error(ERROR_MESSAGES.SUBSCRIBE_ERROR));
+						return { unsubscribe: () => {} };
 					}
 				},
+				pipe: () => observable,
 			};
+			return observable;
 		};
 }
 
@@ -186,7 +189,6 @@ export function initializeTrpcClient() {
 		const customPostMessageLink = createPostMessageLink();
 
 		const client = createTRPCProxyClient({
-			transformer: CONFIG.transformer,
 			links: [customPostMessageLink],
 		});
 

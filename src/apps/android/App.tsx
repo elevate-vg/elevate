@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Platform, NativeModules, Text } from "react-native";
+import { StyleSheet, View, Platform, NativeModules, Text, Button, Alert } from "react-native";
 import { WebView } from "react-native-webview";
 import { useState, useEffect, useRef } from "react";
 import * as NavigationBar from "expo-navigation-bar";
@@ -7,18 +7,19 @@ import {
 	activateKeepAwakeAsync,
 	deactivateKeepAwake,
 } from "expo-keep-awake";
-import { EdgeToEdge } from "react-native-edge-to-edge";
-import Constants from "expo-constants";
+import { SystemBars } from "react-native-edge-to-edge";
+import * as FileSystem from "expo-file-system";
 import { minimalRouter as router } from "../../shared/server/appRouter";
 import { setupTrpcServer } from "./services/trpc-server";
 import { createMessageHandler } from "./services/message-bridge";
 import { getWebViewHtml, getWebViewConfig } from "./services/webview-manager";
+import { TestRomScannerHook } from "./TestRomScannerHook";
 
 export default function App() {
 	const webViewRef = useRef<WebView>(null);
 	const [htmlContent, setHtmlContent] = useState<string | null>(null);
 	const [isReady, setIsReady] = useState(false);
-	const [trpcHandler, setTrpcHandler] = useState<any>(null);
+	const [trpcHandler, setTrpcHandler] = useState<((event: { nativeEvent: { data: string } }) => void) | null>(null);
 
 	useEffect(() => {
 		try {
@@ -32,15 +33,11 @@ export default function App() {
 
 		// Configure immersive mode on Android
 		if (Platform.OS === "android") {
-			// Enable edge-to-edge mode (only works in development builds)
+			// Enable edge-to-edge mode using SystemBars
 			try {
-				if (EdgeToEdge?.setSystemUIChangeListener) {
-					EdgeToEdge.setSystemUIChangeListener((insets) => {
-						console.log("System UI insets:", insets);
-					});
-				}
+				SystemBars.setHidden(true);
 			} catch (error) {
-				console.log("EdgeToEdge not available in Expo Go:", error);
+				console.log("SystemBars not available in Expo Go:", error);
 			}
 
 			// Hide navigation bar
@@ -86,33 +83,55 @@ export default function App() {
 		? createMessageHandler(trpcHandler)
 		: undefined;
 
-	console.log("Render conditions:", { 
-		hasHtmlContent: !!htmlContent, 
-		isReady, 
+	const handlePickFolder = async () => {
+		try {
+			// Request directory permissions using Storage Access Framework
+			const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+
+			if (permissions.granted) {
+				const uri = permissions.directoryUri;
+				Alert.alert('Folder Access Granted', `Directory URI: ${uri}`);
+
+				// You can now list files in the directory
+				const files = await FileSystem.StorageAccessFramework.readDirectoryAsync(uri);
+				console.log('Files in directory:', files);
+			} else {
+				Alert.alert('Permission Denied', 'Folder access was denied');
+			}
+		} catch (error) {
+			Alert.alert('Error', `Failed to access folder: ${error}`);
+		}
+	};
+
+	console.log("Render conditions:", {
+		hasHtmlContent: !!htmlContent,
+		isReady,
 		hasTrpcHandler: !!trpcHandler,
-		htmlLength: htmlContent?.length 
+		htmlLength: htmlContent?.length
 	});
 
 	return (
 		<View style={styles.container}>
 			<StatusBar hidden={true} />
-			{htmlContent && isReady && trpcHandler ? (
-				<WebView
-					ref={webViewRef}
-					source={{ html: htmlContent }}
-					{...getWebViewConfig()}
-					onMessage={messageHandler}
-					onLoad={() => console.log("WebView loaded")}
-					onLoadEnd={() => console.log("WebView load ended")}
-					onError={(error) => console.error("WebView error:", error)}
-				/>
+			<Button title="Pick Folder" onPress={handlePickFolder} />
+      <TestRomScannerHook />
+      {htmlContent && isReady && trpcHandler ? (
+			 	<WebView
+			 		ref={webViewRef}
+			 		source={{ html: htmlContent }}
+			 		{...getWebViewConfig()}
+			 		onMessage={messageHandler}
+			 		onLoad={() => console.log("WebView loaded")}
+			 		onLoadEnd={() => console.log("WebView load ended")}
+			 		onError={(error) => console.error("WebView error:", error)}
+			 	/>
 			) : (
-				<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'red' }}>
-					<Text style={{ color: 'white' }}>
-						Loading... HTML: {!!htmlContent ? 'YES' : 'NO'}, Ready: {isReady ? 'YES' : 'NO'}, tRPC: {!!trpcHandler ? 'YES' : 'NO'}
-					</Text>
-				</View>
-			)}
+			 	<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: 'red' }}>
+			 		<Text style={{ color: 'white' }}>
+			 			Loading... HTML: {!!htmlContent ? 'YES' : 'NO'}, Ready: {isReady ? 'YES' : 'NO'}, tRPC: {!!trpcHandler ? 'YES' : 'NO'}
+			 		</Text>
+			 	</View>
+		  )}
 		</View>
 	);
 }
