@@ -110,11 +110,12 @@ export default function App() {
 		htmlLength: htmlContent?.length
 	});
 
+	// <Button title="Pick Folder" onPress={handlePickFolder} />
+  // <TestRomScannerHook />
+
 	return (
 		<View style={styles.container}>
 			<StatusBar hidden={true} />
-			<Button title="Pick Folder" onPress={handlePickFolder} />
-      <TestRomScannerHook />
       {htmlContent && isReady && trpcHandler ? (
 			 	<WebView
 			 		ref={webViewRef}

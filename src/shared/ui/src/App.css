@@ -318,3 +318,225 @@ body:focus,
     opacity: 1;
   }
 }
+
+/* Router Navigation Styles */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.navigation {
+  display: flex;
+  gap: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0;
+}
+
+.nav-item {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  border: none;
+  padding: 15px 30px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-bottom: 3px solid transparent;
+  position: relative;
+}
+
+.nav-item:hover,
+.nav-item.focused {
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.nav-item.active {
+  color: #4ecdc4;
+  border-bottom-color: #4ecdc4;
+  background: rgba(78, 205, 196, 0.1);
+}
+
+.nav-item.focused {
+  box-shadow: 0 0 15px rgba(78, 205, 196, 0.4);
+  transform: translateY(-2px);
+}
+
+.route-content {
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Page-specific styles */
+.games-page {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.scanner-page,
+.settings-page {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.scanner-header,
+.settings-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.scanner-header h1,
+.settings-header h1 {
+  margin: 0 0 10px 0;
+  color: #4ecdc4;
+}
+
+.scanner-header p,
+.settings-header p {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.scanner-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 15px;
+}
+
+.scan-button {
+  background: #4ecdc4;
+  color: #1a1a2e;
+  border: none;
+  padding: 15px 30px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.scan-button:hover:not(:disabled) {
+  background: #45b7d1;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(78, 205, 196, 0.3);
+}
+
+.scan-button:disabled {
+  background: #666;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.last-scan {
+  color: #888;
+  font-size: 14px;
+  margin: 0;
+}
+
+.scan-results h2 {
+  color: #4ecdc4;
+  margin-bottom: 20px;
+}
+
+.no-results {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  padding: 40px;
+}
+
+.rom-item {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+}
+
+.rom-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.rom-info h3 {
+  margin: 0 0 8px 0;
+  color: white;
+}
+
+.rom-details {
+  color: #4ecdc4;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+.rom-path {
+  color: #888;
+  font-size: 12px;
+  font-family: monospace;
+  margin: 5px 0 0 0;
+  word-break: break-all;
+}
+
+/* Settings page styles */
+.settings-sections {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.settings-section {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.settings-section h2 {
+  color: #4ecdc4;
+  margin: 0 0 15px 0;
+  font-size: 18px;
+}
+
+.setting-item {
+  margin-bottom: 15px;
+}
+
+.setting-item label {
+  display: block;
+  margin-bottom: 5px;
+  color: white;
+  font-weight: 500;
+}
+
+.setting-item input[type="checkbox"] {
+  margin-right: 10px;
+  transform: scale(1.2);
+}
+
+.settings-input,
+.settings-select {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 5px;
+  padding: 10px;
+  color: white;
+  font-size: 14px;
+}
+
+.settings-input:focus,
+.settings-select:focus {
+  outline: none;
+  border-color: #4ecdc4;
+  box-shadow: 0 0 10px rgba(78, 205, 196, 0.3);
+}
