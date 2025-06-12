@@ -20,4 +20,19 @@ export default defineConfig({
 	esbuild: {
 		jsx: "automatic",
 	},
+	define: {
+		// Mock react-native for web build
+		"import.meta.env.PLATFORM": '"web"',
+		global: "globalThis",
+	},
+	resolve: {
+		alias: {
+			"react-native": path.resolve(__dirname, "src/__mocks__/react-native.ts"),
+			"expo-file-system": path.resolve(__dirname, "src/__mocks__/expo-file-system.ts"),
+			"expo-intent-launcher": path.resolve(__dirname, "src/__mocks__/expo-intent-launcher.ts"),
+		},
+	},
+	optimizeDeps: {
+		exclude: ["react-native", "expo-file-system", "expo-intent-launcher"],
+	},
 });

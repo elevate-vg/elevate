@@ -204,6 +204,21 @@ export function useTrpc() {
 		}
 	}, [state.client, handleError, updateStatus, updateOutput]);
 
+	const getScannedGames = useCallback(async () => {
+		if (!state.client) {
+			handleError(ERROR_MESSAGES.CLIENT_NOT_INITIALIZED, "Load Scanned Games");
+			return null;
+		}
+
+		try {
+			const result = await state.client.games.listScanned.query();
+			return result;
+		} catch (error) {
+			handleError(error, "Load Scanned Games");
+			return null;
+		}
+	}, [state.client, handleError]);
+
 	useEffect(() => {
 		initializeClient();
 
@@ -230,5 +245,6 @@ export function useTrpc() {
 		launchZelda,
 		writeYaml,
 		readYaml,
+		getScannedGames,
 	};
 }

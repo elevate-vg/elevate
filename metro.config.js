@@ -10,4 +10,7 @@ config.watchFolders = [projectRoot];
 // Add support for .mjs files
 config.resolver.sourceExts.push("mjs");
 
+// Add support for .html files as assets
+config.resolver.assetExts.push("html");
+
 module.exports = config;

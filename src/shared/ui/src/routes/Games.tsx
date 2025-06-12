@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useTrpc } from "../hooks/useTrpc";
 import { StatusDisplay } from "../components/StatusDisplay";
 import { TestButtons } from "../components/TestButtons";

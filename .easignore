@@ -37,10 +37,3 @@ yarn-error.*
 *.tsbuildinfo
 .direnv
 *.apk
-
-# Generated files
-src/apps/android/generated/
-src/shared/ui/dist/
-src/shared/ui/dist-placeholder
-
-**/.claude/settings.local.json

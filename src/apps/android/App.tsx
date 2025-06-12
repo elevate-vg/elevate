@@ -9,11 +9,11 @@ import {
 } from "expo-keep-awake";
 import { SystemBars } from "react-native-edge-to-edge";
 import * as FileSystem from "expo-file-system";
+import * as DocumentPicker from "expo-document-picker";
 import { minimalRouter as router } from "../../shared/server/appRouter";
 import { setupTrpcServer } from "./services/trpc-server";
 import { createMessageHandler } from "./services/message-bridge";
 import { getWebViewHtml, getWebViewConfig } from "./services/webview-manager";
-import { TestRomScannerHook } from "./TestRomScannerHook";
 
 export default function App() {
 	const webViewRef = useRef<WebView>(null);
@@ -22,14 +22,18 @@ export default function App() {
 	const [trpcHandler, setTrpcHandler] = useState<((event: { nativeEvent: { data: string } }) => void) | null>(null);
 
 	useEffect(() => {
-		try {
-			console.log("Attempting to load WebView HTML...");
-			const content = getWebViewHtml();
-			console.log("HTML content loaded, setting state...");
-			setHtmlContent(content);
-		} catch (error) {
-			console.error("Failed to load WebView HTML:", error);
-		}
+		const loadWebViewContent = async () => {
+			try {
+				console.log("Attempting to load WebView HTML from assets...");
+				const content = await getWebViewHtml();
+				console.log("HTML content loaded, setting state...");
+				setHtmlContent(content);
+			} catch (error) {
+				console.error("Failed to load WebView HTML:", error);
+			}
+		};
+
+		loadWebViewContent();
 
 		// Configure immersive mode on Android
 		if (Platform.OS === "android") {
@@ -83,25 +87,72 @@ export default function App() {
 		? createMessageHandler(trpcHandler)
 		: undefined;
 
-	const handlePickFolder = async () => {
+	// Function to recursively get all files in a directory
+	async function getAllFilesRecursively(directoryUri: string) {
+		const allFiles: Array<{
+			name: string;
+			uri: string;
+			size: number;
+			modificationTime: number;
+		}> = [];
+		
+		async function traverseDirectory(uri: string) {
+			try {
+				const items = await FileSystem.readDirectoryAsync(uri);
+				
+				for (const item of items) {
+					const itemUri = `${uri}/${item}`;
+					const info = await FileSystem.getInfoAsync(itemUri);
+					
+					if (info.isDirectory) {
+						// Recursively traverse subdirectories
+						await traverseDirectory(itemUri);
+					} else {
+						// Add file to our list
+						allFiles.push({
+							name: item,
+							uri: itemUri,
+							size: info.size || 0,
+							modificationTime: info.modificationTime || 0
+						});
+					}
+				}
+			} catch (error) {
+				console.error(`Error reading directory ${uri}:`, error);
+			}
+		}
+		
+		await traverseDirectory(directoryUri);
+		return allFiles;
+	}
+
+	// Function to pick a folder and get all files
+	async function handlePickFolder() {
 		try {
-			// Request directory permissions using Storage Access Framework
-			const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
-
-			if (permissions.granted) {
-				const uri = permissions.directoryUri;
-				Alert.alert('Folder Access Granted', `Directory URI: ${uri}`);
-
-				// You can now list files in the directory
-				const files = await FileSystem.StorageAccessFramework.readDirectoryAsync(uri);
-				console.log('Files in directory:', files);
-			} else {
-				Alert.alert('Permission Denied', 'Folder access was denied');
+			// Pick a directory
+			const result = await DocumentPicker.getDocumentAsync({
+				type: 'directory',
+				copyToCacheDirectory: false,
+				multiple: false,
+			});
+			
+			if (!result.canceled && result.assets && result.assets[0]) {
+				const folderUri = result.assets[0].uri;
+				
+				// Get all files recursively
+				const allFiles = await getAllFilesRecursively(folderUri);
+				
+				console.log(`Found ${allFiles.length} files:`);
+				allFiles.forEach(file => {
+					console.log(`- ${file.name} (${file.size} bytes)`);
+				});
+				
+				return allFiles;
 			}
 		} catch (error) {
-			Alert.alert('Error', `Failed to access folder: ${error}`);
+			console.error('Error picking folder or listing files:', error);
 		}
-	};
+	}
 
 	console.log("Render conditions:", {
 		hasHtmlContent: !!htmlContent,
@@ -110,12 +161,10 @@ export default function App() {
 		htmlLength: htmlContent?.length
 	});
 
-	// <Button title="Pick Folder" onPress={handlePickFolder} />
-  // <TestRomScannerHook />
-
 	return (
 		<View style={styles.container}>
 			<StatusBar hidden={true} />
+      <Button title="Pick Folder" onPress={handlePickFolder} />
       {htmlContent && isReady && trpcHandler ? (
 			 	<WebView
 			 		ref={webViewRef}
