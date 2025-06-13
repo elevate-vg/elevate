@@ -9,11 +9,12 @@ import {
 } from "expo-keep-awake";
 import { SystemBars } from "react-native-edge-to-edge";
 import * as FileSystem from "expo-file-system";
-import * as DocumentPicker from "expo-document-picker";
+import { StorageAccessFramework } from "expo-file-system";
 import { minimalRouter as router } from "../../shared/server/appRouter";
 import { setupTrpcServer } from "./services/trpc-server";
 import { createMessageHandler } from "./services/message-bridge";
 import { getWebViewHtml, getWebViewConfig } from "./services/webview-manager";
+import { getDirectoryPermissionWithPersistence, clearStoredPermission } from "./services/storage-permission";
 
 export default function App() {
 	const webViewRef = useRef<WebView>(null);
@@ -87,70 +88,110 @@ export default function App() {
 		? createMessageHandler(trpcHandler)
 		: undefined;
 
-	// Function to recursively get all files in a directory
-	async function getAllFilesRecursively(directoryUri: string) {
-		const allFiles: Array<{
-			name: string;
-			uri: string;
-			size: number;
-			modificationTime: number;
-		}> = [];
-		
-		async function traverseDirectory(uri: string) {
-			try {
-				const items = await FileSystem.readDirectoryAsync(uri);
-				
-				for (const item of items) {
-					const itemUri = `${uri}/${item}`;
-					const info = await FileSystem.getInfoAsync(itemUri);
-					
-					if (info.isDirectory) {
-						// Recursively traverse subdirectories
-						await traverseDirectory(itemUri);
-					} else {
-						// Add file to our list
-						allFiles.push({
-							name: item,
-							uri: itemUri,
-							size: info.size || 0,
-							modificationTime: info.modificationTime || 0
-						});
-					}
-				}
-			} catch (error) {
-				console.error(`Error reading directory ${uri}:`, error);
-			}
-		}
-		
-		await traverseDirectory(directoryUri);
-		return allFiles;
-	}
-
 	// Function to pick a folder and get all files
 	async function handlePickFolder() {
 		try {
-			// Pick a directory
-			const result = await DocumentPicker.getDocumentAsync({
-				type: 'directory',
-				copyToCacheDirectory: false,
-				multiple: false,
-			});
-			
-			if (!result.canceled && result.assets && result.assets[0]) {
-				const folderUri = result.assets[0].uri;
-				
+			// Get directory permission with persistence
+			const uri = await getDirectoryPermissionWithPersistence();
+
+			if (uri) {
+				// Recursively get all files in directory and subdirectories
+				const getAllFiles = async (directoryUri: string): Promise<string[]> => {
+					const allFiles: string[] = [];
+
+					try {
+						const items = await StorageAccessFramework.readDirectoryAsync(directoryUri);
+
+						for (const itemUri of items) {
+							try {
+								const info = await FileSystem.getInfoAsync(itemUri, { md5: false });
+
+								if (info.exists) {
+									if (info.isDirectory) {
+										// Recursively search subdirectory
+										const subDirFiles = await getAllFiles(itemUri);
+										allFiles.push(...subDirFiles);
+									} else {
+										// Add file to results
+										allFiles.push(itemUri);
+									}
+								}
+							} catch (error) {
+								console.warn(`Could not access ${itemUri}:`, error);
+							}
+						}
+					} catch (error) {
+						console.warn(`Could not read directory ${directoryUri}:`, error);
+					}
+
+					return allFiles;
+				};
+
 				// Get all files recursively
-				const allFiles = await getAllFilesRecursively(folderUri);
-				
-				console.log(`Found ${allFiles.length} files:`);
-				allFiles.forEach(file => {
-					console.log(`- ${file.name} (${file.size} bytes)`);
-				});
-				
-				return allFiles;
+				const allFiles = await getAllFiles(uri);
+
+				Alert.alert('Files Found', `Found ${allFiles.length} files:\n\n${allFiles.slice(0, 10).join('\n')}${allFiles.length > 10 ? `\n\n... and ${allFiles.length - 10} more` : ''}`);
+			} else {
+				Alert.alert('Permission Denied', 'No directory permission was granted.');
 			}
 		} catch (error) {
 			console.error('Error picking folder or listing files:', error);
+			Alert.alert('Error', 'Failed to access directory. Please try again.');
+		}
+	}
+
+	// Function to pick a folder starting from a specific directory
+	async function handlePickFolderWithInitialDir(initialDir: string) {
+		try {
+			// Clear stored permission first to force new picker with initial directory
+			await clearStoredPermission();
+
+			// Get directory permission with initial directory
+			const uri = await getDirectoryPermissionWithPersistence(initialDir);
+
+			if (uri) {
+				// Recursively get all files in directory and subdirectories
+				const getAllFiles = async (directoryUri: string): Promise<string[]> => {
+					const allFiles: string[] = [];
+
+					try {
+						const items = await StorageAccessFramework.readDirectoryAsync(directoryUri);
+
+						for (const itemUri of items) {
+							try {
+								const info = await FileSystem.getInfoAsync(itemUri, { md5: false });
+
+								if (info.exists) {
+									if (info.isDirectory) {
+										// Recursively search subdirectory
+										const subDirFiles = await getAllFiles(itemUri);
+										allFiles.push(...subDirFiles);
+									} else {
+										// Add file to results
+										allFiles.push(itemUri);
+									}
+								}
+							} catch (error) {
+								console.warn(`Could not access ${itemUri}:`, error);
+							}
+						}
+					} catch (error) {
+						console.warn(`Could not read directory ${directoryUri}:`, error);
+					}
+
+					return allFiles;
+				};
+
+				// Get all files recursively
+				const allFiles = await getAllFiles(uri);
+
+				Alert.alert('Files Found', `Found ${allFiles.length} files in ${initialDir}:\n\n${allFiles.slice(0, 10).join('\n')}${allFiles.length > 10 ? `\n\n... and ${allFiles.length - 10} more` : ''}`);
+			} else {
+				Alert.alert('Permission Denied', 'No directory permission was granted.');
+			}
+		} catch (error) {
+			console.error('Error picking folder or listing files:', error);
+			Alert.alert('Error', 'Failed to access directory. Please try again.');
 		}
 	}
 
@@ -164,7 +205,18 @@ export default function App() {
 	return (
 		<View style={styles.container}>
 			<StatusBar hidden={true} />
-      <Button title="Pick Folder" onPress={handlePickFolder} />
+      <View style={{ flexDirection: 'column', gap: 10, padding: 10 }}>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <Button title="Pick Folder" onPress={handlePickFolder} />
+          <Button title="Clear Permission" onPress={async () => {
+            await clearStoredPermission();
+            Alert.alert('Permission Cleared', 'Stored directory permission has been cleared.');
+          }} />
+        </View>
+        <View style={{ flexDirection: 'row', gap: 10 }}>
+          <Button title="Pick from Snowscape" onPress={() => handlePickFolderWithInitialDir('snowscape')} />
+        </View>
+      </View>
       {htmlContent && isReady && trpcHandler ? (
 			 	<WebView
 			 		ref={webViewRef}
@@ -181,7 +233,7 @@ export default function App() {
 			 			Loading... HTML: {!!htmlContent ? 'YES' : 'NO'}, Ready: {isReady ? 'YES' : 'NO'}, tRPC: {!!trpcHandler ? 'YES' : 'NO'}
 			 		</Text>
 			 	</View>
-		  )}
+			)}
 		</View>
 	);
 }
