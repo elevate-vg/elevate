@@ -49,3 +49,4 @@ import { Effect } from 'effect';
 - Use named imports from Effect.js for tree-shaking
 - File operations use expo-file-system and expo-crypto
 - All tests pass with comprehensive error scenario coverage
+- Use bun never npm or node

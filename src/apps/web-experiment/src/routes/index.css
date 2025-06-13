@@ -1,0 +1,51 @@
+@import "tailwindcss";
+/* App.css - Keep minimal as most styles are handled by Tailwind */
+
+/* Custom animations for page transitions */
+@keyframes slide-in-from-right {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-from-left {
+  from {
+    opacity: 0;
+    transform: translateX(-1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.animate-slide-in-right {
+  animation: slide-in-from-right 0.3s ease-out;
+}
+
+.animate-slide-in-left {
+  animation: slide-in-from-left 0.3s ease-out;
+}
+
+.dark .app-container {
+  background-color: var(--neutral-900);
+}
+
+/* Resize handle styles */
+.resize-handle {
+  transition: background 0.2s ease;
+}
+
+.resize-handle:hover {
+  background: linear-gradient(to right, #d1d5db, #9ca3af, #d1d5db) !important;
+}
+
+.resize-handle:active {
+  background: linear-gradient(to right, #9ca3af, #6b7280, #9ca3af) !important;
+}
+

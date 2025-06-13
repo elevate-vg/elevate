@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en" class="h-full bg-neutral-100 select-none">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Switch UI - Top Search Layout</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      html.light {
+        color-scheme: light;
+      }
+      html.dark {
+        color-scheme: dark;
+      }
+    </style>
+  </head>
+  <body
+    style="font-family: &quot;Inter&quot;, sans-serif"
+    class="h-full flex items-center justify-center antialiased transition-colors duration-300 dark:bg-neutral-900 dark:text-white text-black bg-neutral-100"
+  >
+    <div
+      class="relative w-full max-h-screen"
+      style="aspect-ratio: 1.15/1; max-width: min(100vh * 1.15, 420px)"
+    >
+      <div
+        class="w-full h-full bg-neutral-200 dark:bg-neutral-900 flex flex-col overflow-hidden rounded-lg shadow-2xl"
+      >
+        <!-- Top Status Bar -->
+        <header
+          class="w-full flex dark:text-white/70 z-20 relative text-xs text-neutral-600 pt-1.5 pr-3 pb-1.5 pl-3 items-center justify-between"
+        >
+          <div id="clock" class="font-medium">12:50 PM</div>
+          <div class="flex items-center gap-2.5">
+            <button id="theme-toggle" aria-label="Toggle theme">
+              <svg
+                class="w-4 h-4 dark:hidden"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <circle cx="12" cy="12" r="5" />
+                <path
+                  d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"
+                />
+              </svg>
+              <svg
+                class="w-4 h-4 hidden dark:block"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+              </svg>
+            </button>
+            <div
+              class="w-6 h-6 rounded-full overflow-hidden border border-neutral-300 dark:border-white/20"
+            >
+              <img
+                src="https://i.pravatar.cc/80"
+                alt=""
+                class="w-full h-full object-cover"
+              />
+            </div>
+          </div>
+        </header>
+
+        <!-- Category Tabs -->
+        <nav class="w-full flex justify-center pt-3 pb-1">
+          <div
+            class="flex gap-1 rounded-full px-2 py-0.5 text-xs transition"
+            role="tablist"
+          >
+            <button
+              class="tab px-2.5 py-1 rounded-full hover:bg-neutral-300 dark:hover:bg-white/10 transition text-neutral-700 dark:text-white"
+            >
+              Home
+            </button>
+            <button
+              class="tab px-2.5 py-1 rounded-full font-medium bg-red-600 dark:bg-red-500 shadow transition text-white"
+            >
+              Library
+            </button>
+            <button
+              class="tab px-2.5 py-1 rounded-full hover:bg-neutral-300 dark:hover:bg-white/10 transition text-neutral-700 dark:text-white"
+            >
+              Bazzar
+            </button>
+          </div>
+        </nav>
+
+        <!-- Search & Filter Bar -->
+        <div class="px-4 py-3 space-y-2">
+          <!-- Search Bar -->
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Search your library..."
+              class="w-full px-3 py-2 pl-9 text-sm bg-neutral-100 dark:bg-neutral-800 border border-neutral-300 dark:border-white/10 rounded-lg focus:outline-none focus:border-sky-400 focus:ring-1 focus:ring-sky-400"
+            />
+            <svg class="w-4 h-4 absolute left-3 top-2.5 text-neutral-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"/>
+              <path d="m21 21-4.35-4.35"/>
+            </svg>
+            <button class="absolute right-3 top-2.5 text-neutral-400 hover:text-neutral-600">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <polygon points="22,3 2,3 10,12.46 10,19 14,21 14,12.46"/>
+              </svg>
+            </button>
+          </div>
+
+          <!-- Quick Filters -->
+          <div class="flex gap-2 overflow-x-auto pb-1">
+            <button class="flex-shrink-0 px-3 py-1 bg-red-600 dark:bg-red-500 text-white text-xs rounded-full font-medium">
+              Recently Played
+            </button>
+            <button class="flex-shrink-0 px-3 py-1 bg-neutral-300 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 text-xs rounded-full hover:bg-neutral-400 dark:hover:bg-neutral-600 transition">
+              GBA Games
+            </button>
+            <button class="flex-shrink-0 px-3 py-1 bg-neutral-300 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 text-xs rounded-full hover:bg-neutral-400 dark:hover:bg-neutral-600 transition">
+              Favorites
+            </button>
+            <button class="flex-shrink-0 px-3 py-1 bg-neutral-300 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 text-xs rounded-full hover:bg-neutral-400 dark:hover:bg-neutral-600 transition">
+              Action
+            </button>
+            <button class="flex-shrink-0 px-3 py-1 bg-neutral-300 dark:bg-neutral-700 text-neutral-700 dark:text-neutral-300 text-xs rounded-full hover:bg-neutral-400 dark:hover:bg-neutral-600 transition">
+              Puzzle
+            </button>
+          </div>
+
+          <!-- Results & View Toggle -->
+          <div class="flex items-center justify-between">
+            <div class="text-xs text-neutral-600 dark:text-neutral-400">
+              <span class="font-medium">127</span> games found
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-neutral-600 dark:text-neutral-400">View:</span>
+              <div class="flex bg-neutral-200 dark:bg-neutral-800 rounded p-0.5">
+                <button class="p-1 rounded bg-white dark:bg-neutral-700 shadow-sm">
+                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 24 24">
+                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                    <rect x="14" y="14" width="7" height="7" rx="1"/>
+                  </svg>
+                </button>
+                <button class="p-1 rounded text-neutral-400">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <line x1="8" y1="6" x2="21" y2="6"/>
+                    <line x1="8" y1="12" x2="21" y2="12"/>
+                    <line x1="8" y1="18" x2="21" y2="18"/>
+                    <line x1="3" y1="6" x2="3.01" y2="6"/>
+                    <line x1="3" y1="12" x2="3.01" y2="12"/>
+                    <line x1="3" y1="18" x2="3.01" y2="18"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="flex-1 overflow-hidden px-4 pb-4">
+          <!-- Game Grid -->
+          <div class="h-full overflow-y-auto">
+            <div class="grid grid-cols-2 gap-3">
+              <!-- Featured Game Card -->
+              <div class="col-span-2 group cursor-pointer relative rounded-xl overflow-hidden bg-gradient-to-br from-purple-600 to-blue-600 p-4 text-white">
+                <div class="flex items-center gap-3">
+                  <div class="w-12 h-12 rounded-lg overflow-hidden border-2 border-white/20">
+                    <img
+                      src="https://cdn2.steamgriddb.com/thumb/036036d598e3d81b103ce8b3c6786dfb.jpg"
+                      alt="Featured"
+                      class="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div class="flex-1">
+                    <div class="text-sm font-semibold">Continue Playing</div>
+                    <div class="text-xs opacity-80">Tetris: Hard Drop</div>
+                    <div class="text-xs opacity-60 mt-1">68% complete</div>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-xs opacity-60">Last played</div>
+                    <div class="text-xs font-medium">2 hours ago</div>
+                  </div>
+                </div>
+                <div class="mt-3 h-1 bg-white/20 rounded-full overflow-hidden">
+                  <div class="h-full bg-white rounded-full" style="width: 68%"></div>
+                </div>
+              </div>
+
+              <!-- Regular Game Cards -->
+              <div class="group cursor-pointer relative rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-800/50 border border-neutral-300 dark:border-white/10 hover:border-sky-400 dark:hover:border-sky-400 transition-all duration-200" style="aspect-ratio: 1">
+                <img
+                  src="https://cdn2.steamgriddb.com/thumb/e98002ab38ca88f2ca5e461cc99c5d2b.jpg"
+                  alt="Minish Cap"
+                  class="w-full h-full object-cover"
+                />
+                <div class="absolute top-2 right-2">
+                  <div class="w-5 h-5 bg-yellow-400 rounded-full flex items-center justify-center">
+                    <svg class="w-3 h-3 text-yellow-900" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                    </svg>
+                  </div>
+                </div>
+                <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                  <div class="text-xs font-medium text-white">The Minish Cap</div>
+                  <div class="text-xs text-white/70">GBA • Adventure</div>
+                </div>
+              </div>
+
+              <div class="group cursor-pointer relative rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-800/50 border border-neutral-300 dark:border-white/10 hover:border-sky-400 dark:hover:border-sky-400 transition-all duration-200" style="aspect-ratio: 1">
+                <img
+                  src="https://cdn2.steamgriddb.com/thumb/8c690fdb96c00586c26b5ce86d21b55f.jpg"
+                  alt="Donkey Kong"
+                  class="w-full h-full object-cover"
+                />
+                <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                  <div class="text-xs font-medium text-white">Donkey Kong</div>
+                  <div class="text-xs text-white/70">NES • Platform</div>
+                </div>
+              </div>
+
+              <div class="group cursor-pointer relative rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-800/50 border border-neutral-300 dark:border-white/10 hover:border-sky-400 dark:hover:border-sky-400 transition-all duration-200" style="aspect-ratio: 1">
+                <img
+                  src="https://cdn2.steamgriddb.com/grid/f68724cd9da08a80a5eaa5cc60bbe1ab.jpg"
+                  alt="ScourgeBringer"
+                  class="w-full h-full object-cover"
+                />
+                <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                  <div class="text-xs font-medium text-white">ScourgeBringer</div>
+                  <div class="text-xs text-white/70">PC • Action</div>
+                </div>
+              </div>
+
+              <div class="group cursor-pointer relative rounded-xl overflow-hidden bg-neutral-100 dark:bg-neutral-800/50 border border-neutral-300 dark:border-white/10 hover:border-sky-400 dark:hover:border-sky-400 transition-all duration-200" style="aspect-ratio: 1">
+                <img
+                  src="https://cdn2.steamgriddb.com/grid/da0198ea02cb283a14672a3837d65d92.jpg"
+                  alt="Metroid"
+                  class="w-full h-full object-cover"
+                />
+                <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/80 to-transparent">
+                  <div class="text-xs font-medium text-white">Metroid Zero Mission</div>
+                  <div class="text-xs text-white/70">GBA • Action</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </main>
+
+        <!-- Footer Action Bar -->
+        <footer
+          class="w-full flex dark:text-white/70 dark:border-white/10 text-xs text-neutral-600 border-neutral-300 border-t pt-2.5 pr-3 pb-2.5 pl-3 items-center justify-between"
+        >
+          <div class="flex items-center gap-1.5">
+            <div
+              class="w-5 h-5 rounded-full border border-neutral-400 dark:border-white/50 flex items-center justify-center text-xs font-semibold"
+            >
+              Y
+            </div>
+            <span>Search</span>
+          </div>
+          <div class="flex items-center gap-4">
+            <button class="flex items-center gap-1.5">
+              <div
+                class="w-5 h-5 rounded-full border border-neutral-400 dark:border-white/50 flex items-center justify-center text-xs font-semibold"
+              >
+                X
+              </div>
+              <span>Filter</span>
+            </button>
+            <button class="flex items-center gap-1.5">
+              <div
+                class="w-5 h-5 rounded-full border border-neutral-400 dark:border-white/50 flex items-center justify-center text-xs font-semibold"
+              >
+                A
+              </div>
+              <span>Play</span>
+            </button>
+          </div>
+        </footer>
+      </div>
+    </div>
+
+    <script>
+      // Theme toggle
+      document.getElementById("theme-toggle").addEventListener("click", () => {
+        document.documentElement.classList.toggle("dark");
+      });
+
+      // Clock functionality
+      function updateClock() {
+        const now = new Date();
+        const time = now.toLocaleTimeString("en-US", {
+          hour: "numeric",
+          minute: "2-digit",
+          hour12: true,
+        });
+        document.getElementById("clock").textContent = time;
+      }
+
+      updateClock();
+      setInterval(updateClock, 1000);
+    </script>
+  </body>
+</html>

@@ -113,7 +113,14 @@ export function useTrpc() {
 		}
 	}, [state.client, handleError, updateStatus, updateOutput]);
 
-	const launchGame = useCallback(async (game: { title: string; romPath: string; core: string; console: string }) => {
+	const launchGame = useCallback(async (game: { 
+		title: string; 
+		romPath: string; 
+		core: string; 
+		console: string;
+		packageName?: string;
+		className?: string;
+	}) => {
 		if (!state.client) {
 			handleError(ERROR_MESSAGES.CLIENT_NOT_INITIALIZED, "Game Launch");
 			return;
@@ -127,6 +134,8 @@ export function useTrpc() {
 				romPath: game.romPath,
 				core: game.core,
 				console: game.console,
+				packageName: game.packageName,
+				className: game.className,
 			});
 
 			updateStatus("🎮 Game launched successfully!");

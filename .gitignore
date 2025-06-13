@@ -44,3 +44,4 @@ src/shared/ui/dist/
 src/shared/ui/dist-placeholder
 
 **/.claude/settings.local.json
+.tanstack/tmp/router-generator-LpzLxX

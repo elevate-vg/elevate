@@ -34,6 +34,17 @@ const sampleGames = [
 		core: "mgba",
 		console: "gb",
 	},
+	{
+		id: "3",
+		title: "ScourgeBringer",
+		boxArt:
+			"https://cdn2.steamgriddb.com/grid/f68724cd9da08a80a5eaa5cc60bbe1ab.jpg",
+		romPath: "ScourgeBringer", // For Android games, this is just the display name
+		core: "android",
+		console: "android",
+		packageName: "com.pid.scourgebringer",
+		className: "crc645d6a1e7bece73b70.Program",
+	},
 ];
 
 export function Games() {

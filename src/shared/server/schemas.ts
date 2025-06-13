@@ -10,14 +10,18 @@ export const gameConfigSchema = z.object({
 		"genesis_plus_gx",
 		"nestopia",
 		"pcsx_rearmed",
+		"android", // For native Android games
 	]),
-	console: z.enum(["gb", "gba", "snes", "genesis", "nes", "psx"]),
+	console: z.enum(["gb", "gba", "snes", "genesis", "nes", "psx", "android"]),
 	configPath: z
 		.string()
 		.optional()
 		.default(
 			"/storage/emulated/0/Android/data/com.retroarch.aarch64/files/retroarch.cfg",
 		),
+	// For Android games
+	packageName: z.string().optional(),
+	className: z.string().optional(),
 });
 
 export const fileOperationSchema = z.object({

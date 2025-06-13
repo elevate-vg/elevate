@@ -38,6 +38,26 @@ export const gamesRouter = router({
 			}
 
 			try {
+				// Handle native Android games
+				if (input.core === "android" && input.packageName) {
+					await IntentLauncher.startActivityAsync("android.intent.action.MAIN", {
+						packageName: input.packageName,
+						className: input.className,
+						flags: 0x10000000, // NEW_TASK
+					});
+
+					return {
+						success: true,
+						game: {
+							name: input.romPath, // For Android games, romPath contains the game name
+							console: input.console,
+							core: input.core,
+						},
+						launchTime: new Date().toISOString(),
+					};
+				}
+
+				// Handle RetroArch emulated games
 				const coreFile = coreMap[input.core];
 				const corePath = `/data/data/com.retroarch.aarch64/cores/${coreFile}`;
 
