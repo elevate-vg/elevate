@@ -61,7 +61,7 @@ Start the complete development environment:
 
 ```bash
 # Starts Expo dev server, WebView watcher, and UI build watcher
-bun run dev
+just dev::dev
 ```
 
 This command runs three processes concurrently:
@@ -73,32 +73,32 @@ This command runs three processes concurrently:
 
 ```bash
 # Start Expo development server only
-bun run android::serve
+just dev::serve
 
 # Build UI components with watcher
-bun run ui::watch
+just ui::watch
 
 # Serve UI development server
-bun run ui::serve
+just ui::serve
 
 # Build WebView content string
-bun run webview::string
+just webview::string
 
 # Validate WebView content
-bun run validate::webview
+just webview::validate
 ```
 
 ### Building APKs
 
 ```bash
 # Build both preview and development APKs
-bun run android::build
+just android::build
 
 # Build preview APK only
-bun run android::build::preview
+just android::build-preview
 
 # Build development APK only
-bun run android::build::development
+just android::build-development
 ```
 
 Built APKs are saved to the `builds/` directory with timestamps.
@@ -107,10 +107,10 @@ Built APKs are saved to the `builds/` directory with timestamps.
 
 ```bash
 # Run tests once
-bun run test
+just test::run
 
 # Run tests in watch mode
-bun run test:watch
+just test::watch
 ```
 
 ## 🏗️ Architecture
@@ -174,12 +174,6 @@ src/
 - **Android SDK Management** - Automatic SDK and NDK setup
 - **Dependency Isolation** - No global package conflicts
 - **Team Consistency** - Same versions for all developers
-
-### Editor Integration
-
-Recommended for Neovim users:
-- Use `nvr` for integration
-- Open `:Neotree git_status` before making changes
 
 ## 🤝 Contributing
 

@@ -2,23 +2,6 @@
 	"name": "elevate",
 	"version": "1.0.0",
 	"main": "src/apps/android/index.ts",
-	"scripts": {
-		"dev": "mprocs --names expo,vite,webview \"npm run android::serve\" \"npm run ui::watch\" \"npm run webview::string::watch\"",
-		"android::serve": "expo start",
-		"android::build": "npm run android::build::preview && npm run android::build::development",
-		"android::build::preview": "npm run ui::build && npm run validate::webview && eas build --platform android --profile preview --local --output ./builds/elevate-preview-$(date +%Y%m%d-%H%M%S).apk",
-		"android::build::development": "npm run ui::build && npm run validate::webview && eas build --platform android --profile development --local --output ./builds/elevate-development-$(date +%Y%m%d-%H%M%S).apk",
-		"ui::watch": "vite build --watch",
-		"ui::build": "vite build && npm run webview::string",
-		"ui::serve": "vite dev",
-		"webview::string": "node scripts/build-webview-string.js",
-		"webview::string::watch": "chokidar \"src/apps/android/generated/index.html\" -c \"npm run webview::string\"",
-		"webview::string::placeholder": "cp src/shared/ui/dist/webview-content.js src/shared/ui/dist-placeholder/webview-content.js || echo 'Placeholder copy failed, but continuing...'",
-		"validate::webview": "node scripts/validate-webview-content.js",
-		"test": "vitest",
-		"test:watch": "vitest watch",
-		"experiment": "vite --config src/apps/web-experiment/vite.config.mjs"
-	},
 	"dependencies": {
 		"@elasticbottle/trpc-post-message": "^0.0.4",
 		"@noriginmedia/norigin-spatial-navigation": "^2.3.0",

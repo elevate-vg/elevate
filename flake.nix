@@ -60,6 +60,7 @@
           # Misc
           mprocs
           biome
+          just
         ];
 
         JAVA_HOME = pinnedJDK;
